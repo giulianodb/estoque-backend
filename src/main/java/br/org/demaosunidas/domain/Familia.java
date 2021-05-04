@@ -3,12 +3,16 @@ package br.org.demaosunidas.domain;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="familia",schema="estoque")
 public class Familia implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -19,10 +23,13 @@ public class Familia implements Serializable{
 	@Column(name = "id")
 	private Integer id;
 	
+	@Column(name = "nomeresponsavel")
 	private String nomeResponsavel;
 	
+	@Column(name = "cpfresponsavel")
 	private String cpfResponsavel;
 	
+	@Column(name = "rgresponsavel")
 	private String rgResponsavel;
 	
 	private String bairro;

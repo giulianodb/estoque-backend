@@ -30,9 +30,11 @@ public class Campanha implements Serializable{
 	private String descricao;
 	
 	@Enumerated
+	@Column(name = "mesinicio")
 	private MesesEnum mesInicio;
 	
 	@Enumerated
+	@Column(name = "mesfim")
 	private MesesEnum mesFim;
 	
 	@Enumerated

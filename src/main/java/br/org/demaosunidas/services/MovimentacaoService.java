@@ -75,7 +75,8 @@ public class MovimentacaoService {
 	
 	private void ajustarDataMovimentacao(List<Movimentacao> movimentacaoPosteriores, Movimentacao obj) {
 		
-		int contMovMesmoDia = 0;
+		int segundos = 0;
+		int minutos = 0;
 		List <Movimentacao> listaMovimentacaoExcluir = new ArrayList<>();
 		
 		if (movimentacaoPosteriores.size() > 0) {
@@ -84,16 +85,21 @@ public class MovimentacaoService {
 						movimentacao.getData().getMonth() == obj.getData().getMonth() && 
 								movimentacao.getData().getYear() == obj.getData().getYear()
 						) {
-					contMovMesmoDia++;
+					
+					minutos = movimentacao.getData().getMinute(); 
+					segundos = movimentacao.getData().getSecond(); 
+					
 					listaMovimentacaoExcluir.add(movimentacao);
 					
 				}
 			}
 		}
 		
+		segundos = (minutos * 60) + segundos + 1;
+		
 		movimentacaoPosteriores.removeAll(listaMovimentacaoExcluir);
 		obj.setData(LocalDateTime.of(obj.getData().getYear(),obj.getData().getMonth(), obj.getData().getDayOfMonth(), 0, 0, 0));
-		obj.setData(obj.getData().plusSeconds(contMovMesmoDia));
+		obj.setData(obj.getData().plusSeconds(segundos));
 	}
 
 	//responsável em atualizar os saldos de cada movimentação posterior
@@ -135,7 +141,8 @@ public class MovimentacaoService {
 		produto.setQuantidadeEstoque(NumeroUtil.somarDinheiro(produto.getQuantidadeEstoque(), quantidadeMov, 5));
 	
 	}
-
+	
+	//Verifica se a movimentação provocará saldo negativo
 	private boolean saldoNegativo(List<Movimentacao> movimentacaoPosteriores,Movimentacao mov, Produto produto) {
 		
 		Float quantidadeMov = mov.getQuantidade() *-1;

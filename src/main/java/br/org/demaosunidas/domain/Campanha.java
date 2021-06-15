@@ -41,6 +41,15 @@ public class Campanha implements Serializable{
 	@Column(name="status")
 	private Status status;
 
+	public Campanha(Integer id) {
+		super();
+		this.id = id;
+	}
+
+	public Campanha() {
+		super();
+	}
+
 	public Integer getId() {
 		return id;
 	}

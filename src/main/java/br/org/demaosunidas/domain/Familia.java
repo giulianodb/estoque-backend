@@ -49,6 +49,17 @@ public class Familia implements Serializable{
 	@Enumerated
 	@Column(name="status")
 	private Status status;
+	
+
+	public Familia() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Familia(Integer id) {
+		super();
+		this.id = id;
+	}
 
 	public Integer getId() {
 		return id;

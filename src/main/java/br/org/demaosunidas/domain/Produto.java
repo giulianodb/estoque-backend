@@ -73,7 +73,11 @@ public class Produto implements Serializable{
 	private Status status;
 	
 	
-	
+	public Produto(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public Produto() {
 		super();
 		// TODO Auto-generated constructor stub

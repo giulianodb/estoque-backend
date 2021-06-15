@@ -40,6 +40,11 @@ public class Instituicao implements Serializable {
 	
 	}
 	
+	public Instituicao(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public Instituicao(Integer id, String nome, String cnpj, String nomeContato, String email, String telefone,
 			Status status) {
 		super();

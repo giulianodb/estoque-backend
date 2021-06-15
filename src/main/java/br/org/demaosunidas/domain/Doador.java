@@ -50,6 +50,17 @@ public class Doador implements Serializable {
 	@Enumerated
 	@Column(name="status")
 	private Status status;
+	
+
+	public Doador() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Doador(Integer id) {
+		super();
+		this.id = id;
+	}
 
 	public Integer getId() {
 		return id;

@@ -2,6 +2,7 @@ package br.org.demaosunidas.util;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -110,6 +111,32 @@ public class DateUtil {
 		calendar.set(Calendar.SECOND, quantidadeSegundos);
 
 		return calendar.getTime();
+	}
+//	
+//	public static LocalDateTime adicionarHoraEntrada(LocalDateTime data, LocalDateTime dataBase) {
+//		if (dataBase == null) {
+//			data = LocalDateTime.of(data.getYear(),data.getMonth(), data.getDayOfMonth(), 0, 0, 59);
+//		} else {
+//			data = LocalDateTime.of(data.getYear(),data.getMonth(), data.getDayOfMonth(), 0, 0, (dataBase.getSecond())-1);
+//		}
+//		
+//		return data;
+//		
+//	}
+//	
+//	public static LocalDateTime adicionarHoraSaida(LocalDateTime data,LocalDateTime dataBase) {
+//		if (dataBase == null) {
+//			data = LocalDateTime.of(data.getYear(),data.getMonth(), data.getDayOfMonth(), 23, 59, 00);
+//		} else {
+//			data = LocalDateTime.of(data.getYear(),data.getMonth(), data.getDayOfMonth(), 0, 0, (dataBase.getSecond())-1);
+//		}
+//		
+//		return data;
+//		
+//	}
+	
+	public static void adicionarSegundos(LocalDateTime data,int quantidadeSegundos) {
+		data = data.plusSeconds(quantidadeSegundos);
 	}
 
 	public static String dataExtenso(String data) {

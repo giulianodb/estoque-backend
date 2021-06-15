@@ -95,7 +95,9 @@ public class MovimentacaoService {
 		obj.setData(LocalDateTime.of(obj.getData().getYear(),obj.getData().getMonth(), obj.getData().getDayOfMonth(), 0, 0, 0));
 		obj.setData(obj.getData().plusSeconds(contMovMesmoDia));
 	}
-	
+
+	//responsável em atualizar os saldos de cada movimentação posterior
+	//Atualiza o saldo do produto
 	private void atualizarSaldosMovEtProd(List<Movimentacao> movimentacaoPosteriores, Movimentacao obj, Produto produto) {
 		Float quantidadeMov = 0f;
 		Float valorMov = 0f;
@@ -144,21 +146,14 @@ public class MovimentacaoService {
 		for (Movimentacao movimentacao : movimentacaoPosteriores) {
 			
 			if (movimentacao.getLoteMovimentacao().getTipoMovimentacaoEnum().equals(TipoMovimentacaoEnum.ENTRADA)) {
-//				quantidade =  movimentacao.getQuantidadeUltimo() + movimentacao.getQuantidade() + quantidadeMov;
+			
 				quantidade = NumeroUtil.somarDinheiro(movimentacao.getQuantidadeUltimo(), quantidadeMov, 5);
-//				quantidade = NumeroUtil.somarDinheiro(quantidade, quantidadeMov, 5);
-				
-//				saldo = movimentacao.getSaldoUltimo() + movimentacao.getValor() + valorMov;
 				saldo = NumeroUtil.somarDinheiro(movimentacao.getSaldoUltimo(), valorMov, 5);
-//				saldo = NumeroUtil.somarDinheiro(quantidade,valorMov,5);
-				
 				
 				if(quantidade < 0 || saldo < 0) {
 					return true;
 				}
 			} else {
-//				quantidade = movimentacao.getQuantidadeUltimo() - movimentacao.getQuantidade() + quantidadeMov;
-//				saldo = movimentacao.getSaldoUltimo() - movimentacao.getValor() + valorMov;;
 
 				quantidade = NumeroUtil.diminuirDinheiro(movimentacao.getQuantidadeUltimo(),  movimentacao.getQuantidade(), 5);
 				quantidade = NumeroUtil.somarDinheiro(quantidade, quantidadeMov, 5);

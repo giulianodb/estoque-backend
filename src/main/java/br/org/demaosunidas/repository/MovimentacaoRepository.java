@@ -11,7 +11,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.org.demaosunidas.domain.LoteMovimentacao;
 import br.org.demaosunidas.domain.Movimentacao;
+import br.org.demaosunidas.domain.Produto;
 
 @Repository
 public interface MovimentacaoRepository extends JpaRepository<Movimentacao, Integer>{
@@ -24,4 +26,11 @@ public interface MovimentacaoRepository extends JpaRepository<Movimentacao, Inte
 	@Query("SELECT obj FROM Movimentacao obj WHERE obj.data >= :data AND obj.produto.id = :idProduto ORDER BY obj.data ASC" )
 	List <Movimentacao> obterMovimentacoesPosteriores(@Param("data") LocalDateTime data, @Param("idProduto") Integer idProduto);
 	
+	List<Movimentacao> findByLoteMovimentacao(LoteMovimentacao cod);
+	
+	List<Movimentacao> findByProduto(Produto produto);
+	
+	@Transactional(readOnly=true)
+	@Query("SELECT obj FROM Movimentacao obj WHERE obj.produto.id = :idProduto ORDER BY obj.data ASC" )
+	List <Movimentacao> obterMovimentacoesPorProduto(@Param("idProduto") Integer idProduto);
 }

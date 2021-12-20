@@ -186,7 +186,7 @@ public class Movimentacao implements Serializable{
 	
 	@Override
 	public String toString() {
-		return produto.getId() +" - " + produto.getNome();
+		return id + " - " + loteMovimentacao.getCodigo() ;
 	}
 
 	public LocalDateTime getData() {

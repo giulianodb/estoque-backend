@@ -1,5 +1,6 @@
 package br.org.demaosunidas.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,19 +64,52 @@ public class LoteMovimentacaoService {
 	}
 	
 
-	public LoteMovimentacao update(LoteMovimentacao objAlterado) {
+	public LoteMovimentacao update(LoteMovimentacao objAlterado) throws Exception {
 		LoteMovimentacao objBanco = findById(objAlterado.getCodigo());
+		
+		objAlterado.setTipoMovimentacaoEnum(objBanco.getTipoMovimentacaoEnum());
+		
+		//Define qual é a data mais antiga par aobter a lista de 
+		LocalDateTime dataMaisAntiga = null;
+		Boolean alterarTodasPosteriores = false;
+		Boolean desfazerTodosSaldosLista= false;
+		Boolean usarDataMovimentacao = true;
+		
+		if (objAlterado.getData().isBefore(objBanco.getData())) {
+			usarDataMovimentacao = false;
+			dataMaisAntiga = objAlterado.getData();
+			desfazerTodosSaldosLista = false;
+			alterarTodasPosteriores = true;
+			
+		} else if(objAlterado.getData().isAfter(objBanco.getData())) {
+			dataMaisAntiga = objBanco.getData();
+			usarDataMovimentacao = true;
+			alterarTodasPosteriores = false;
+			desfazerTodosSaldosLista = true;
+		} 
+		
+		for (Movimentacao mov : objAlterado.getListMovimentacao()) {
+			movimentacaoService.update(mov,dataMaisAntiga,alterarTodasPosteriores,desfazerTodosSaldosLista,usarDataMovimentacao);
+		}
+		
+//		if (dataAlterada || valorAlterado || quantidadeAlterada) {
+//			List<Movimentacao> movimentacoesPosteriores = repo.obterMovimentacoesPosteriores (objBanco.getData(),objBanco.getProduto().getId());
+//		}
+		
+		
 		updateData(objBanco,objAlterado);
 		return repo.save(objBanco);
 	}
 	
-	public void deletar (Integer id) {
-		LoteMovimentacao obj = findById(id);
-		repo.save(obj);
-	}
-	
 	private void updateData(LoteMovimentacao objBanco, LoteMovimentacao objAnterado) {
 		//		objBanco.setStatus(objAnterado.getStatus());
+		
+		objBanco.setData(objAnterado.getData());
+		objBanco.setCampanha(objAnterado.getCampanha());
+		objBanco.setDoador(objAnterado.getDoador());
+		objBanco.setFamilia(objAnterado.getFamilia());
+		objBanco.setInstituicao(objAnterado.getInstituicao());
+		
 		
 	}
 
@@ -136,6 +170,11 @@ public class LoteMovimentacaoService {
 		lote.setListMovimentacao(listaMovimentacao);
 		
 		return lote;
+	}
+	
+	public void deletar (Integer id) {
+		LoteMovimentacao obj = findById(id);
+		repo.save(obj);
 	}
 	
 }

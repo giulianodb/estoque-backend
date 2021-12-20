@@ -57,26 +57,30 @@ public class LoteResource {
 			
 			return ResponseEntity.badRequest().build();
 		}
+	}
+	
+	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
+	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody LoteMovimentacaoInsertDTO loteInsertDto){
 		
+		LoteMovimentacao lote = service.fromInsertDTO(loteInsertDto);
 		
+		lote.setCodigo(id);
+		try {
+			service.update(lote);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return ResponseEntity.badRequest().build();
+		}
+
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
+				path("/{id}").buildAndExpand(lote.getCodigo()).toUri();
+		
+		return ResponseEntity.created(uri).build();
 		
 	}
 	
-//	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
-//	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody LoteMovimentacaoInsertDTO loteInsertDto){
-//		
-//		LoteMovimentacao lote = service.fromDTO(loteInsertDto);
-//		
-//		lote.setId(id);
-//		service.update(lote);
-//		
-//		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-//				path("/{id}").buildAndExpand(lote.getId()).toUri();
-//		
-//		return ResponseEntity.created(uri).build();
-//		
-//	}
-//	
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@CrossOrigin

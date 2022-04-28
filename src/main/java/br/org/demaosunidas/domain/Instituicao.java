@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.org.demaosunidas.domain.enums.Status;
+
 @Entity
 @Table(name="instituicao",schema="estoque")
 public class Instituicao implements Serializable {

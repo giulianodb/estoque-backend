@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 import br.org.demaosunidas.domain.LoteMovimentacao;
-import br.org.demaosunidas.domain.TipoMovimentacaoEnum;
+import br.org.demaosunidas.domain.enums.TipoMovimentacaoEnum;
 
 public class LoteMovimentacaoGetDTO implements Serializable{
 	private static final long serialVersionUID = 8996466788745786863L;

@@ -3,9 +3,9 @@ package br.org.demaosunidas.dto;
 import java.io.Serializable;
 
 import br.org.demaosunidas.domain.Produto;
-import br.org.demaosunidas.domain.Status;
-import br.org.demaosunidas.domain.TipoMedidaEnum;
-import br.org.demaosunidas.domain.TipoProdutoEnum;
+import br.org.demaosunidas.domain.enums.Status;
+import br.org.demaosunidas.domain.enums.TipoMedidaEnum;
+import br.org.demaosunidas.domain.enums.TipoProdutoEnum;
 
 public class ProdutoGetDTO implements Serializable{
 

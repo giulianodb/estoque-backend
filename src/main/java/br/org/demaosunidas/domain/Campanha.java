@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.util.DateUtil.MesesEnum;
 
 @Entity

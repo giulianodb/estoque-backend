@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.org.demaosunidas.domain.Aluno;
-import br.org.demaosunidas.domain.Status;
+import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.repository.AlunoRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
 

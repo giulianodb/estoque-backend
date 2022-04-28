@@ -19,6 +19,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import br.org.demaosunidas.domain.enums.TipoMovimentacaoEnum;
+
 @Entity
 @Table(name="lotemovimentacao",schema="estoque")
 public class LoteMovimentacao implements Serializable{

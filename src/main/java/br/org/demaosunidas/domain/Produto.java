@@ -15,6 +15,10 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.org.demaosunidas.domain.enums.Status;
+import br.org.demaosunidas.domain.enums.TipoMedidaEnum;
+import br.org.demaosunidas.domain.enums.TipoProdutoEnum;
+
 @Entity
 @Table(name="produto",schema="estoque")
 public class Produto implements Serializable{

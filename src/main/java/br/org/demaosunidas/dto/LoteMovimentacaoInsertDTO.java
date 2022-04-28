@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import br.org.demaosunidas.domain.TipoMovimentacaoEnum;
+import br.org.demaosunidas.domain.enums.TipoMovimentacaoEnum;
 public class LoteMovimentacaoInsertDTO implements Serializable{
 	private static final long serialVersionUID = 8996466788745786863L;
 	

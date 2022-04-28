@@ -1,4 +1,4 @@
-package br.org.demaosunidas.domain;
+package br.org.demaosunidas.domain.enums;
 
 public enum Status {
 

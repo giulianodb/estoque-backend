@@ -1,15 +1,24 @@
 package br.org.demaosunidas.domain;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import br.org.demaosunidas.domain.enums.EstadoCivilEnum;
+import br.org.demaosunidas.domain.enums.Status;
 
 @Entity
 @Table(name="familia",schema="estoque")
@@ -36,6 +45,8 @@ public class Familia implements Serializable{
 	
 	private String rua;
 	
+	private String cep;
+	
 	private String cidade;
 	
 	private String estado;
@@ -46,10 +57,28 @@ public class Familia implements Serializable{
 	
 	private String email;
 	
+	private String nacionalidade;
+	
+	private String profissao;
+	
+	private LocalDateTime dataCadastro;
+	
+	@Enumerated
+	private EstadoCivilEnum estadoCivil;
+	
 	@Enumerated
 	@Column(name="status")
 	private Status status;
 	
+	@OneToOne
+	private Motivo motivo;
+	
+	@OneToOne
+	private Moradia moradia;
+	
+	@OneToMany(mappedBy = "familia",fetch = FetchType.LAZY)
+	@OrderBy("nome asc")
+	private Set<MembroFamilia> listFamilia;
 
 	public Familia() {
 		super();
@@ -180,6 +209,70 @@ public class Familia implements Serializable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public EstadoCivilEnum getEstadoCivil() {
+		return estadoCivil;
+	}
+
+	public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
+		this.estadoCivil = estadoCivil;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
+	public String getNacionalidade() {
+		return nacionalidade;
+	}
+
+	public void setNacionalidade(String nacionalidade) {
+		this.nacionalidade = nacionalidade;
+	}
+
+	public String getProfissao() {
+		return profissao;
+	}
+
+	public void setProfissao(String profissao) {
+		this.profissao = profissao;
+	}
+
+	public LocalDateTime getDataCadastro() {
+		return dataCadastro;
+	}
+
+	public void setDataCadastro(LocalDateTime dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}
+
+	public Motivo getMotivo() {
+		return motivo;
+	}
+
+	public void setMotivo(Motivo motivo) {
+		this.motivo = motivo;
+	}
+
+	public Moradia getMoradia() {
+		return moradia;
+	}
+
+	public void setMoradia(Moradia moradia) {
+		this.moradia = moradia;
+	}
+
+	public Set<MembroFamilia> getListFamilia() {
+		return listFamilia;
+	}
+
+	public void setListFamilia(Set<MembroFamilia> listFamilia) {
+		this.listFamilia = listFamilia;
 	}
 	
 	

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.org.demaosunidas.domain.Produto;
-import br.org.demaosunidas.domain.Status;
+import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.dto.ProdutoGetDTO;
 import br.org.demaosunidas.dto.ProdutoInsertDTO;
 import br.org.demaosunidas.repository.ProdutoRepository;

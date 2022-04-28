@@ -2,8 +2,8 @@ package br.org.demaosunidas.dto;
 
 import java.io.Serializable;
 
-import br.org.demaosunidas.domain.TipoMedidaEnum;
-import br.org.demaosunidas.domain.TipoProdutoEnum;
+import br.org.demaosunidas.domain.enums.TipoMedidaEnum;
+import br.org.demaosunidas.domain.enums.TipoProdutoEnum;
 
 public class ProdutoInsertDTO implements Serializable{
 

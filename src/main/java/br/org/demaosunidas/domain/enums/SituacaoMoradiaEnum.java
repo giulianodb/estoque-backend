@@ -1,14 +1,14 @@
-package br.org.demaosunidas.domain;
+package br.org.demaosunidas.domain.enums;
 
 
-public enum TipoMovimentacaoEnum {
+public enum SituacaoMoradiaEnum {
 	
-	ENTRADA("Entrada"),
-	SAIDA("Saída");
+	PROPRIA("Própria"),
+	ALUGADA("Alugada"),
+	CEDIDA("Cedida");
 	
 	private String descricao;
-	
-	private TipoMovimentacaoEnum(String descricao) {
+	private SituacaoMoradiaEnum(String descricao) {
 		this.descricao = descricao;
 	}
 	public String getDescricao() {

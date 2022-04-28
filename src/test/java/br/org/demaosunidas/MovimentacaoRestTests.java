@@ -24,9 +24,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.org.demaosunidas.domain.Movimentacao;
 import br.org.demaosunidas.domain.Produto;
-import br.org.demaosunidas.domain.TipoMedidaEnum;
-import br.org.demaosunidas.domain.TipoMovimentacaoEnum;
-import br.org.demaosunidas.domain.TipoProdutoEnum;
+import br.org.demaosunidas.domain.enums.TipoMedidaEnum;
+import br.org.demaosunidas.domain.enums.TipoMovimentacaoEnum;
+import br.org.demaosunidas.domain.enums.TipoProdutoEnum;
 import br.org.demaosunidas.dto.LoteMovimentacaoInsertDTO;
 import br.org.demaosunidas.dto.MovimentacaoInsertDTO;
 import br.org.demaosunidas.dto.ProdutoInsertDTO;

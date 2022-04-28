@@ -19,7 +19,7 @@ import br.org.demaosunidas.domain.Instituicao;
 import br.org.demaosunidas.domain.LoteMovimentacao;
 import br.org.demaosunidas.domain.Movimentacao;
 import br.org.demaosunidas.domain.Produto;
-import br.org.demaosunidas.domain.TipoMovimentacaoEnum;
+import br.org.demaosunidas.domain.enums.TipoMovimentacaoEnum;
 import br.org.demaosunidas.dto.LoteMovimentacaoGetDTO;
 import br.org.demaosunidas.dto.LoteMovimentacaoInsertDTO;
 import br.org.demaosunidas.repository.LoteMovimentacaoRepository;

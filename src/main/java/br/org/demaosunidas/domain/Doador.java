@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.org.demaosunidas.domain.enums.Status;
+
 @Entity
 @Table(name="pessoa",schema="estoque")
 public class Doador implements Serializable {

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.org.demaosunidas.domain.LoteMovimentacao;
 import br.org.demaosunidas.domain.Movimentacao;
 import br.org.demaosunidas.domain.Produto;
-import br.org.demaosunidas.domain.TipoMovimentacaoEnum;
+import br.org.demaosunidas.domain.enums.TipoMovimentacaoEnum;
 import br.org.demaosunidas.repository.MovimentacaoRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
 import br.org.demaosunidas.util.DateUtil;

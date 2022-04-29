@@ -48,10 +48,6 @@ public class ProgramasSociais implements Serializable{
 	
 	private String beneficioAssistencial;
 	
-	@OneToOne
-	@JoinColumn(name = "familia_id")
-	private Familia familia;
-
 	public Integer getId() {
 		return id;
 	}
@@ -181,15 +177,5 @@ public class ProgramasSociais implements Serializable{
 	public void setBeneficioAssistencial(String beneficioAssistencial) {
 		this.beneficioAssistencial = beneficioAssistencial;
 	}
-
-	public Familia getFamilia() {
-		return familia;
-	}
-
-	public void setFamilia(Familia familia) {
-		this.familia = familia;
-	}
-	
-	
 	
 }

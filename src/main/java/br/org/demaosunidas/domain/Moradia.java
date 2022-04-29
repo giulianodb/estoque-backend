@@ -8,6 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -48,7 +49,6 @@ public class Moradia implements Serializable{
 	@Enumerated
 	private TipoMoradiaEnum tipoMoradia;
 	
-	@Enumerated
 	private Integer quantidadePecas;
 	
 	@Enumerated
@@ -60,11 +60,7 @@ public class Moradia implements Serializable{
 	@Enumerated
 	private SituacaoMoradiaEnum situacaoMoradia;
 	
-	@Enumerated
 	private Integer tempoResidencia;
-	
-	@OneToOne
-	private Familia familia;
 
 	public Integer getId() {
 		return id;
@@ -239,16 +235,5 @@ public class Moradia implements Serializable{
 		this.tempoResidencia = tempoResidencia;
 	}
 
-
-	public Familia getFamilia() {
-		return familia;
-	}
-
-
-	public void setFamilia(Familia familia) {
-		this.familia = familia;
-	}
-	
-	
 	
 }

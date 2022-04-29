@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import br.org.demaosunidas.domain.Familia;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.repository.FamiliaRepository;
+import br.org.demaosunidas.repository.MembroFamiliaRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
 
 @Service
@@ -19,6 +20,9 @@ public class FamiliaService {
 	
 	@Autowired
 	private FamiliaRepository repo;
+	
+	@Autowired
+	private MembroFamiliaRepository membroFamiliaRepo;
 	
 	public List<Familia> listar() {
 		// TODO Auto-generated method stub
@@ -40,7 +44,12 @@ public class FamiliaService {
 	
 	public void insert(Familia obj) {
 		obj.setId(null);
-		repo.save(obj);
+		Familia familia = repo.save(obj);
+		obj.getListMembroFamilia().forEach(x -> x.setFamilia(familia));
+		
+		membroFamiliaRepo.saveAll(obj.getListMembroFamilia());
+		
+		
 	}
 	
 	public Familia update(Familia objAlterado) {

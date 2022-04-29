@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -11,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -70,15 +72,18 @@ public class Familia implements Serializable{
 	@Column(name="status")
 	private Status status;
 	
-	@OneToOne
+	@OneToOne (cascade = CascadeType.ALL)
+	@JoinColumn(name = "motivo_id")
 	private Motivo motivo;
 	
-	@OneToOne
+	@OneToOne (cascade = CascadeType.ALL)
+	@JoinColumn(name = "moradia_id")
 	private Moradia moradia;
 	
-	@OneToMany(mappedBy = "familia",fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "familia",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@OrderBy("nome asc")
-	private Set<MembroFamilia> listFamilia;
+//	@Cascade(CascadeType.ALL)
+	private Set<MembroFamilia> listMembroFamilia;
 
 	public Familia() {
 		super();
@@ -267,13 +272,14 @@ public class Familia implements Serializable{
 		this.moradia = moradia;
 	}
 
-	public Set<MembroFamilia> getListFamilia() {
-		return listFamilia;
+	public Set<MembroFamilia> getListMembroFamilia() {
+		return listMembroFamilia;
 	}
 
-	public void setListFamilia(Set<MembroFamilia> listFamilia) {
-		this.listFamilia = listFamilia;
+	public void setListMembroFamilia(Set<MembroFamilia> listMembroFamilia) {
+		this.listMembroFamilia = listMembroFamilia;
 	}
-	
+
+
 	
 }

@@ -32,10 +32,6 @@ public class Motivo implements Serializable{
 	private Boolean orientacaoTecnica;
 	
 	private String outros;
-	
-	@OneToOne
-	@JoinColumn(name = "familia_id")
-	private Familia familia;
 
 	public Integer getId() {
 		return id;
@@ -102,15 +98,5 @@ public class Motivo implements Serializable{
 			return false;
 		return true;
 	}
-
-	public Familia getFamilia() {
-		return familia;
-	}
-
-	public void setFamilia(Familia familia) {
-		this.familia = familia;
-	}
-	
-	
 	
 }

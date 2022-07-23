@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.org.demaosunidas.domain.Familia;
+import br.org.demaosunidas.domain.MembroFamilia;
+import br.org.demaosunidas.services.FamiliaMembroService;
 import br.org.demaosunidas.services.FamiliaService;
 
 @RestController
@@ -23,6 +25,10 @@ public class FamiliaResource {
 	
 	@Autowired
 	private FamiliaService service;
+	
+	
+	@Autowired
+	private FamiliaMembroService serviceMembro;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@CrossOrigin
@@ -54,7 +60,7 @@ public class FamiliaResource {
 	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
 	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody Familia familia){
 		familia.setId(id);
-		service.update(familia);
+		Familia banco = service.update(familia);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
 				path("/{id}").buildAndExpand(familia.getId()).toUri();
@@ -62,6 +68,15 @@ public class FamiliaResource {
 		return ResponseEntity.created(uri).build();
 		
 	}
+//	
+//	@RequestMapping(value="/{id}",method=RequestMethod.DELETE)
+//	public ResponseEntity<Void> delete(@PathVariable Integer id){
+//
+//		serviceMembro.delete(id);
+//		
+//		return ResponseEntity.ok().build();
+//		
+//	}
 	
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

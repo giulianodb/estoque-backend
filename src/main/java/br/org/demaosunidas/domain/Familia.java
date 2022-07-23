@@ -2,6 +2,7 @@ package br.org.demaosunidas.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -18,6 +19,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.transaction.TransactionScoped;
 
 import br.org.demaosunidas.domain.enums.EstadoCivilEnum;
 import br.org.demaosunidas.domain.enums.Status;
@@ -80,10 +83,17 @@ public class Familia implements Serializable{
 	@JoinColumn(name = "moradia_id")
 	private Moradia moradia;
 	
-	@OneToMany(mappedBy = "familia",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne (cascade = CascadeType.ALL)
+	@JoinColumn(name = "programas_id")
+	private ProgramasSociais programas;
+	
+	@OneToMany(mappedBy = "familia",fetch = FetchType.LAZY)
 	@OrderBy("nome asc")
 //	@Cascade(CascadeType.ALL)
 	private Set<MembroFamilia> listMembroFamilia;
+	
+	@Transient
+	private List<MembroFamilia> teste;
 
 	public Familia() {
 		super();
@@ -278,6 +288,22 @@ public class Familia implements Serializable{
 
 	public void setListMembroFamilia(Set<MembroFamilia> listMembroFamilia) {
 		this.listMembroFamilia = listMembroFamilia;
+	}
+
+	public ProgramasSociais getProgramas() {
+		return programas;
+	}
+
+	public void setProgramas(ProgramasSociais programas) {
+		this.programas = programas;
+	}
+
+	public List<MembroFamilia> getTeste() {
+		return teste;
+	}
+
+	public void setTeste(List<MembroFamilia> teste) {
+		this.teste = teste;
 	}
 
 

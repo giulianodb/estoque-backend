@@ -2,6 +2,7 @@ package br.org.demaosunidas.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -66,7 +67,7 @@ public class Familia implements Serializable{
 	
 	private String profissao;
 	
-	private LocalDateTime dataCadastro;
+	private Date dataCadastro;
 	
 	@Enumerated
 	private EstadoCivilEnum estadoCivil;
@@ -258,11 +259,11 @@ public class Familia implements Serializable{
 		this.profissao = profissao;
 	}
 
-	public LocalDateTime getDataCadastro() {
+	public Date getDataCadastro() {
 		return dataCadastro;
 	}
 
-	public void setDataCadastro(LocalDateTime dataCadastro) {
+	public void setDataCadastro(Date dataCadastro) {
 		this.dataCadastro = dataCadastro;
 	}
 

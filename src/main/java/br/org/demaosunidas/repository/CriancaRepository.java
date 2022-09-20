@@ -8,17 +8,18 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.org.demaosunidas.domain.Familia;
+import br.org.demaosunidas.domain.Crianca;
 
 @Repository
-public interface FamiliaRepository extends JpaRepository<Familia, Integer>{
+public interface CriancaRepository extends JpaRepository<Crianca, Integer>{
 
 
 	@Transactional(readOnly=true)
-	@Query("SELECT DISTINCT obj FROM Familia obj WHERE ( :nome is null or lower(obj.nomeResponsavel) LIKE lower (concat ('%',:nome ,'%' )))")
-	Page<Familia> searchQuery(@Param("nome") String nome, Pageable pageRequest);
+	@Query("SELECT DISTINCT obj FROM Crianca obj WHERE ( :nome is null or obj.nome LIKE %:nome% )" )
+	Page<Crianca> searchQuery(@Param("nome") String nome, Pageable pageRequest);
 	
 	@Transactional(readOnly=true)
-	@Query("SELECT DISTINCT obj FROM Familia obj " )
-	Page<Familia> searchQueryTeste(Pageable pageRequest);
+	@Query("SELECT DISTINCT obj FROM Crianca obj WHERE ( obj.familia.id = :idFamilia )" )
+	Page<Crianca> searchQueryPorFamilia(@Param("idFamilia") Integer idFamilia, Pageable pageRequest);
+	
 }

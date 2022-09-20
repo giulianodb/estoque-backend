@@ -14,89 +14,98 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.org.demaosunidas.domain.Familia;
-import br.org.demaosunidas.domain.MembroFamilia;
-import br.org.demaosunidas.services.FamiliaMembroService;
-import br.org.demaosunidas.services.FamiliaService;
+import br.org.demaosunidas.domain.Aluno;
+import br.org.demaosunidas.domain.Crianca;
+import br.org.demaosunidas.dto.AvaliacaoContextoDTO;
+import br.org.demaosunidas.services.CriancaService;
 
 @RestController
-@RequestMapping(value="/familias")
-public class FamiliaResource {
+@RequestMapping(value="/criancas")
+public class CriancaResource {
 	
 	@Autowired
-	private FamiliaService service;
-	
-	
-	@Autowired
-	private FamiliaMembroService serviceMembro;
+	private CriancaService service;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@CrossOrigin
-	public ResponseEntity<Page<Familia>> findPage (
+	public ResponseEntity<Page<Crianca>> findPage (
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,
-			@RequestParam(value="orderBy",defaultValue="nomeResponsavel") String orderBy,
+			@RequestParam(value="orderBy",defaultValue="nome") String orderBy,
 			@RequestParam(value="direction",defaultValue="ASC") String direction,
 			@RequestParam(value="nome",required = false) String nome) {
 		
-		page = page -1;
-		Page<Familia> lista = service.search(nome,page,linesPerPage,orderBy,direction);
 		
+		if (page > 0) {
+			page = page - 1;
+		}
+		Page<Crianca> lista = service.search(nome,page,linesPerPage,orderBy,direction);
 		
 		return ResponseEntity.ok().body(lista);
 	}
 	
+	
+	@RequestMapping(value="/familia/{idFamilia}", method = RequestMethod.GET)
+	@CrossOrigin
+	public ResponseEntity<Page<Crianca>> buscarCriancaFamilia (
+			@RequestParam(value="page",defaultValue="0") Integer page,
+			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,
+			@RequestParam(value="orderBy",defaultValue="nome") String orderBy,
+			@RequestParam(value="direction",defaultValue="ASC") String direction,
+			@PathVariable Integer idFamilia) {
+		
+		
+		if (page > 0) {
+			page = page - 1;
+		}
+		Page<Crianca> lista = service.buscarPorFamilia(idFamilia,page,linesPerPage,orderBy,direction);
+		
+		return ResponseEntity.ok().body(lista);
+	}
+	
+	
+	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody Familia familia){
-		service.insert(familia);
+	public ResponseEntity<Void> insert(@RequestBody Crianca crianca){
+		service.insert(crianca);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-				path("/{id}").buildAndExpand(familia.getId()).toUri();
+				path("/{id}").buildAndExpand(crianca.getId()).toUri();
 		
 		return ResponseEntity.created(uri).build();
 		
 	}
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
-	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody Familia familia){
-		familia.setId(id);
-		Familia banco = service.update(familia);
+	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody Crianca crianca){
+		crianca.setId(id);
+		service.update(crianca);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-				path("/{id}").buildAndExpand(familia.getId()).toUri();
+				path("/{id}").buildAndExpand(crianca.getId()).toUri();
 		
 		return ResponseEntity.created(uri).build();
 		
 	}
-//	
-//	@RequestMapping(value="/{id}",method=RequestMethod.DELETE)
-//	public ResponseEntity<Void> delete(@PathVariable Integer id){
-//
-//		serviceMembro.delete(id);
-//		
-//		return ResponseEntity.ok().build();
-//		
-//	}
 	
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@CrossOrigin
-	public ResponseEntity<Familia> findById(@PathVariable Integer id){
+	public ResponseEntity<Crianca> findById(@PathVariable Integer id){
 			
-		Familia obj = service.findById(id);
+		Crianca obj = service.findById(id);
 		
 		return ResponseEntity.ok().body(obj);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@CrossOrigin
-	public ResponseEntity<Familia> Excluir(@PathVariable Integer id){
+	public ResponseEntity<Crianca> Excluir(@PathVariable Integer id){
 			
 		service.deletar(id);
 		
 		return ResponseEntity.noContent().build() ;
 	}
-	
 	
 	
 }

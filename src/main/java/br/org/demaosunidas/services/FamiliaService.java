@@ -34,9 +34,8 @@ public class FamiliaService {
 	
 	public Page<Familia> search (String nome, Integer page,Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-				
-		
 		return repo. searchQuery(nome,pageRequest);
+		
 	}
 	
 	public Familia findById(Integer id) {

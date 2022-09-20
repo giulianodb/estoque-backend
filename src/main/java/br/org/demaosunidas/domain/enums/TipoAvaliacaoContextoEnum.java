@@ -1,15 +1,16 @@
 package br.org.demaosunidas.domain.enums;
 
 
-public enum EstadoCivilEnum {
+public enum TipoAvaliacaoContextoEnum {
 	
-	NFI("NFI"),
-	FOCAR("Focar");
+	SITUACAO("Situacao","S"),
+	AFIRMACAO("Afirmação","A");
 	
 	private String descricao;
 	private String abreviatura;
-	private EstadoCivilEnum(String descricao) {
+	private TipoAvaliacaoContextoEnum(String descricao, String abreviatura) {
 		this.descricao = descricao;
+		this.abreviatura = abreviatura;
 	}
 	public String getDescricao() {
 		return descricao;

@@ -1,14 +1,14 @@
 package br.org.demaosunidas.domain.enums;
 
 
-public enum EstadoCivilEnum {
+public enum ProjetoEnum {
 	
-	NFI("NFI"),
-	FOCAR("Focar");
+	FOCAR("FOCAR"),
+	NFI("NFI");
 	
 	private String descricao;
 	private String abreviatura;
-	private EstadoCivilEnum(String descricao) {
+	private ProjetoEnum(String descricao) {
 		this.descricao = descricao;
 	}
 	public String getDescricao() {

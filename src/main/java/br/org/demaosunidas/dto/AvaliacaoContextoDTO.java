@@ -18,6 +18,7 @@ public class AvaliacaoContextoDTO implements Serializable {
 	private Integer totalSituacao;
 	private Date data;
 	private CriancaDTO crianca;
+	private Boolean novo = false;
 
 	public AvaliacaoContextoDTO() {
 		super();
@@ -102,6 +103,14 @@ public class AvaliacaoContextoDTO implements Serializable {
 
 	public void setCrianca(CriancaDTO crianca) {
 		this.crianca = crianca;
+	}
+
+	public Boolean getNovo() {
+		return novo;
+	}
+
+	public void setNovo(Boolean novo) {
+		this.novo = novo;
 	}
 
 }

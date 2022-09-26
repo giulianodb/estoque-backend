@@ -92,16 +92,18 @@ public class AvaliacaoContextoResource {
 	@RequestMapping(value="/crianca/{idCrianca}/respostas", method = RequestMethod.GET)
 	@CrossOrigin
 	public ResponseEntity<AvaliacaoContextoDTO> buscarRespostas (@PathVariable Integer idCrianca) {
-		
+		AvaliacaoContextoDTO avaliacaoContextoDTO = new AvaliacaoContextoDTO();
 		List<AvaliacaoContextoRespostaDTO> lista = service.buscarRespostasPorCrianca(idCrianca);
 		
 		CriancaDTO criancaDTO = new CriancaDTO (criancaService.findById(idCrianca));
 		
 		if (lista ==null || lista.size() == 0) {
 			lista = service.montarRespostaVazia(idCrianca);
+			avaliacaoContextoDTO.setNovo(true);
+			avaliacaoContextoDTO.setTotalAfirmacao(0);
+			avaliacaoContextoDTO.setTotalSituacao(0);
 		}
 		
-		AvaliacaoContextoDTO avaliacaoContextoDTO = new AvaliacaoContextoDTO();
 		avaliacaoContextoDTO.setListAvaliacaoContextoResposta(lista);
 		avaliacaoContextoDTO.setCrianca(criancaDTO);
 		

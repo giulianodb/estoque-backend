@@ -61,10 +61,8 @@ public class AvaliacaoContextoService {
 //		for (AvaliacaoContextoResposta avaliacaoContextoResposta : listaBanco) {
 //			lista.add(new AvaliacaoContextoRespostaDTO (avaliacaoContextoResposta));
 //		}
-		
 		return lista;
 	}
-	
 	
 	public List<AvaliacaoContextoPerguntasDTO> buscarPerguntas() {
 		List<AvaliacaoContextoPerguntasDTO> lista = new ArrayList<>();
@@ -85,16 +83,13 @@ public class AvaliacaoContextoService {
 		for (AvaliacaoContextoPerguntas pergunta : listaPerguntas) {
 			AvaliacaoContextoRespostaDTO respostaDTO = new AvaliacaoContextoRespostaDTO();
 			respostaDTO.setAvaliacaoContextoPergunta(new AvaliacaoContextoPerguntasDTO(pergunta));
+			respostaDTO.setResposta(0);
 			listaRespostaDTO.add(respostaDTO);
+			
 		}
 		
-		
-		
 		return listaRespostaDTO;
-		
 	}
-
-	
 	
 	public void updateResposta(AvaliacaoContextoDTO avaliacaoContexto) {
 		
@@ -106,7 +101,6 @@ public class AvaliacaoContextoService {
 		}
 		
 	}
-
 	
 	public AvaliacaoContextoResposta update(AvaliacaoContextoRespostaDTO objAlterado) {
 		AvaliacaoContextoResposta objBanco = findById(objAlterado.getId());

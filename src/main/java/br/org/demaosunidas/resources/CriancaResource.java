@@ -1,6 +1,8 @@
 package br.org.demaosunidas.resources;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.org.demaosunidas.domain.Aluno;
 import br.org.demaosunidas.domain.Crianca;
+import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.dto.AvaliacaoContextoDTO;
 import br.org.demaosunidas.services.CriancaService;
 
@@ -33,13 +36,28 @@ public class CriancaResource {
 			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,
 			@RequestParam(value="orderBy",defaultValue="nome") String orderBy,
 			@RequestParam(value="direction",defaultValue="ASC") String direction,
-			@RequestParam(value="nome",required = false) String nome) {
+			@RequestParam(value="nome",required = false) String nome,
+			@RequestParam(value="projeto",required = false) Integer projeto,
+			@RequestParam(value="matriculado",required = false) Boolean matriculado,
+			@RequestParam(value="espera",required = false) Boolean espera) {
 		
 		
 		if (page > 0) {
 			page = page - 1;
 		}
-		Page<Crianca> lista = service.search(nome,page,linesPerPage,orderBy,direction);
+		
+		ProjetoEnum projetoEnum = null;
+		
+		List<ProjetoEnum> teste = Arrays.asList(ProjetoEnum.values());
+		if (projeto != -1) {
+			for (ProjetoEnum p : teste) {
+				if (projeto != null && p.ordinal() == projeto) {
+					projetoEnum = p;
+				}
+			}
+		}
+		
+		Page<Crianca> lista = service.search(nome, projetoEnum,matriculado,espera, page,linesPerPage,orderBy,direction);
 		
 		return ResponseEntity.ok().body(lista);
 	}

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import br.org.demaosunidas.domain.Crianca;
 import br.org.demaosunidas.domain.Crianca;
+import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.repository.CriancaRepository;
 import br.org.demaosunidas.repository.CriancaRepository;
@@ -27,11 +28,11 @@ public class CriancaService {
 //		return repo.findAll();
 //	}
 	
-	public Page<Crianca> search (String nome, Integer page,Integer linesPerPage, String orderBy, String direction) {
+	public Page<Crianca> search (String nome,ProjetoEnum projeto,Boolean matriculada, Boolean espera, Integer page,Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-				
 		
-		return repo. searchQuery(nome,pageRequest);
+		return repo. searchQuery(nome,projeto,matriculada,espera,pageRequest);
+//		return repo. searchQueryTeste(nome,matriculada,pageRequest);
 	}
 	
 	public Crianca findById(Integer id) {
@@ -60,7 +61,20 @@ public class CriancaService {
 	private void updateData(Crianca objBanco, Crianca objAnterado) {
 		objBanco.setAlergia(objAnterado.getAlergia());
 		objBanco.setStatus(objAnterado.getStatus());
-		
+		objBanco.setDataInscricao(objAnterado.getDataInscricao());
+		objBanco.setDataNascimento(objAnterado.getDataNascimento());
+		objBanco.setDescricaoAlergia(objAnterado.getDescricaoAlergia());
+		objBanco.setDescricaoMedicamento(objAnterado.getDescricaoMedicamento());
+		objBanco.setEscola(objAnterado.getEscola());
+		objBanco.setListaEspera(objAnterado.getListaEspera());
+		objBanco.setMatriculado(objAnterado.getMatriculado());
+		objBanco.setMedicamento(objAnterado.getMedicamento());
+		objBanco.setNome(objAnterado.getNome());
+		objBanco.setNomeConducao(objAnterado.getNomeConducao());
+		objBanco.setProjeto(objAnterado.getProjeto());
+		objBanco.setReligiao(objAnterado.getReligiao());
+		objBanco.setSexo(objAnterado.getSexo());
+		objBanco.setTelefoneConducao(objAnterado.getTelefoneConducao());
 	}
 
 	public Page<Crianca> buscarPorFamilia(Integer idFamilia, Integer page, Integer linesPerPage, String orderBy,

@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.domain.enums.Status;
 
@@ -31,6 +33,7 @@ public class Crianca implements Serializable {
 	
 	private String nome;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
 	@Column(name="datanascimento")
 	private Date dataNascimento;
 	
@@ -62,6 +65,7 @@ public class Crianca implements Serializable {
 	
 	private String religiao;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
 	private Date dataInscricao;
 	
 	private Boolean listaEspera;

@@ -3,8 +3,10 @@ package br.org.demaosunidas.domain.enums;
 
 public enum EstadoCivilEnum {
 	
-	NFI("NFI"),
-	FOCAR("Focar");
+	SOLTEIRA("Solteira"),
+	CASADA("Casada"),
+	DIVORCIADA("Divorciada"),
+	VIUVA("Viúva");	
 	
 	private String descricao;
 	private String abreviatura;

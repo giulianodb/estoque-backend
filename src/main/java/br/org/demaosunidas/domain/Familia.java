@@ -23,6 +23,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.transaction.TransactionScoped;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import br.org.demaosunidas.domain.enums.EstadoCivilEnum;
 import br.org.demaosunidas.domain.enums.Status;
 
@@ -67,7 +69,11 @@ public class Familia implements Serializable{
 	
 	private String profissao;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
 	private Date dataCadastro;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
+	private Date dataNascimento;
 	
 	@Enumerated
 	private EstadoCivilEnum estadoCivil;
@@ -305,6 +311,14 @@ public class Familia implements Serializable{
 
 	public void setTeste(List<MembroFamilia> teste) {
 		this.teste = teste;
+	}
+
+	public Date getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
 	}
 
 

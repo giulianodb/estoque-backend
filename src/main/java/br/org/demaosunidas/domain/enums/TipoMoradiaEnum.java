@@ -3,10 +3,9 @@ package br.org.demaosunidas.domain.enums;
 
 public enum TipoMoradiaEnum {
 	
-	SOLTEIRA("Solteira"),
-	CASADA("Casada"),
-	DIVORCIADA("Divorciada"),
-	VIUVA("Viúva");	
+	APARTAMENTO("Apartamento"),
+	CASA("Casa"),
+	SOBRADO("Sobrado");
 	
 	private String descricao;
 	private String abreviatura;

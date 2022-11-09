@@ -16,6 +16,7 @@ import javax.persistence.MapsId;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.org.demaosunidas.domain.enums.EscolaridadeEnum;
@@ -41,6 +42,7 @@ public class MembroFamilia implements Serializable {
 	
 	private Float renda;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
 	@Column(name="datanascimento")
 	private Date dataNascimento;
 	

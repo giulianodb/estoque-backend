@@ -3,9 +3,9 @@ package br.org.demaosunidas.domain.enums;
 
 public enum SituacaoMoradiaEnum {
 	
-	PROPRIA("Própria"),
-	ALUGADA("Alugada"),
-	CEDIDA("Cedida");
+	INSALUBRE("Insalubre"),
+	IRREGULAR("Irregular"),
+	LEGALIZADA("Legalizada");
 	
 	private String descricao;
 	private SituacaoMoradiaEnum(String descricao) {

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import br.org.demaosunidas.domain.Familia;
 import br.org.demaosunidas.domain.MembroFamilia;
 import br.org.demaosunidas.domain.Moradia;
+import br.org.demaosunidas.domain.Motivo;
 import br.org.demaosunidas.domain.ProgramasSociais;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.repository.FamiliaRepository;
@@ -146,6 +147,8 @@ public class FamiliaService {
 		objBanco.setProfissao(objAnterado.getProfissao());
 		objBanco.setEstadoCivil(objAnterado.getEstadoCivil());
 		objBanco.setStatus(objAnterado.getStatus());
+		objBanco.setDataCadastro(objAnterado.getDataCadastro());
+		objBanco.setDataNascimento(objAnterado.getDataNascimento());
 		
 		Moradia moradiaBanco = objBanco.getMoradia();
 		moradiaBanco.setAguaEncanada(objAnterado.getMoradia().getAguaEncanada());
@@ -182,7 +185,12 @@ public class FamiliaService {
 		objBanco.setProgramas(ps);
 		objBanco.setNacionalidade(objAnterado.getNacionalidade());
 		
-		
+		Motivo motivo = objBanco.getMotivo();
+		motivo.setOrientacaoTecnica(objAnterado.getMotivo().getOrientacaoTecnica());
+		motivo.setOutros(objAnterado.getMotivo().getOutros());
+		motivo.setSolicitacaoDoacoes(objAnterado.getMotivo().getSolicitacaoDoacoes());
+		motivo.setVagaSCFV(objAnterado.getMotivo().getVagaSCFV());
+		objBanco.setMotivo(motivo);
 		
 		
 	}

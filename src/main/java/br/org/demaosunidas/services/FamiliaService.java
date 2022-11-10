@@ -60,6 +60,8 @@ public class FamiliaService {
 		updateDataFamilia(objBanco,objAlterado);
 		updateDataMembros(objBanco,objAlterado);
 		
+		repo.save(objBanco);
+		
 		return objAlterado;
 	}
 	
@@ -151,6 +153,9 @@ public class FamiliaService {
 		objBanco.setDataNascimento(objAnterado.getDataNascimento());
 		
 		Moradia moradiaBanco = objBanco.getMoradia();
+		if (moradiaBanco == null) {
+			moradiaBanco = new Moradia();
+		}
 		moradiaBanco.setAguaEncanada(objAnterado.getMoradia().getAguaEncanada());
 		moradiaBanco.setRedeEsgoto(objAnterado.getMoradia().getRedeEsgoto());
 		
@@ -170,6 +175,10 @@ public class FamiliaService {
 		objBanco.setMoradia(moradiaBanco);
 		
 		ProgramasSociais ps = objBanco.getProgramas();
+		if (ps == null) {
+			ps = new ProgramasSociais();
+		}
+		
 		ps.setBpc(objAnterado.getProgramas().getBpc());
 		ps.setAuxilioDoenca(objAnterado.getProgramas().getAuxilioDoenca());
 		ps.setScfv(objAnterado.getProgramas().getScfv());
@@ -186,6 +195,10 @@ public class FamiliaService {
 		objBanco.setNacionalidade(objAnterado.getNacionalidade());
 		
 		Motivo motivo = objBanco.getMotivo();
+		if (motivo == null) {
+			motivo = new Motivo();
+		}
+		
 		motivo.setOrientacaoTecnica(objAnterado.getMotivo().getOrientacaoTecnica());
 		motivo.setOutros(objAnterado.getMotivo().getOutros());
 		motivo.setSolicitacaoDoacoes(objAnterado.getMotivo().getSolicitacaoDoacoes());

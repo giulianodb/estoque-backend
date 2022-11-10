@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.org.demaosunidas.domain.Atendimento;
@@ -18,9 +21,11 @@ public class AtendimentoService {
 	@Autowired
 	private AtendimentoRepository repo;
 
-	public List<AtendimentoDTO> searchPorCrianca(Integer idCrianca) {
+	public Page<Atendimento> searchPorCrianca(Integer idCrianca, Integer page,Integer linesPerPage, String orderBy, String direction) {
 		Crianca c = new Crianca(idCrianca);
-		return this.toListAtendimentoDTO(repo.findAllByCriancaOrderByDataAtendimento(c));
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Page<Atendimento> teste = repo.findAllByCriancaOrderByDataAtendimento(c,pageRequest);
+		return teste;
 		
 	}
 	

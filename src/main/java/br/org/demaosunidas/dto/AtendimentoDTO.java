@@ -8,6 +8,8 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import br.org.demaosunidas.domain.Atendimento;
+
 public class AtendimentoDTO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -16,12 +18,24 @@ public class AtendimentoDTO implements Serializable{
 	
 	private Integer id;
 	
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
 	@DateTimeFormat(iso = ISO.DATE_TIME)
 	private Date dataAtendimento;
 	
 	private CriancaDTO crianca;
-
+	
+	
+	public AtendimentoDTO() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public AtendimentoDTO(Atendimento obj) {
+		this.id = obj.getId();
+		this.dataAtendimento = obj.getDataAtendimento();
+		this.registro = obj.getRegistroAtendimento();
+		this.crianca = new CriancaDTO(obj.getCrianca());
+	}
+	
 	public String getRegistro() {
 		return registro;
 	}

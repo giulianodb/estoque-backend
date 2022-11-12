@@ -91,6 +91,10 @@ public class Familia implements Serializable{
 	private Moradia moradia;
 	
 	@OneToOne (cascade = CascadeType.ALL)
+	@JoinColumn(name = "visita_id")
+	private VisitaDomiciliar visitaDomiciliar;
+	
+	@OneToOne (cascade = CascadeType.ALL)
 	@JoinColumn(name = "programas_id")
 	private ProgramasSociais programas;
 	
@@ -321,6 +325,12 @@ public class Familia implements Serializable{
 		this.dataNascimento = dataNascimento;
 	}
 
+	public VisitaDomiciliar getVisitaDomiciliar() {
+		return visitaDomiciliar;
+	}
 
+	public void setVisitaDomiciliar(VisitaDomiciliar visitaDomiciliar) {
+		this.visitaDomiciliar = visitaDomiciliar;
+	}
 	
 }

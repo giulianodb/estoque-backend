@@ -16,6 +16,7 @@ import br.org.demaosunidas.domain.MembroFamilia;
 import br.org.demaosunidas.domain.Moradia;
 import br.org.demaosunidas.domain.Motivo;
 import br.org.demaosunidas.domain.ProgramasSociais;
+import br.org.demaosunidas.domain.VisitaDomiciliar;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.repository.FamiliaRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
@@ -205,6 +206,21 @@ public class FamiliaService {
 		motivo.setVagaSCFV(objAnterado.getMotivo().getVagaSCFV());
 		objBanco.setMotivo(motivo);
 		
+		
+		VisitaDomiciliar visita = objAnterado.getVisitaDomiciliar();
+		if (visita == null) {
+			visita = new VisitaDomiciliar();
+		}
+		visita.setManha(objAnterado.getVisitaDomiciliar().getManha());
+		visita.setTarde(objAnterado.getVisitaDomiciliar().getTarde());
+		visita.setSegunda(objAnterado.getVisitaDomiciliar().getSegunda());
+		visita.setTerca(objAnterado.getVisitaDomiciliar().getTerca());
+		visita.setQuarta(objAnterado.getVisitaDomiciliar().getQuarta());
+		visita.setQuinta(objAnterado.getVisitaDomiciliar().getQuinta());
+		visita.setSexta(objAnterado.getVisitaDomiciliar().getSexta());
+		visita.setSabado(objAnterado.getVisitaDomiciliar().getSabado());
+		visita.setObservacoes(objAnterado.getVisitaDomiciliar().getObservacoes());
+		objBanco.setVisitaDomiciliar(visita);
 		
 	}
 

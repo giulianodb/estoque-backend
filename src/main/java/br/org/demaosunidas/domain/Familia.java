@@ -1,7 +1,6 @@
 package br.org.demaosunidas.domain;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -21,12 +20,12 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.transaction.TransactionScoped;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.org.demaosunidas.domain.enums.EstadoCivilEnum;
 import br.org.demaosunidas.domain.enums.Status;
+import br.org.demaosunidas.dto.FamiliaDTO;
 
 @Entity
 @Table(name="familia",schema="estoque")
@@ -115,6 +114,12 @@ public class Familia implements Serializable{
 		super();
 		this.id = id;
 	}
+
+	public Familia(FamiliaDTO dto) {
+		this.id = dto.getId();
+		this.nomeResponsavel = dto.getNomeResponsavel();
+	}
+	
 
 	public Integer getId() {
 		return id;

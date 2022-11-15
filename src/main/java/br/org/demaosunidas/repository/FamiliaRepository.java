@@ -9,14 +9,15 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.demaosunidas.domain.Familia;
+import br.org.demaosunidas.domain.enums.Status;
 
 @Repository
 public interface FamiliaRepository extends JpaRepository<Familia, Integer>{
 
 
 	@Transactional(readOnly=true)
-	@Query("SELECT DISTINCT obj FROM Familia obj WHERE ( :nome is null or lower(obj.nomeResponsavel) LIKE lower (concat ('%',:nome ,'%' )))")
-	Page<Familia> searchQuery(@Param("nome") String nome, Pageable pageRequest);
+	@Query("SELECT DISTINCT obj FROM Familia obj WHERE ( (:nome is null or lower(obj.nomeResponsavel) LIKE lower (concat ('%',:nome ,'%' ))) AND obj.status = :status )")
+	Page<Familia> searchQuery(@Param("nome") String nome, @Param("status") Status status, Pageable pageRequest);
 	
 	@Transactional(readOnly=true)
 	@Query("SELECT DISTINCT obj FROM Familia obj " )

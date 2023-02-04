@@ -25,7 +25,7 @@ public interface CriancaRepository extends JpaRepository<Crianca, Integer>{
 	
 	
 	@Transactional(readOnly=true)
-	@Query("SELECT DISTINCT obj FROM Crianca obj WHERE ( obj.familia.id = :idFamilia )" )
+	@Query("SELECT DISTINCT obj FROM Crianca obj WHERE ( obj.familia.id = :idFamilia ) " )
 	Page<Crianca> searchQueryPorFamilia(@Param("idFamilia") Integer idFamilia, Pageable pageRequest);
 	
 }

@@ -20,6 +20,8 @@ import br.org.demaosunidas.domain.Aluno;
 import br.org.demaosunidas.domain.Crianca;
 import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.dto.AvaliacaoContextoDTO;
+import br.org.demaosunidas.dto.CriancaGetDTO;
+import br.org.demaosunidas.dto.ProdutoGetDTO;
 import br.org.demaosunidas.services.CriancaService;
 
 @RestController
@@ -31,7 +33,7 @@ public class CriancaResource {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@CrossOrigin
-	public ResponseEntity<Page<Crianca>> findPage (
+	public ResponseEntity<Page<CriancaGetDTO>> findPage (
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,
 			@RequestParam(value="orderBy",defaultValue="nome") String orderBy,
@@ -59,7 +61,10 @@ public class CriancaResource {
 		
 		Page<Crianca> lista = service.search(nome, projetoEnum,matriculado,espera, page,linesPerPage,orderBy,direction);
 		
-		return ResponseEntity.ok().body(lista);
+		Page<CriancaGetDTO> listCriancaDTO = lista.map(obj -> new CriancaGetDTO(obj));
+		
+		
+		return ResponseEntity.ok().body(listCriancaDTO);
 	}
 	
 	

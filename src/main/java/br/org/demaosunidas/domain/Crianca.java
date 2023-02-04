@@ -2,6 +2,7 @@ package br.org.demaosunidas.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -72,9 +75,22 @@ public class Crianca implements Serializable {
 	
 	private Boolean matriculado;
 	
+	@OneToMany(mappedBy = "crianca",fetch = FetchType.EAGER)
+//	@OrderBy("nome asc")
+//	@Cascade(CascadeType.ALL)
+	private Set<AvaliacaoContextoResposta> listRespostaAvaliacaoContexto;
+	
 	public Crianca() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public Set<AvaliacaoContextoResposta> getListRespostaAvaliacaoContexto() {
+		return listRespostaAvaliacaoContexto;
+	}
+
+	public void setListRespostaAvaliacaoContexto(Set<AvaliacaoContextoResposta> listRespostaAvaliacaoContexto) {
+		this.listRespostaAvaliacaoContexto = listRespostaAvaliacaoContexto;
 	}
 
 	public Crianca(Integer id) {

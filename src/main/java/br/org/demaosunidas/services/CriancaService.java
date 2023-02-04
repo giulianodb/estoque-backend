@@ -37,7 +37,9 @@ public class CriancaService {
 	
 	public Crianca findById(Integer id) {
 		Optional<Crianca> obj = repo.findById(id);
-
+		obj.get().getListRespostaAvaliacaoContexto();
+		
+		
 		return obj.orElseThrow(() -> new ObjectNotFoudException("Objeto não encontrado"));
 	}
 	

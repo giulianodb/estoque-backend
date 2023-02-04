@@ -4,7 +4,7 @@ package br.org.demaosunidas.domain.enums;
 public enum ProjetoEnum {
 	
 	FOCAR("FOCAR"),
-	NFI("NFI");
+	SCFV("SCFV");
 	
 	private String descricao;
 	private String abreviatura;

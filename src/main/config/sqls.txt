@@ -1,0 +1,23 @@
+Inserir perguntas de contexto
+
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (1,'Tem desafasagem superior ou igual a dois anos?',0);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (2,'Está ou esteve em situação de acolhimento?',0);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (3,'Está cumprindo ou cumpriu medida socioeducativa?',0);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (4,'Já foi vitima de abuso/violência sexual?',0);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (5,'É  PCD: pessoa com deficiência?',0);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (6,'A familia tem histórico de constante mudança de endereço.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (7,'A criança não convive com outras da mesma faixa etária.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (8,'A criança apresenta histórico de notificações referente à questões de convivio e dificuldades de relacionamento com outras crianças na escola.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (9,'Os responsáveis pela criança não se fazem presente na vida da criança: atenção, afeto e desenvolvimento no âmbito social.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (10,'Os responsáveis pela criança não conseguem garantir a rotina e momentos de convivência/atenção à criança/ tarefa escolar/brincadeiras etc.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (11,'A familia nuclear não conta com o apoio e presença de outros familiares na educação da criança.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (12,'Na familia nuclear alguém precisou deixar de estudar para trabalhar ou suprir outras necessidades.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (13,'Nenhum membro da familia concluiu o ensino médio.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (14,'Os membros familiares não tem renda fixa.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (15,'Os responsáveis não trabalham com carteira assinada (emprego formal)',1); 
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (16,'Na familia as pessoas responsáveis pelo orçamento familias precisam buscar fontes de renda alternativa para suprir suas necessidades.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (17,'Há na familia membro com idade escolar fora da escola.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (18,'A criança realiza algum tipo de acompanhamento médico/psicológico que demanda a ausencia das aulas na escola.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (19,'Existe na familia algum membro que está em cumprimento de medida socioeducativa ou é egresso do sistema penal.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (20,'Na familia algum membro faz uso abusivo de alcool ou drogas.',1);
+insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (21,'A familia identifica no território em que reside situações de insegurança social.',1);

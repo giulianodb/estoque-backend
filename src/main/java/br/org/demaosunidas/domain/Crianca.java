@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.domain.enums.Status;
+import br.org.demaosunidas.dto.CriancaDTO;
 
 @Entity
 @Table(name="crianca",schema="estoque")
@@ -44,8 +45,8 @@ public class Crianca implements Serializable {
 	@Column(name="status")
 	private Status status;
 	
-	@Enumerated
-	private ProjetoEnum projeto;
+//	@Enumerated
+//	private ProjetoEnum projeto;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Familia familia;
@@ -68,17 +69,20 @@ public class Crianca implements Serializable {
 	
 	private String religiao;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
-	private Date dataInscricao;
+//	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
+//	private Date dataInscricao;
 	
-	private Boolean listaEspera;
-	
-	private Boolean matriculado;
+//	private Boolean listaEspera;
+//	
+//	private Boolean matriculado;
 	
 	@OneToMany(mappedBy = "crianca",fetch = FetchType.EAGER)
 //	@OrderBy("nome asc")
 //	@Cascade(CascadeType.ALL)
 	private Set<AvaliacaoContextoResposta> listRespostaAvaliacaoContexto;
+	
+	@OneToMany(mappedBy = "crianca",fetch = FetchType.LAZY)
+	private Set<Inscricao> listInscricao;
 	
 	public Crianca() {
 		super();
@@ -96,6 +100,10 @@ public class Crianca implements Serializable {
 	public Crianca(Integer id) {
 		super();
 		this.id = id;
+	}
+
+	public Crianca(CriancaDTO crianca) {
+		// TODO Auto-generated constructor stub
 	}
 
 	public Integer getId() {
@@ -128,14 +136,6 @@ public class Crianca implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
-	}
-
-	public ProjetoEnum getProjeto() {
-		return projeto;
-	}
-
-	public void setProjeto(ProjetoEnum projeto) {
-		this.projeto = projeto;
 	}
 
 	public String getSexo() {
@@ -210,29 +210,6 @@ public class Crianca implements Serializable {
 		this.religiao = religiao;
 	}
 
-	public Date getDataInscricao() {
-		return dataInscricao;
-	}
-
-	public void setDataInscricao(Date dataInscricao) {
-		this.dataInscricao = dataInscricao;
-	}
-
-	public Boolean getListaEspera() {
-		return listaEspera;
-	}
-
-	public void setListaEspera(Boolean listaEspera) {
-		this.listaEspera = listaEspera;
-	}
-
-	public Boolean getMatriculado() {
-		return matriculado;
-	}
-
-	public void setMatriculado(Boolean matriculado) {
-		this.matriculado = matriculado;
-	}
 
 	public Familia getFamilia() {
 		return familia;

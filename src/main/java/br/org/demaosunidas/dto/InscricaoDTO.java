@@ -1,73 +1,50 @@
-package br.org.demaosunidas.domain;
+package br.org.demaosunidas.dto;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import br.org.demaosunidas.domain.Inscricao;
 import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.domain.enums.Status;
-import br.org.demaosunidas.dto.CriancaDTO;
-import br.org.demaosunidas.dto.InscricaoDTO;
 
-@Entity
-@Table(name="inscricao",schema="estoque")
-public class Inscricao implements Serializable {
+public class InscricaoDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	@Id
-	@SequenceGenerator(name = "INSCRICAO_ID", sequenceName = "id_inscricao_seq", schema="estoque",allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "INSCRICAO_ID")
-	@Column(name = "id")
 	private Integer id;
 	
-	@Enumerated
-	@Column(name="status")
 	private Status status;
 	
-	@Enumerated
 	private ProjetoEnum projeto;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	private Crianca crianca;
+	private CriancaDTO crianca;
 	
 	private Integer ano;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
 	private Date dataInscricao;
 	
-	private Boolean listaEspera;
+	private boolean listaEspera;
 	
 	private Boolean matriculado;
 	
-	public Inscricao() {
+	public InscricaoDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public Inscricao(InscricaoDTO obj) {
-		
+	
+	public InscricaoDTO(Inscricao obj) {
 		this.ano = obj.getAno();
-		this.crianca = new Crianca (obj.getCrianca().getId());
+		this.crianca = new CriancaDTO(obj.getCrianca());
 		this.dataInscricao = obj.getDataInscricao();
 		this.id = obj.getId();
 		this.listaEspera = obj.getListaEspera();
 		this.matriculado = obj.getMatriculado();
 		this.projeto = obj.getProjeto();
 		this.status = obj.getStatus();
-		
+	
 	}
 
 	public Integer getId() {
@@ -94,13 +71,20 @@ public class Inscricao implements Serializable {
 		this.projeto = projeto;
 	}
 
-
-	public Crianca getCrianca() {
+	public CriancaDTO getCrianca() {
 		return crianca;
 	}
 
-	public void setCrianca(Crianca crianca) {
+	public void setCrianca(CriancaDTO crianca) {
 		this.crianca = crianca;
+	}
+
+	public Integer getAno() {
+		return ano;
+	}
+
+	public void setAno(Integer ano) {
+		this.ano = ano;
 	}
 
 	public Date getDataInscricao() {
@@ -125,14 +109,6 @@ public class Inscricao implements Serializable {
 
 	public void setMatriculado(Boolean matriculado) {
 		this.matriculado = matriculado;
-	}
-
-	public Integer getAno() {
-		return ano;
-	}
-
-	public void setAno(Integer ano) {
-		this.ano = ano;
 	}
 
 	

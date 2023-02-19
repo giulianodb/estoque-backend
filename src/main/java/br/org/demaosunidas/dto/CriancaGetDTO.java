@@ -20,6 +20,7 @@ public class CriancaGetDTO implements Serializable{
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
 	private Date dataNascimento;
 	private Status status;
+	
 	private ProjetoEnum projeto;
 	private FamiliaDTO familia;
 	
@@ -37,11 +38,14 @@ public class CriancaGetDTO implements Serializable{
 		this.id = obj.getId();
 		this.nome = obj.getNome();
 		this.dataNascimento = obj.getDataNascimento();
+		
 		this.status = obj.getStatus();
-		this.projeto = obj.getProjeto();
+		
+//		this.projeto = obj.getProjeto();
+		
 		this.familia = new FamiliaDTO(obj.getFamilia());
-		this.listaEspera = obj.getListaEspera();
-		this.matriculado = obj.getMatriculado();
+//		this.listaEspera = obj.getListaEspera();
+//		this.matriculado = obj.getMatriculado();
 		
 		int somaAfirmacao = 0;
 		int somaSituacao = 0;

@@ -31,7 +31,8 @@ public class CriancaService {
 	public Page<Crianca> search (String nome,ProjetoEnum projeto,Boolean matriculada, Boolean espera, Integer page,Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		
-		return repo. searchQuery(nome,projeto,matriculada,espera,pageRequest);
+//		return repo. searchQuery(nome,projeto,matriculada,espera,pageRequest);
+		return repo. searchQuery(nome,pageRequest);
 //		return repo. searchQueryTeste(nome,matriculada,pageRequest);
 	}
 	
@@ -63,17 +64,19 @@ public class CriancaService {
 	private void updateData(Crianca objBanco, Crianca objAnterado) {
 		objBanco.setAlergia(objAnterado.getAlergia());
 		objBanco.setStatus(objAnterado.getStatus());
-		objBanco.setDataInscricao(objAnterado.getDataInscricao());
+		
+//		objBanco.setDataInscricao(objAnterado.getDataInscricao());
+		
 		objBanco.setDataNascimento(objAnterado.getDataNascimento());
 		objBanco.setDescricaoAlergia(objAnterado.getDescricaoAlergia());
 		objBanco.setDescricaoMedicamento(objAnterado.getDescricaoMedicamento());
 		objBanco.setEscola(objAnterado.getEscola());
-		objBanco.setListaEspera(objAnterado.getListaEspera());
-		objBanco.setMatriculado(objAnterado.getMatriculado());
+//		objBanco.setListaEspera(objAnterado.getListaEspera());
+//		objBanco.setMatriculado(objAnterado.getMatriculado());
 		objBanco.setMedicamento(objAnterado.getMedicamento());
 		objBanco.setNome(objAnterado.getNome());
 		objBanco.setNomeConducao(objAnterado.getNomeConducao());
-		objBanco.setProjeto(objAnterado.getProjeto());
+//		objBanco.setProjeto(objAnterado.getProjeto());
 		objBanco.setReligiao(objAnterado.getReligiao());
 		objBanco.setSexo(objAnterado.getSexo());
 		objBanco.setTelefoneConducao(objAnterado.getTelefoneConducao());

@@ -3,6 +3,7 @@ package br.org.demaosunidas.resources;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -70,7 +71,7 @@ public class CriancaResource {
 	
 	@RequestMapping(value="/familia/{idFamilia}", method = RequestMethod.GET)
 	@CrossOrigin
-	public ResponseEntity<Page<Crianca>> buscarCriancaFamilia (
+	public ResponseEntity<Page<CriancaGetDTO>> buscarCriancaFamilia (
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,
 			@RequestParam(value="orderBy",defaultValue="nome") String orderBy,
@@ -83,7 +84,10 @@ public class CriancaResource {
 		}
 		Page<Crianca> lista = service.buscarPorFamilia(idFamilia,page,linesPerPage,orderBy,direction);
 		
-		return ResponseEntity.ok().body(lista);
+		Page<CriancaGetDTO> listaDTO = lista.map(obj -> new CriancaGetDTO(obj));
+		
+		
+		return ResponseEntity.ok().body(listaDTO);
 	}
 	
 	

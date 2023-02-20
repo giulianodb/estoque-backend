@@ -67,7 +67,7 @@ public class InscricaoService {
 		objBanco.setProjeto(objAlterado.getProjeto());
 		objBanco.setStatus(objAlterado.getStatus());
 		objBanco.setPeriodo(objAlterado.getPeriodo());
-		
+		objBanco.setDataDesligamento(objAlterado.getDataDesligamento());
 	}
 
 	public Page<Inscricao> buscarPorCrianca(Integer idCrianca, Integer page, Integer linesPerPage, String orderBy,

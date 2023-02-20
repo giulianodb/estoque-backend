@@ -75,6 +75,7 @@ public class Inscricao implements Serializable {
 		this.projeto = obj.getProjeto();
 		this.status = obj.getStatus();
 		this.periodo = obj.getPeriodo();
+		this.dataDesligamento = obj.getDataDesligamento();
 		
 	}
 

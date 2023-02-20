@@ -6,6 +6,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.org.demaosunidas.domain.Inscricao;
+import br.org.demaosunidas.domain.enums.PeriodoEnum;
 import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.domain.enums.Status;
 
@@ -30,6 +31,7 @@ public class InscricaoDTO implements Serializable {
 	
 	private Boolean matriculado;
 	
+	private PeriodoEnum periodo;
 	public InscricaoDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -44,6 +46,7 @@ public class InscricaoDTO implements Serializable {
 		this.matriculado = obj.getMatriculado();
 		this.projeto = obj.getProjeto();
 		this.status = obj.getStatus();
+		this.periodo = obj.getPeriodo();
 	
 	}
 
@@ -109,6 +112,18 @@ public class InscricaoDTO implements Serializable {
 
 	public void setMatriculado(Boolean matriculado) {
 		this.matriculado = matriculado;
+	}
+
+	public PeriodoEnum getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(PeriodoEnum periodo) {
+		this.periodo = periodo;
+	}
+
+	public void setListaEspera(boolean listaEspera) {
+		this.listaEspera = listaEspera;
 	}
 
 	

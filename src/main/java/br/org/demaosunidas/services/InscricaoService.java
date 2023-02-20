@@ -58,6 +58,7 @@ public class InscricaoService {
 		objBanco.setListaEspera(objAlterado.getListaEspera());
 		objBanco.setProjeto(objAlterado.getProjeto());
 		objBanco.setStatus(objAlterado.getStatus());
+		objBanco.setPeriodo(objAlterado.getPeriodo());
 		
 	}
 

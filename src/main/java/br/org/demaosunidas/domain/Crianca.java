@@ -82,6 +82,7 @@ public class Crianca implements Serializable {
 	private Set<AvaliacaoContextoResposta> listRespostaAvaliacaoContexto;
 	
 	@OneToMany(mappedBy = "crianca",fetch = FetchType.LAZY)
+	@OrderBy( value="ano DESC")
 	private Set<Inscricao> listInscricao;
 	
 	public Crianca() {
@@ -104,6 +105,8 @@ public class Crianca implements Serializable {
 
 	public Crianca(CriancaDTO crianca) {
 		// TODO Auto-generated constructor stub
+		this.id = crianca.getId();
+		this.nome = crianca.getNome();
 	}
 
 	public Integer getId() {
@@ -217,6 +220,14 @@ public class Crianca implements Serializable {
 
 	public void setFamilia(Familia familia) {
 		this.familia = familia;
+	}
+
+	public Set<Inscricao> getListInscricao() {
+		return listInscricao;
+	}
+
+	public void setListInscricao(Set<Inscricao> listInscricao) {
+		this.listInscricao = listInscricao;
 	}
 
 

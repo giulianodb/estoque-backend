@@ -30,6 +30,96 @@ public class CriancaGetDTO implements Serializable{
 	private Integer totalAfirmacao;
 	private Integer totalSituacao;
 	
+	private String sexo;
+	
+	private String escola;
+	
+	private String nomeConducao;
+	
+	private String telefoneConducao;
+	
+	private Boolean alergia;
+	
+	private String descricaoAlergia;
+	
+	private Boolean medicamento;
+	
+	private String descricaoMedicamento;
+	
+	private String religiao;
+	
+	public String getSexo() {
+		return sexo;
+	}
+
+	public void setSexo(String sexo) {
+		this.sexo = sexo;
+	}
+
+	public String getEscola() {
+		return escola;
+	}
+
+	public void setEscola(String escola) {
+		this.escola = escola;
+	}
+
+	public String getNomeConducao() {
+		return nomeConducao;
+	}
+
+	public void setNomeConducao(String nomeConducao) {
+		this.nomeConducao = nomeConducao;
+	}
+
+	public String getTelefoneConducao() {
+		return telefoneConducao;
+	}
+
+	public void setTelefoneConducao(String telefoneConducao) {
+		this.telefoneConducao = telefoneConducao;
+	}
+
+	public Boolean getAlergia() {
+		return alergia;
+	}
+
+	public void setAlergia(Boolean alergia) {
+		this.alergia = alergia;
+	}
+
+	public String getDescricaoAlergia() {
+		return descricaoAlergia;
+	}
+
+	public void setDescricaoAlergia(String descricaoAlergia) {
+		this.descricaoAlergia = descricaoAlergia;
+	}
+
+	public Boolean getMedicamento() {
+		return medicamento;
+	}
+
+	public void setMedicamento(Boolean medicamento) {
+		this.medicamento = medicamento;
+	}
+
+	public String getDescricaoMedicamento() {
+		return descricaoMedicamento;
+	}
+
+	public void setDescricaoMedicamento(String descricaoMedicamento) {
+		this.descricaoMedicamento = descricaoMedicamento;
+	}
+
+	public String getReligiao() {
+		return religiao;
+	}
+
+	public void setReligiao(String religiao) {
+		this.religiao = religiao;
+	}
+
 	public CriancaGetDTO () {
 		
 	}
@@ -38,14 +128,26 @@ public class CriancaGetDTO implements Serializable{
 		this.id = obj.getId();
 		this.nome = obj.getNome();
 		this.dataNascimento = obj.getDataNascimento();
-		
 		this.status = obj.getStatus();
-		
-//		this.projeto = obj.getProjeto();
-		
 		this.familia = new FamiliaDTO(obj.getFamilia());
-//		this.listaEspera = obj.getListaEspera();
-//		this.matriculado = obj.getMatriculado();
+		this.sexo = obj.getSexo();
+		this.escola = obj.getEscola();
+		
+		this.nomeConducao = obj.getNomeConducao();
+		this.telefoneConducao = obj.getTelefoneConducao();
+		this.alergia = obj.getAlergia();
+		this.descricaoAlergia = obj.getDescricaoAlergia();
+		this.medicamento = obj.getMedicamento();
+		this.descricaoMedicamento = obj.getDescricaoMedicamento();
+		this.religiao = obj.getReligiao();
+		
+		if (obj.getListInscricao() != null) {
+			obj.getListInscricao().forEach(x -> {
+		            this.projeto = x.getProjeto();
+		            return;
+		        });
+		}
+			
 		
 		int somaAfirmacao = 0;
 		int somaSituacao = 0;
@@ -62,6 +164,9 @@ public class CriancaGetDTO implements Serializable{
 		
 		this.totalAfirmacao = somaAfirmacao;
 		this.totalSituacao = somaSituacao;
+//		this.listaEspera = obj.getListaEspera();
+//		this.matriculado = obj.getMatriculado();
+//		this.projeto = obj.getProjeto();
 		
 	}
 	

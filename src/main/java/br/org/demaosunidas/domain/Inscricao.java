@@ -49,6 +49,9 @@ public class Inscricao implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
 	private Date dataInscricao;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
+	private Date dataDesligamento;
+	
 	private Boolean listaEspera;
 	
 	private Boolean matriculado;
@@ -146,6 +149,14 @@ public class Inscricao implements Serializable {
 
 	public void setPeriodo(PeriodoEnum periodo) {
 		this.periodo = periodo;
+	}
+
+	public Date getDataDesligamento() {
+		return dataDesligamento;
+	}
+
+	public void setDataDesligamento(Date dataDesligamento) {
+		this.dataDesligamento = dataDesligamento;
 	}
 
 	

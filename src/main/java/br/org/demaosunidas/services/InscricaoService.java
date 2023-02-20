@@ -46,6 +46,14 @@ public class InscricaoService {
 		return repo.save(objBanco);
 	}
 //	
+	
+	public Inscricao desligar (Inscricao objAlterado) {
+		Inscricao objBanco = findById(objAlterado.getId());
+		objBanco.setDataDesligamento(objAlterado.getDataDesligamento());
+		return repo.save(objBanco);
+	}
+//	
+	
 	public void deletar (Integer id) {
 		Inscricao obj = findById(id);
 		obj.setStatus(Status.INATIVO);

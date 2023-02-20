@@ -119,6 +119,19 @@ public class InscricaoResource {
 		
 	}
 	
+	@RequestMapping(value="/desligar/{id}",method=RequestMethod.PUT)
+	public ResponseEntity<Void> desligarInscricao(@PathVariable Integer id,@RequestBody InscricaoDTO inscricaoDTO){
+		inscricaoDTO.setId(id);
+		Inscricao i = new Inscricao(inscricaoDTO);
+		service.desligar(i);
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
+				path("/{id}").buildAndExpand(i.getId()).toUri();
+		
+		return ResponseEntity.created(uri).build();
+		
+	}
+	
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@CrossOrigin

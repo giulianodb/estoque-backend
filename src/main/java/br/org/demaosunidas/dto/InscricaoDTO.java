@@ -27,6 +27,9 @@ public class InscricaoDTO implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
 	private Date dataInscricao;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
+	private Date dataDesligamento;
+	
 	private boolean listaEspera;
 	
 	private Boolean matriculado;
@@ -47,6 +50,7 @@ public class InscricaoDTO implements Serializable {
 		this.projeto = obj.getProjeto();
 		this.status = obj.getStatus();
 		this.periodo = obj.getPeriodo();
+		this.dataDesligamento = obj.getDataDesligamento();
 	
 	}
 
@@ -124,6 +128,14 @@ public class InscricaoDTO implements Serializable {
 
 	public void setListaEspera(boolean listaEspera) {
 		this.listaEspera = listaEspera;
+	}
+
+	public Date getDataDesligamento() {
+		return dataDesligamento;
+	}
+
+	public void setDataDesligamento(Date dataDesligamento) {
+		this.dataDesligamento = dataDesligamento;
 	}
 
 	

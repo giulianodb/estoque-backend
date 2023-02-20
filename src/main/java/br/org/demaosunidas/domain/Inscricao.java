@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import br.org.demaosunidas.domain.enums.PeriodoEnum;
 import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.dto.CriancaDTO;
@@ -52,6 +53,9 @@ public class Inscricao implements Serializable {
 	
 	private Boolean matriculado;
 	
+	@Enumerated
+	private PeriodoEnum periodo;
+	
 	public Inscricao() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -67,6 +71,7 @@ public class Inscricao implements Serializable {
 		this.matriculado = obj.getMatriculado();
 		this.projeto = obj.getProjeto();
 		this.status = obj.getStatus();
+		this.periodo = obj.getPeriodo();
 		
 	}
 
@@ -133,6 +138,14 @@ public class Inscricao implements Serializable {
 
 	public void setAno(Integer ano) {
 		this.ano = ano;
+	}
+
+	public PeriodoEnum getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(PeriodoEnum periodo) {
+		this.periodo = periodo;
 	}
 
 	

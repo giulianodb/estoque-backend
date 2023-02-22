@@ -20,13 +20,13 @@ public class InscricaoService {
 	@Autowired
 	private InscricaoRepository repo;
 	
-	public Page<Inscricao> search (String nomeCrianca, ProjetoEnum projeto, Boolean espera, Integer page,Integer linesPerPage, String orderBy, String direction) {
+	public Page<Inscricao> search (String nomeCrianca, ProjetoEnum projeto, Boolean espera, Integer ano, Integer page,Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		
-//		return repo. searchQuery(nome,projeto,matriculada,espera,pageRequest);
+		return repo.searchQuery(nomeCrianca,projeto,espera,ano,pageRequest);
 //		return repo. searchQueryTeste(nome,matriculada,pageRequest);
 		
-		return null;
+//		return null;
 	}
 	
 	public Inscricao findById(Integer id) {

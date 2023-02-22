@@ -58,7 +58,7 @@ public class InscricaoResource {
 			}
 		}
 		
-		Page<Inscricao> lista = service.search(nome, projetoEnum,espera, page,linesPerPage,orderBy,direction);
+		Page<Inscricao> lista = service.search(nome, projetoEnum,espera,ano, page,linesPerPage,orderBy,direction);
 		
 		Page<InscricaoDTO> listCriancaDTO = lista.map(obj -> new InscricaoDTO(obj));
 		

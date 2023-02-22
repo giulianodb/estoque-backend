@@ -20,7 +20,7 @@ public class InscricaoDTO implements Serializable {
 	
 	private ProjetoEnum projeto;
 	
-	private CriancaDTO crianca;
+	private CriancaGetDTO crianca;
 	
 	private Integer ano;
 	
@@ -42,11 +42,13 @@ public class InscricaoDTO implements Serializable {
 	
 	public InscricaoDTO(Inscricao obj) {
 		this.ano = obj.getAno();
-		this.crianca = new CriancaDTO(obj.getCrianca());
+		this.crianca = new CriancaGetDTO (obj.getCrianca());
 		this.dataInscricao = obj.getDataInscricao();
 		this.id = obj.getId();
 		this.listaEspera = obj.getListaEspera();
-		this.matriculado = obj.getMatriculado();
+		
+		this.matriculado = !obj.getListaEspera() && obj.getDataDesligamento() == null;
+		
 		this.projeto = obj.getProjeto();
 		this.status = obj.getStatus();
 		this.periodo = obj.getPeriodo();
@@ -78,11 +80,11 @@ public class InscricaoDTO implements Serializable {
 		this.projeto = projeto;
 	}
 
-	public CriancaDTO getCrianca() {
+	public CriancaGetDTO getCrianca() {
 		return crianca;
 	}
 
-	public void setCrianca(CriancaDTO crianca) {
+	public void setCrianca(CriancaGetDTO crianca) {
 		this.crianca = crianca;
 	}
 

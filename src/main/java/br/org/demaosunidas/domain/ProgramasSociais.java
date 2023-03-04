@@ -1,6 +1,7 @@
 package br.org.demaosunidas.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name="programas",schema="estoque")
@@ -45,6 +48,9 @@ public class ProgramasSociais implements Serializable{
 	private String cras;
 	
 	private String nis;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
+	private Date dataValidadeNis;
 	
 	private String beneficioAssistencial;
 	

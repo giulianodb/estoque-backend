@@ -12,8 +12,4 @@ public class EstoqueBackendApplication {
 		SpringApplication.run(EstoqueBackendApplication.class, args);
 	}
 	
-	@Bean public BCryptPasswordEncoder bCryptPasswordEncoder() {
-	    return new BCryptPasswordEncoder(); 
-	}
-
 }

@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.org.demaosunidas.dto.PapelDTO;
+
 @Entity
 @Table(name="papel",schema="estoque")
 	//@NamedQueries({ @NamedQuery(name = "listarPapel", query = "SELECT p FROM Papel p") 	
@@ -30,6 +32,16 @@ public class Papel implements Serializable{
 	@Column(name="nome_papel")
 	private String nomePapel;
 	
+	
+	public Papel(PapelDTO papel) {
+		this.descricaoPapel = papel.getDescricaoPapel();
+		this.idPapel = papel.getIdPapel();
+		this.nomePapel = papel.getNomePapel();
+	}
+	
+	public Papel() {
+		// TODO Auto-generated constructor stub
+	}
 	
 	public String getNomePapel() {
 		return nomePapel;

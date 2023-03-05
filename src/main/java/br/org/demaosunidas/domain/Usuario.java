@@ -12,7 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.org.demaosunidas.domain.enums.Status;
+import br.org.demaosunidas.dto.PapelDTO;
+import br.org.demaosunidas.dto.UsuarioNewDTO;
 
 @Entity
 @Table(name="usuario",schema="estoque")
@@ -37,13 +41,50 @@ public class Usuario implements Serializable {
 	@ManyToOne 
 	private Papel papel;
 	
-	@Column(unique=true)
+	@Column(unique=true,name = "loginusuario")
 	private String loginUsuario;
 	
+	@JsonIgnore
 	private String senha;
 	
+	@JsonIgnore
 	private String senhaCripto;
 	
+	public Usuario(UsuarioNewDTO obj) {
+		// TODO Auto-generated constructor stub
+		this.email = obj.getEmail();
+		this.idUsuario = obj.getIdUsuario();
+		this.loginUsuario = obj.getLoginUsuario();
+		this.nome = obj.getNome();
+		this.papel = new Papel(obj.getPapel());
+		this.senha = obj.getSenha();
+		this.senhaCripto = obj.getSenhaCripto();
+		this.sobrenome = obj.getSobrenome();
+		this.statusUsuario = obj.getStatusUsuario();
+		
+	}
+
+	public Usuario() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Usuario(Integer idUsuario2, String email2, String loginUsuario2, String nome2, PapelDTO papel2,
+			String senha2, String sobrenome2, Status statusUsuario2, String encode) {
+		// TODO Auto-generated constructor stub
+		
+		this.idUsuario = idUsuario2;
+		this.email = email2;
+		this.loginUsuario = loginUsuario2;
+		this.nome = nome2;
+		this.papel = new Papel(papel2);
+		this.senha = senha2;
+		this.sobrenome = sobrenome2;
+		this.statusUsuario = statusUsuario2;
+		this.senhaCripto = encode;
+		
+		
+	}
+
 	public String getSenhaCripto() {
 		return senhaCripto;
 	}

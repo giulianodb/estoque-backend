@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,7 @@ public class InscricaoResource {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Page<InscricaoDTO>> findPage (
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,
@@ -68,6 +70,7 @@ public class InscricaoResource {
 	
 	@RequestMapping(value="/crianca/{idCrianca}", method = RequestMethod.GET)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Page<InscricaoDTO>> findPagePorCrianca (
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,
@@ -93,6 +96,7 @@ public class InscricaoResource {
 	
 	
 	@RequestMapping(method=RequestMethod.POST)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Void> insert(@RequestBody InscricaoDTO inscricaoDTO){
 		inscricaoDTO.setId(null);
 		inscricaoDTO.setStatus(Status.ATIVO);
@@ -107,6 +111,7 @@ public class InscricaoResource {
 	}
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody InscricaoDTO inscricaoDTO){
 		inscricaoDTO.setId(id);
 		Inscricao i = new Inscricao(inscricaoDTO);
@@ -120,6 +125,7 @@ public class InscricaoResource {
 	}
 	
 	@RequestMapping(value="/desligar/{id}",method=RequestMethod.PUT)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Void> desligarInscricao(@PathVariable Integer id,@RequestBody InscricaoDTO inscricaoDTO){
 		inscricaoDTO.setId(id);
 		Inscricao i = new Inscricao(inscricaoDTO);
@@ -135,6 +141,7 @@ public class InscricaoResource {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<InscricaoDTO> findById(@PathVariable Integer id){
 			
 		Inscricao obj = service.findById(id);
@@ -144,6 +151,7 @@ public class InscricaoResource {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Void> Excluir(@PathVariable Integer id){
 			
 		service.deletar(id);

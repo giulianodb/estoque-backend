@@ -20,7 +20,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.org.demaosunidas.domain.Usuario;
 import br.org.demaosunidas.dto.CredenciaisDTO;
+import br.org.demaosunidas.repository.UsuarioRepository;
 
 public class JWTAuthentcationFilter extends UsernamePasswordAuthenticationFilter {
 	
@@ -32,7 +34,10 @@ public class JWTAuthentcationFilter extends UsernamePasswordAuthenticationFilter
 		this.authenticationManager = authenticationManager;
 		this.jwtUtil = jwtUtil;
 	}
-
+	
+	@Autowired
+	private UsuarioRepository userRepo;
+	
 	//tente autenticar
 	@Override
 	public Authentication attemptAuthentication (HttpServletRequest req, HttpServletResponse res) throws AuthenticationException{
@@ -61,7 +66,12 @@ public class JWTAuthentcationFilter extends UsernamePasswordAuthenticationFilter
 	@Override
 	protected void successfulAuthentication( HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException, ServletException {
 		String username = ((UserSS) auth.getPrincipal()).getUsername();
-		String token = jwtUtil.generateToken(username);
+		String nome = ((UserSS) auth.getPrincipal()).getNome();
+		
+		
+		//Usuario user = userRepo.findByLoginUsuario(username);
+		String token = jwtUtil.generateToken(nome,username,((UserSS) auth.getPrincipal()).getAuthorities());
+		
 		
 		res.addHeader("Authorization", "Bearer "+token);
 		

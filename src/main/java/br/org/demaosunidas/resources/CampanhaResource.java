@@ -26,6 +26,7 @@ public class CampanhaResource {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@CrossOrigin
+	
 	public ResponseEntity<Page<Campanha>> findPage (
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,

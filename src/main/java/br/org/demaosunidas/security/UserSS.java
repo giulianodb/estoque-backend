@@ -32,7 +32,9 @@ public class UserSS implements UserDetails{
 		this.login = login;
 		this.senha = senha;
 		this.nome = nome;
-		this.authorities = papels.stream().map(x -> new SimpleGrantedAuthority(x.getNomePapel())).collect(Collectors.toList());
+		if (papels != null)
+			this.authorities = papels.stream().map(x -> new SimpleGrantedAuthority("ROLE_"+x.getNomePapel())).collect(Collectors.toList());
+			
 	}
 
 

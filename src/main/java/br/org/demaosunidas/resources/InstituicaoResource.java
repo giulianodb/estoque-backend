@@ -5,6 +5,7 @@ import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ public class InstituicaoResource {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
 	public ResponseEntity<Page<Instituicao>> findPage (
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,
@@ -41,6 +43,7 @@ public class InstituicaoResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
 	public ResponseEntity<Void> insert(@RequestBody Instituicao instituicao){
 		service.insert(instituicao);
 		
@@ -54,6 +57,7 @@ public class InstituicaoResource {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
 	public ResponseEntity<Instituicao> findById(@PathVariable Integer id){
 			
 		Instituicao obj = service.findById(id);
@@ -63,6 +67,7 @@ public class InstituicaoResource {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
 	public ResponseEntity<Instituicao> Excluir(@PathVariable Integer id){
 			
 		service.deletar(id);

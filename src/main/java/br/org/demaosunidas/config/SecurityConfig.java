@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,10 +17,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import br.org.demaosunidas.security.JWTAuthentcationFilter;
+import br.org.demaosunidas.security.JWTAuthorizationFilter;
 import br.org.demaosunidas.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true,securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
@@ -52,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 								 .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
 								.anyRequest().authenticated();
 		http.addFilter(new JWTAuthentcationFilter(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 	
@@ -63,8 +67,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
 		
+		CorsConfiguration c = new CorsConfiguration().applyPermitDefaultValues();
+		c.addAllowedHeader("Authorization");
+		c.addExposedHeader("Authorization");
+		source.registerCorsConfiguration("/**", c);
+//		source.registerCorsConfiguration("/**", new CorsConfiguration().addAllowedHeader("Authorization"));
 		return source;
 	}
 	

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,7 @@ public class AtendimentoResource {
 	
 	@RequestMapping(value = "/crianca/{idCrianca}", method = RequestMethod.GET)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Page<AtendimentoDTO>> findAtendmento (@PathVariable Integer idCrianca,
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="24") Integer linesPerPage,
@@ -45,6 +47,7 @@ public class AtendimentoResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Void> insert(@RequestBody AtendimentoDTO atendimento){
 		service.insert(atendimento);
 		
@@ -56,6 +59,7 @@ public class AtendimentoResource {
 	}
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody AtendimentoDTO atendimentoDTO){
 		atendimentoDTO.setId(id);
 		service.update(atendimentoDTO);
@@ -68,6 +72,7 @@ public class AtendimentoResource {
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	@CrossOrigin
 	public ResponseEntity<Void> Excluir(@PathVariable Integer id){
 			

@@ -95,9 +95,6 @@ public class Usuario implements Serializable {
 
 	private String email;
 	
-	private Boolean participaExtra;
-	
-	private Float participacao;
 	
 	private String sobrenome;
 	
@@ -159,22 +156,6 @@ public class Usuario implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Boolean getParticipaExtra() {
-		return participaExtra;
-	}
-
-	public void setParticipaExtra(Boolean participaExtra) {
-		this.participaExtra = participaExtra;
-	}
-
-	public Float getParticipacao() {
-		return participacao;
-	}
-
-	public void setParticipacao(Float participacao) {
-		this.participacao = participacao;
 	}
 
 	public Status getStatusUsuario() {

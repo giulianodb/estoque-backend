@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +35,7 @@ public class CriancaResource {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Page<CriancaGetDTO>> findPage (
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,
@@ -71,6 +73,7 @@ public class CriancaResource {
 	
 	@RequestMapping(value="/familia/{idFamilia}", method = RequestMethod.GET)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Page<CriancaGetDTO>> buscarCriancaFamilia (
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,
@@ -93,6 +96,7 @@ public class CriancaResource {
 	
 	
 	@RequestMapping(method=RequestMethod.POST)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Void> insert(@RequestBody Crianca crianca){
 		service.insert(crianca);
 		
@@ -104,6 +108,7 @@ public class CriancaResource {
 	}
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody Crianca crianca){
 		crianca.setId(id);
 		service.update(crianca);
@@ -118,6 +123,7 @@ public class CriancaResource {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<CriancaGetDTO> findById(@PathVariable Integer id){
 			
 		Crianca obj = service.findById(id);
@@ -127,6 +133,7 @@ public class CriancaResource {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Crianca> Excluir(@PathVariable Integer id){
 			
 		service.deletar(id);

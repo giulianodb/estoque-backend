@@ -5,6 +5,7 @@ import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,7 @@ public class LoteResource {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
 	public ResponseEntity<Page<LoteMovimentacaoGetDTO>> findPage (
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="10") Integer linesPerPage,
@@ -43,6 +45,7 @@ public class LoteResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
 	public ResponseEntity<Void> insert(@RequestBody LoteMovimentacaoInsertDTO loteInsertDto){
 		
 		LoteMovimentacao lote;
@@ -60,6 +63,7 @@ public class LoteResource {
 	}
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
 	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody LoteMovimentacaoInsertDTO loteInsertDto){
 		
 		LoteMovimentacao lote = service.fromInsertDTO(loteInsertDto);
@@ -83,6 +87,7 @@ public class LoteResource {
 	
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
 	@CrossOrigin
 	public ResponseEntity<LoteMovimentacaoGetDTO> findById(@PathVariable Integer id){
 			
@@ -92,6 +97,7 @@ public class LoteResource {
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
 	@CrossOrigin
 	public ResponseEntity<LoteMovimentacao> Excluir(@PathVariable Integer id){
 			

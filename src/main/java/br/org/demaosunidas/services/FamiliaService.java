@@ -47,6 +47,12 @@ public class FamiliaService {
 		return obj. orElseThrow(() -> new ObjectNotFoudException("Objet non trouvé"));
 	}
 	
+	public Familia findByCpfResponsavel(String cpf) {
+		Familia obj = repo.findByCpfResponsavel(cpf);
+//		return obj. orElseThrow(() -> new ObjectNotFoudException("Objet non trouvé"));
+		return obj;
+	}
+	
 	public void insert(Familia obj) {
 		obj.setId(null);
 		Familia familia = repo.save(obj);

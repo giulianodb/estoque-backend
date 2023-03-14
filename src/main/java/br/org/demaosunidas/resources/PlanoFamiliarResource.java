@@ -5,6 +5,7 @@ import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,7 @@ public class PlanoFamiliarResource {
 	
 	@RequestMapping(value = "/familia/{idFamilia}", method = RequestMethod.GET)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Page<PlanoFamiliarDTO>> findPlanoFamiliar (@PathVariable Integer idFamilia,
 			@RequestParam(value="page",defaultValue="0") Integer page,
 			@RequestParam(value="linesPerPage",defaultValue="24") Integer linesPerPage,
@@ -44,6 +46,7 @@ public class PlanoFamiliarResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Void> insert(@RequestBody PlanoFamiliarDTO dto){
 		service.insert(dto);
 		
@@ -55,6 +58,7 @@ public class PlanoFamiliarResource {
 	}
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody PlanoFamiliarDTO dto){
 		dto.setId(id);
 		service.update(dto);
@@ -68,6 +72,7 @@ public class PlanoFamiliarResource {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Void> Excluir(@PathVariable Integer id){
 			
 		service.delete(id);

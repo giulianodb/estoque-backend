@@ -21,6 +21,7 @@ import br.org.demaosunidas.domain.Inscricao;
 import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.dto.InscricaoDTO;
+import br.org.demaosunidas.dto.InscricaoReportDTO;
 import br.org.demaosunidas.services.InscricaoService;
 
 @RestController
@@ -66,6 +67,40 @@ public class InscricaoResource {
 		
 		
 		return ResponseEntity.ok().body(listCriancaDTO);
+	}
+	
+	@RequestMapping(value="/relatorio/pesquisa", method = RequestMethod.GET)
+	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
+	public ResponseEntity<InscricaoReportDTO> findReport (
+			@RequestParam(value="page",defaultValue="0") Integer page,
+			@RequestParam(value="linesPerPage",defaultValue="800") Integer linesPerPage,
+			@RequestParam(value="orderBy",defaultValue="nome") String orderBy,
+			@RequestParam(value="direction",defaultValue="ASC") String direction,
+			@RequestParam(value="nomeCrianca",required = false) String nome,
+			@RequestParam(value="projeto",required = false) Integer projeto,
+			@RequestParam(value="ano",required = false) Integer ano,
+			@RequestParam(value="espera",required = false) Boolean espera) {
+		
+		
+		if (page > 0) {
+			page = page - 1;
+		}
+		
+		ProjetoEnum projetoEnum = null;
+		
+		List<ProjetoEnum> teste = Arrays.asList(ProjetoEnum.values());
+		if (projeto != -1) {
+			for (ProjetoEnum p : teste) {
+				if (projeto != null && p.ordinal() == projeto) {
+					projetoEnum = p;
+				}
+			}
+		}
+		
+		InscricaoReportDTO dto = service.searchRelatorio(nome, projetoEnum,espera,ano, page,linesPerPage,orderBy,direction);
+		
+		return ResponseEntity.ok().body(dto);
 	}
 	
 	@RequestMapping(value="/crianca/{idCrianca}", method = RequestMethod.GET)

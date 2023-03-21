@@ -23,7 +23,7 @@ public class UsuarioResource {
 	private UsuarioService service;
 	
 	@RequestMapping(method=RequestMethod.POST)
-	@PreAuthorize( "hasAnyRole('ROLE_Administrador')")
+//	@PreAuthorize( "hasAnyRole('ROLE_Administrador')")
 	public ResponseEntity<Void> insert(@RequestBody UsuarioNewDTO obj){
 		
 		service.insert(service.fromDTO(obj));

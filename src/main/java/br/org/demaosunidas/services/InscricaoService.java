@@ -1,5 +1,6 @@
 package br.org.demaosunidas.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,11 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.org.demaosunidas.domain.Inscricao;
+import br.org.demaosunidas.domain.enums.PeriodoEnum;
 import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.domain.enums.Status;
+import br.org.demaosunidas.dto.InscricaoDTO;
+import br.org.demaosunidas.dto.InscricaoReportDTO;
 import br.org.demaosunidas.repository.InscricaoRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
 
@@ -79,6 +83,39 @@ public class InscricaoService {
 		
 		return repo.searchQueryPorCrianca(idCrianca,pageRequest);
 		
+	}
+
+	public InscricaoReportDTO searchRelatorio(String nome, ProjetoEnum projetoEnum, Boolean espera, Integer ano,
+			Integer page, Integer linesPerPage, String orderBy, String direction) {
+			
+			List<Inscricao> lista = this.search(nome, projetoEnum, espera, ano, page, linesPerPage, orderBy, direction).getContent();
+			
+			InscricaoReportDTO dto = new InscricaoReportDTO();
+			
+			for (Inscricao i : lista) {
+				if (i.getListaEspera()) {
+					dto.setTotalEspera(dto.getTotalEspera() + 1);
+				} else {
+					dto.setTotalInscritos(dto.getTotalInscritos() + 1);
+				}
+				
+				if (i.getProjeto().equals(ProjetoEnum.FOCAR)) {
+					dto.setTotalFocar(dto.getTotalFocar());
+				} else {
+					dto.setTotalSCFV(dto.getTotalSCFV());
+				}
+				
+				if (i.getPeriodo().equals(PeriodoEnum.MANHA)) {
+					dto.setTotalManha(dto.getTotalManha() + 1);
+				} else {
+					dto.setTotalTarde(dto.getTotalTarde() + 1);
+				}
+				
+				dto.getListInscricao().add(new InscricaoDTO(i));
+			}
+			
+		// TODO Auto-generated method stub
+		return dto;
 	}
 
 	

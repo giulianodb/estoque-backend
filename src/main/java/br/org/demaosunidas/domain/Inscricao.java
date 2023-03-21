@@ -44,6 +44,7 @@ public class Inscricao implements Serializable {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Crianca crianca;
 	
+	@Column(nullable = false)
 	private Integer ano;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")

@@ -102,7 +102,7 @@ public class FamiliaResource {
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@CrossOrigin
-	@PreAuthorize("hasAnyRole('Administrador')")
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Familia> findById(@PathVariable Integer id){
 			
 		Familia obj = service.findById(id);

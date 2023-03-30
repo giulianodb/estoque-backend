@@ -34,6 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	//Liberar todos as urls e verbos
 	private static final String[] PUBLIC_MATCHERS = {
 		"/h2-console/**",
+		"/contas/**",
+		"/transacoes/**",
 		"/usuarios/**"
 	};
 	

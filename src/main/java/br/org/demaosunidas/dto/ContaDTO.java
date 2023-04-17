@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Enumerated;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import br.org.demaosunidas.domain.Conta;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.domain.enums.TipoContaEnum;
@@ -21,10 +23,13 @@ public class ContaDTO implements Serializable{
 	private String agenciaConta;
 	
 	@Enumerated
+	@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 	private TipoContaEnum tipoConta;
 	
 	@Enumerated
 	private Status status;
+	
+	private SaldoDTO saldo;
 	
 	public ContaDTO() {
 		// TODO Auto-generated constructor stub
@@ -97,6 +102,14 @@ public class ContaDTO implements Serializable{
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public SaldoDTO getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(SaldoDTO saldo) {
+		this.saldo = saldo;
 	}
 	
 }

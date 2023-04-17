@@ -2,15 +2,11 @@ package br.org.demaosunidas.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
 import br.org.demaosunidas.domain.Transacao;
 import br.org.demaosunidas.domain.enums.TipoTransacaoEnum;
@@ -24,12 +20,14 @@ public class TransacaoDTO implements Serializable{
 	
 	private BigDecimal valor;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd", locale = "pt_BR", timezone="America/Sao_Paulo")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt_BR", timezone="America/Sao_Paulo")
 //	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	//@DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "yyyy/MM/dd")
-	private Date data;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "yyyy/MM/dd")
+	private LocalDate data;
 	
 	private TipoTransacaoEnum tipoTransacaoEnum;
+	
+	private BigDecimal saldo;
 	
 	public TransacaoDTO() {
 		super();
@@ -39,8 +37,23 @@ public class TransacaoDTO implements Serializable{
 		this.id = obj.getId();
 		this.conta = new ContaDTO(obj.getConta());
 		this.valor = obj.getValor();
-		this.data = Date.from(obj.getData().atZone(ZoneId.systemDefault()).toInstant());
+//		this.data = Date.from(obj.getData().atZone(ZoneId.systemDefault()).toInstant());
+		this.data = obj.getData();
 		this.tipoTransacaoEnum = obj.getTipoTransacaoEnum();
+	}
+	
+	public TransacaoDTO(Transacao obj,BigDecimal saldoAnterior, boolean addConta) {
+		this.id = obj.getId();
+		if (addConta)
+			this.conta = new ContaDTO(obj.getConta());
+		this.valor = obj.getValor();
+//		this.data = Date.from(obj.getData().atZone(ZoneId.systemDefault()).toInstant());
+		this.data = obj.getData();
+		this.tipoTransacaoEnum = obj.getTipoTransacaoEnum();
+		if (saldoAnterior == null) {
+			saldoAnterior = new BigDecimal(0);
+		}
+		this.saldo = obj.getValor().add(saldoAnterior);
 	}
 
 	public Integer getId() {
@@ -75,11 +88,20 @@ public class TransacaoDTO implements Serializable{
 		this.tipoTransacaoEnum = tipoTransacaoEnum;
 	}
 
-	public Date getData() {
+
+	public BigDecimal getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(BigDecimal saldo) {
+		this.saldo = saldo;
+	}
+
+	public LocalDate getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 

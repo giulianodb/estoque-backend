@@ -2,6 +2,7 @@ package br.org.demaosunidas.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -35,7 +36,7 @@ public class Saldo implements Serializable{
 	
 //	@Temporal(value=TemporalType.TIMESTAMP )
 	@Column(name="data")
-	private LocalDateTime data;
+	private LocalDate data;
 
 	public Saldo() {
 		super();
@@ -65,6 +66,8 @@ public class Saldo implements Serializable{
 	}
 
 	public BigDecimal getValor() {
+		if (valor == null)
+			valor = new BigDecimal(0);
 		return valor;
 	}
 
@@ -72,11 +75,11 @@ public class Saldo implements Serializable{
 		this.valor = valor;
 	}
 
-	public LocalDateTime getData() {
+	public LocalDate getData() {
 		return data;
 	}
 
-	public void setData(LocalDateTime data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 	

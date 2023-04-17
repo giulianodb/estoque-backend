@@ -2,6 +2,7 @@ package br.org.demaosunidas.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -38,7 +39,7 @@ public class Transacao implements Serializable{
 	
 //	@Temporal(value=TemporalType.TIMESTAMP )
 	@Column(name="data")
-	private LocalDateTime data;
+	private LocalDate data;
 	
 	@Enumerated
 	private TipoTransacaoEnum tipoTransacaoEnum;
@@ -52,9 +53,9 @@ public class Transacao implements Serializable{
 		this.id = obj.getId();
 		this.conta = new Conta(obj.getConta());
 		this.valor = obj.getValor();
-		this.data = obj.getData().toInstant()
-			      .atZone(ZoneId.systemDefault())
-			      .toLocalDateTime();
+		this.data = obj.getData();
+			      
+		
 		this.tipoTransacaoEnum = obj.getTipoTransacaoEnum();
 		
 	}
@@ -90,12 +91,12 @@ public class Transacao implements Serializable{
 	}
 
 
-	public LocalDateTime getData() {
+	public LocalDate getData() {
 		return data;
 	}
 
 
-	public void setData(LocalDateTime data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 

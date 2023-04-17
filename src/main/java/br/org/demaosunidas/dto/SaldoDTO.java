@@ -2,6 +2,7 @@ package br.org.demaosunidas.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -19,7 +20,7 @@ public class SaldoDTO implements Serializable{
 	private BigDecimal valor;
 	
 	@Column(name="data")
-	private LocalDateTime data;
+	private LocalDate data;
 
 	public SaldoDTO() {
 		super();
@@ -56,11 +57,11 @@ public class SaldoDTO implements Serializable{
 		this.valor = valor;
 	}
 
-	public LocalDateTime getData() {
+	public LocalDate getData() {
 		return data;
 	}
 
-	public void setData(LocalDateTime data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 

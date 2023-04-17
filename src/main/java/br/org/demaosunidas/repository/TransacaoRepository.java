@@ -1,6 +1,8 @@
 package br.org.demaosunidas.repository;
 
 import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +27,11 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Integer>{
 	@Transactional(readOnly=true)
 	@Query("SELECT obj FROM Transacao obj WHERE obj.data >= :data AND obj.conta.id = :idConta ORDER BY obj.data ASC" )
 	Page <Transacao> obterTransacoesPosteriores(@Param("data") LocalDateTime data, @Param("idConta") Integer idConta, Pageable pageRequest);
+	
+	@Transactional(readOnly=true)
+	@Query("SELECT obj FROM Transacao obj WHERE obj.data >= :dataInicio AND obj.data <= :dataFim AND obj.conta.id = :idConta ORDER BY obj.data ASC" )
+	Page <Transacao> obterTransacoesPorData(@Param("dataInicio") LocalDate dataInicio,@Param("dataFim") LocalDate dataFim, @Param("idConta") Integer idConta, Pageable pageRequest);
+		
 	
 	List<Transacao> findByConta(Conta conta);
 	

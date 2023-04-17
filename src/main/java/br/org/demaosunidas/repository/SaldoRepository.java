@@ -18,7 +18,7 @@ public interface SaldoRepository extends JpaRepository<Saldo, Integer>{
 	
 	
 	@Transactional(readOnly=true)
-	@Query(value = "SELECT obj FROM Saldo obj WHERE obj.conta.id = :idConta AND obj.data < :data ORDER BY obj.data DESC" )
+	@Query(value = "SELECT obj FROM Saldo obj WHERE obj.conta.id = :idConta AND obj.data <= :data ORDER BY obj.data DESC" )
 	List<Saldo> obterSaldoPorContaAndData(Integer idConta, LocalDate data, Pageable pageRequest);
 
 	@Transactional(readOnly=true)

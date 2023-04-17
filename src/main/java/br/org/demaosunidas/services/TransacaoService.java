@@ -54,7 +54,7 @@ public class TransacaoService {
 		BigDecimal valorASomar = saldo.getValor();
 		
 		for (Transacao x : listaTransacao) {
-			TransacaoDTO dto = new TransacaoDTO(x,valorASomar,false);
+			TransacaoDTO dto = new TransacaoDTO(x,valorASomar,true);
 			valorASomar = dto.getSaldo();
 			listaTransacaoDTO.add(dto);
 		}
@@ -70,7 +70,7 @@ public class TransacaoService {
 	}
 	
 	@Transactional
-	public void insert(Transacao obj) {
+	public Transacao insert(Transacao obj) {
 		obj.setId(null);
 		
 		Saldo s = new Saldo();
@@ -80,7 +80,7 @@ public class TransacaoService {
 		
 		saldoService.insert(s);
 		
-		repo.save(obj);
+		return repo.save(obj);
 	}
 	
 	@Transactional

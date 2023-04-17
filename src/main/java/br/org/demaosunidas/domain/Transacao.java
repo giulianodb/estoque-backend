@@ -3,8 +3,6 @@ package br.org.demaosunidas.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +16,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import br.org.demaosunidas.domain.enums.TipoTransacaoEnum;
-import br.org.demaosunidas.dto.ContaDTO;
 import br.org.demaosunidas.dto.TransacaoDTO;
 
 @Entity
@@ -31,6 +28,8 @@ public class Transacao implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "TRANSACAO_ID")
 	@Column(name = "id")
 	private Integer id;
+	
+	private String descricao;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Conta conta;
@@ -54,7 +53,7 @@ public class Transacao implements Serializable{
 		this.conta = new Conta(obj.getConta());
 		this.valor = obj.getValor();
 		this.data = obj.getData();
-			      
+		this.descricao = obj.getDescricao();	      
 		
 		this.tipoTransacaoEnum = obj.getTipoTransacaoEnum();
 		
@@ -108,6 +107,14 @@ public class Transacao implements Serializable{
 
 	public void setTipoTransacaoEnum(TipoTransacaoEnum tipoTransacaoEnum) {
 		this.tipoTransacaoEnum = tipoTransacaoEnum;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 

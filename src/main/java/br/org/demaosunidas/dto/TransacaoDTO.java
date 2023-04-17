@@ -16,13 +16,15 @@ public class TransacaoDTO implements Serializable{
 	private static final long serialVersionUID = 8996467323445786863L;
 	private Integer id;
 	
+	private String descricao;
+	
 	private ContaDTO conta;
 	
 	private BigDecimal valor;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt_BR", timezone="America/Sao_Paulo")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
 //	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "yyyy/MM/dd")
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "dd/MM/yyyy")
 	private LocalDate data;
 	
 	private TipoTransacaoEnum tipoTransacaoEnum;
@@ -40,6 +42,7 @@ public class TransacaoDTO implements Serializable{
 //		this.data = Date.from(obj.getData().atZone(ZoneId.systemDefault()).toInstant());
 		this.data = obj.getData();
 		this.tipoTransacaoEnum = obj.getTipoTransacaoEnum();
+		this.descricao = obj.getDescricao();
 	}
 	
 	public TransacaoDTO(Transacao obj,BigDecimal saldoAnterior, boolean addConta) {
@@ -49,6 +52,7 @@ public class TransacaoDTO implements Serializable{
 		this.valor = obj.getValor();
 //		this.data = Date.from(obj.getData().atZone(ZoneId.systemDefault()).toInstant());
 		this.data = obj.getData();
+		this.descricao = obj.getDescricao();
 		this.tipoTransacaoEnum = obj.getTipoTransacaoEnum();
 		if (saldoAnterior == null) {
 			saldoAnterior = new BigDecimal(0);
@@ -103,6 +107,14 @@ public class TransacaoDTO implements Serializable{
 
 	public void setData(LocalDate data) {
 		this.data = data;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	

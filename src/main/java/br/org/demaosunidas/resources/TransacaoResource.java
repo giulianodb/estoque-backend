@@ -65,10 +65,10 @@ public class TransacaoResource {
 	public ResponseEntity<Void> insert(@RequestBody TransacaoDTO obj){
 		
 		try {
-			service.insert(new Transacao(obj));
+			Transacao ret = service.insert(new Transacao(obj));
 			
 			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-					path("/{id}").buildAndExpand(obj.getId()).toUri();
+					path("/{id}").buildAndExpand(ret.getId()).toUri();
 			return ResponseEntity.created(uri).build();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

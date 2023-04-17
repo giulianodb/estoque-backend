@@ -28,7 +28,9 @@ public class SaldoDTO implements Serializable{
 	
 	public SaldoDTO(Saldo obj) {
 		this.id = obj.getId();
-		this.conta = new ContaDTO(obj.getConta());
+		if (obj.getConta() != null) {
+			this.conta = new ContaDTO(obj.getConta());
+		}
 		this.valor = obj.getValor();
 		this.data = obj.getData();
 	}

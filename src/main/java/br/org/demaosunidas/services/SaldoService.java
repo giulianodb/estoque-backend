@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.org.demaosunidas.domain.Saldo;
+import br.org.demaosunidas.domain.Transacao;
 import br.org.demaosunidas.repository.SaldoRepository;
 
 @Service
@@ -32,9 +33,36 @@ public class SaldoService {
 		}
 	}
 	
+	public Saldo obterUltimoSaldo(Integer idConta, LocalDate data) {
+		// TODO Auto-generated method stub
+		PageRequest pageRequest = PageRequest.of(0,1);
+		List<Saldo> result =  repo.obterUltimoSaldoPorContaAndData(idConta, data,pageRequest);
+		
+		if (result.size() > 0) {
+			return result.get(0);
+		} else {
+			return new Saldo();
+		}
+	}
 	
 	
+	/**
+	 * obtem saldos para frente, desconsidera da dataa atual
+	 * @param idConta
+	 * @param data
+	 * @return
+	 */
+	public List<Saldo> obterTodosSaldoMenosData(Integer idConta, LocalDate data) {
+		// TODO Auto-generated method stub
+		return repo.obterListaSaldoPorContaAndDataEmFrente(idConta, data);
+	}
 	
+	/**
+	 * Obtem todos os saldos inclusive da mesma data
+	 * @param idConta
+	 * @param data
+	 * @return
+	 */
 	public List<Saldo> obterTodosSaldo(Integer idConta, LocalDate data) {
 		// TODO Auto-generated method stub
 		return repo.obterListaSaldoPorContaAndData(idConta, data);
@@ -65,7 +93,7 @@ public class SaldoService {
 			saldoBanco = obj;
 		}
 		
-		List<Saldo> saldosParaFrente = this.obterTodosSaldo(obj.getConta().getId(), obj.getData());
+		List<Saldo> saldosParaFrente = this.obterTodosSaldoMenosData(obj.getConta().getId(), obj.getData());
 		
 		if (saldosParaFrente.size() > 0) {
 			for (Saldo saldo : saldosParaFrente) {
@@ -90,6 +118,19 @@ public class SaldoService {
 
 	private void updateData(Saldo objBanco, Saldo objAlterado) {
 		objBanco.setValor(objAlterado.getValor());
+		
+	}
+	/**
+	 * Alterar os saldos em frente, desfazendo os valores da transacação 
+	 * @param objBanco
+	 */
+	public void desfazerSaldosEmFrente(Transacao objBanco) {
+		
+		List<Saldo> saldosParaFrente = this.obterTodosSaldo(objBanco.getConta().getId(), objBanco.getData());
+		for (Saldo saldo : saldosParaFrente) {
+			saldo.setValor(saldo.getValor().subtract(objBanco.getValor()));
+			repo.saveAndFlush(saldo);
+		}
 		
 	}
 }

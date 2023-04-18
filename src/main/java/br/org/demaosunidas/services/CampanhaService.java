@@ -40,6 +40,7 @@ public class CampanhaService {
 	
 	public void insert(Campanha obj) {
 		obj.setId(null);
+		obj.setStatus(Status.ATIVO);
 		repo.save(obj);
 	}
 	

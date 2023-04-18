@@ -13,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,9 +37,9 @@ public class TransacaoResource {
 //	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
 	public ResponseEntity<List<TransacaoDTO>> findPage (
 			@RequestParam(value="idConta") Integer idConta,
-			@RequestParam(value="dataInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "yyyy.MM.dd")  LocalDate dataInicio,
-			@RequestParam(value="dataFim", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "yyyy.MM.dd")  LocalDate dataFim,
-			@RequestParam(value="dias30",defaultValue="true") Boolean dias30,
+			@RequestParam(value="dataInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "yyyy-MM-dd")  LocalDate dataInicio,
+			@RequestParam(value="dataFim", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "yyyy-MM-dd")  LocalDate dataFim,
+			@RequestParam(value="dias30",defaultValue="false") Boolean dias30,
 			@RequestParam(value="dias60",defaultValue="false") Boolean dias60
 			
 			) {
@@ -78,9 +79,9 @@ public class TransacaoResource {
 		}
 	}
 	
-	@RequestMapping(method=RequestMethod.PUT,path = "id")
+	@RequestMapping(method=RequestMethod.PUT,value = "/{id}")
 //	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
-	public ResponseEntity<Void> update(@RequestBody TransacaoDTO obj, @PathParam("id") Integer id){
+	public ResponseEntity<Void> update(@RequestBody TransacaoDTO obj, @PathVariable("id") Integer id){
 		
 		try {
 			obj.setId(id);
@@ -89,6 +90,22 @@ public class TransacaoResource {
 			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
 					path("/{id}").buildAndExpand(obj.getId()).toUri();
 			return ResponseEntity.created(uri).build();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
+	@RequestMapping(method=RequestMethod.DELETE,value = "/{id}")
+//	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	public ResponseEntity<Void> delete(@PathVariable("id") Integer id){
+		
+		try {
+			service.delete(id);
+			
+			return ResponseEntity.ok().build();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

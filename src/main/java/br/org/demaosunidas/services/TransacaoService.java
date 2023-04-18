@@ -46,7 +46,7 @@ public class TransacaoService {
 	
 	public List<TransacaoDTO> listarTransacaoComSaldo (LocalDate dataInicio,LocalDate dataFim, Integer idConta) {
 		
-		Saldo saldo = saldoService.obterSaldo(idConta, dataInicio);
+		Saldo saldo = saldoService.obterUltimoSaldo(idConta, dataInicio);
 		
 		List<Transacao> listaTransacao = this.search(dataInicio, dataFim, idConta);
 		List<TransacaoDTO> listaTransacaoDTO = new ArrayList<>();
@@ -88,15 +88,31 @@ public class TransacaoService {
 		
 		Transacao transacaoBanco = repo.findById(obj.getId()).get();
 		
+		//Verificar a necessidade de alterar os SALDOS
+		
+		if (obj.getValor().compareTo(transacaoBanco.getValor()) != 0  || 
+				!obj.getData().equals(transacaoBanco.getData()) || 
+				!obj.getConta().getId().equals(transacaoBanco.getConta().getId())) {
+			
+			saldoService.desfazerSaldosEmFrente(transacaoBanco);
+			
+			Saldo novoSaldo = new Saldo();
+			novoSaldo.setConta(obj.getConta());
+			novoSaldo.setData(obj.getData());
+			novoSaldo.setValor(obj.getValor());
+			
+			saldoService.insert(novoSaldo);
+		}
+		
 		// Data é a mesma
 		// Valor é o mesmo
 		
 		// Conta é a mesma
-		  /*
-		   *  ---- Data não é a mesma?
-		   *       
-		   */
-		
+				  /*
+				   *  ---- Data não é a mesma?
+				   *       
+				   */
+				
 		
 		
 		//Verificar se a conta é a mesma
@@ -112,18 +128,22 @@ public class TransacaoService {
 		 * -------
 		 */
 		
+		transacaoBanco.setConta(obj.getConta());
+		transacaoBanco.setData(obj.getData());
+		transacaoBanco.setDescricao(obj.getDescricao());
+		transacaoBanco.setTipoTransacaoEnum(obj.getTipoTransacaoEnum());
+		transacaoBanco.setValor(obj.getValor());
 		
-		
-		Saldo s = new Saldo();
-		s.setConta(obj.getConta());
-		s.setData(obj.getData());
-		s.setValor(obj.getValor());
-		
-		saldoService.insert(s);
-		
-		repo.save(obj);
+		repo.save(transacaoBanco);
 	}
 	
+	
+	@Transactional
+	public void delete (Integer id) {
+		Transacao transacaoBanco = repo.findById(id).get();
+		saldoService.desfazerSaldosEmFrente(transacaoBanco);
+		repo.delete(transacaoBanco);
+	}
 	
 	public List<Transacao> buscarTransacaoPorConta(Integer codConta){
 		Conta lote = new Conta(codConta);

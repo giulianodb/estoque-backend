@@ -55,6 +55,7 @@ public class FamiliaService {
 	
 	public void insert(Familia obj) {
 		obj.setId(null);
+		obj.setStatus(Status.ATIVO);
 		Familia familia = repo.save(obj);
 		obj.getListMembroFamilia().forEach(x -> x.setFamilia(familia));
 		

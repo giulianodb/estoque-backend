@@ -36,9 +36,9 @@ public class ContaService {
 	}
 	
 	
-	public void insert(Conta obj) {
+	public Conta insert(Conta obj) {
 		obj.setId(null);
-		repo.save(obj);
+		return repo.save(obj);
 	}
 	
 	public Conta update(Conta objAlterado) {
@@ -47,7 +47,7 @@ public class ContaService {
 		return repo.save(objBanco);
 	}
 	
-	public void deletar (Integer id) {
+	public void delete (Integer id) {
 		Conta obj = findById(id);
 		obj.setStatus(Status.INATIVO);
 		repo.save(obj);

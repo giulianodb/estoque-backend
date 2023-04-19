@@ -94,27 +94,28 @@ public class ContaResource {
 	@RequestMapping(method=RequestMethod.POST)
 	//@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
 	public ResponseEntity<Void> insert(@RequestBody ContaDTO conta){
-		service.insert(new Conta(conta));
+		Conta obj = new Conta(conta);
+		obj = service.insert(obj);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-				path("/{id}").buildAndExpand(conta.getId()).toUri();
+				path("/{id}").buildAndExpand(obj.getId()).toUri();
 		
 		return ResponseEntity.created(uri).build();
 		
 	}
 	
-//	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
+	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
 //	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
-//	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody Doador doador){
-//		doador.setId(id);
-//		service.update(doador);
-//		
-//		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-//				path("/{id}").buildAndExpand(doador.getId()).toUri();
-//		
-//		return ResponseEntity.created(uri).build();
-//		
-//	}
+	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody ContaDTO contaDTO){
+		contaDTO.setId(id);
+		service.update(new Conta(contaDTO));
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
+				path("/{id}").buildAndExpand(id).toUri();
+		
+		return ResponseEntity.created(uri).build();
+		
+	}
 //	
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -125,6 +126,16 @@ public class ContaResource {
 		ContaDTO obj = new ContaDTO(service.findById(id));
 		
 		return ResponseEntity.ok().body(obj);
+	}
+	
+	
+	@RequestMapping(value="/{id}",method=RequestMethod.DELETE)
+//	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	public ResponseEntity<Void> update(@PathVariable Integer id){
+		service.delete(id);
+		
+		return ResponseEntity.ok().build();
+		
 	}
 	
 //	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +35,7 @@ public class TransacaoResource {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@CrossOrigin
-//	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
 	public ResponseEntity<List<TransacaoDTO>> findPage (
 			@RequestParam(value="idConta") Integer idConta,
 			@RequestParam(value="dataInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "yyyy-MM-dd")  LocalDate dataInicio,
@@ -62,7 +63,7 @@ public class TransacaoResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-//	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
 	public ResponseEntity<Void> insert(@RequestBody TransacaoDTO obj){
 		
 		try {
@@ -80,7 +81,7 @@ public class TransacaoResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT,value = "/{id}")
-//	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
 	public ResponseEntity<Void> update(@RequestBody TransacaoDTO obj, @PathVariable("id") Integer id){
 		
 		try {
@@ -99,7 +100,7 @@ public class TransacaoResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.DELETE,value = "/{id}")
-//	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
 	public ResponseEntity<Void> delete(@PathVariable("id") Integer id){
 		
 		try {

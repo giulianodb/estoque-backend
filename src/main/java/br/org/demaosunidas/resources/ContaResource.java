@@ -36,7 +36,7 @@ public class ContaResource {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@CrossOrigin
-//	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
 	public ResponseEntity<List<ContaDTO> > findAll () {
 		List<ContaDTO> listaDTO = new ArrayList<>();
 		
@@ -49,7 +49,7 @@ public class ContaResource {
 	
 	@RequestMapping(path = "/tipo_conta/todos", method = RequestMethod.GET)
 	@CrossOrigin
-//	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
 	public ResponseEntity<List<ContaPorTipoDTO> > findAllTipoConta () {
 		List<ContaPorTipoDTO> listaTipo = new ArrayList<>();
 		
@@ -92,7 +92,7 @@ public class ContaResource {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	//@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
 	public ResponseEntity<Void> insert(@RequestBody ContaDTO conta){
 		Conta obj = new Conta(conta);
 		obj = service.insert(obj);
@@ -105,7 +105,7 @@ public class ContaResource {
 	}
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
-//	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
 	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody ContaDTO contaDTO){
 		contaDTO.setId(id);
 		service.update(new Conta(contaDTO));
@@ -130,7 +130,7 @@ public class ContaResource {
 	
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.DELETE)
-//	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
 	public ResponseEntity<Void> update(@PathVariable Integer id){
 		service.delete(id);
 		

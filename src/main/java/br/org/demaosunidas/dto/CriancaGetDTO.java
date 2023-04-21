@@ -1,6 +1,9 @@
 package br.org.demaosunidas.dto;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -47,6 +50,8 @@ public class CriancaGetDTO implements Serializable{
 	private String descricaoMedicamento;
 	
 	private String religiao;
+	
+	private Integer idade;
 	
 	public String getSexo() {
 		return sexo;
@@ -167,7 +172,7 @@ public class CriancaGetDTO implements Serializable{
 //		this.listaEspera = obj.getListaEspera();
 //		this.matriculado = obj.getMatriculado();
 //		this.projeto = obj.getProjeto();
-		
+//		this.getIdade();
 	}
 	
 	public Integer getId() {
@@ -229,6 +234,19 @@ public class CriancaGetDTO implements Serializable{
 	}
 	public void setTotalSituacao(Integer totalSituacao) {
 		this.totalSituacao = totalSituacao;
+	}
+
+	public Integer getIdade() {
+		LocalDate dataNascimentoLocal = dataNascimento.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	    LocalDate dataAtual = LocalDate.now();
+	    Period periodo = Period.between(dataNascimentoLocal, dataAtual);
+	    idade =  periodo.getYears();
+		
+		return idade;
+	}
+
+	public void setIdade(Integer idade) {
+		this.idade = idade;
 	}
 	
 }

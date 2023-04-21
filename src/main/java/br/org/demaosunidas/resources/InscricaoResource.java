@@ -43,7 +43,16 @@ public class InscricaoResource {
 			@RequestParam(value="nomeCrianca",required = false) String nome,
 			@RequestParam(value="projeto",required = false) Integer projeto,
 			@RequestParam(value="ano",required = false) Integer ano,
-			@RequestParam(value="espera",required = false) Boolean espera) {
+			@RequestParam(value="espera",required = false) String espera) {
+		
+		
+		Boolean listaEspera;
+		if (espera.equals("null")) {
+			listaEspera = null;
+		}
+		else {
+			listaEspera = Boolean.valueOf(espera);
+		}
 		
 		
 		if (page > 0) {
@@ -61,7 +70,7 @@ public class InscricaoResource {
 			}
 		}
 		
-		Page<Inscricao> lista = service.search(nome, projetoEnum,espera,ano, page,linesPerPage,orderBy,direction);
+		Page<Inscricao> lista = service.search(nome, projetoEnum,listaEspera,ano, page,linesPerPage,orderBy,direction);
 		
 		Page<InscricaoDTO> listCriancaDTO = lista.map(obj -> new InscricaoDTO(obj));
 		
@@ -80,7 +89,15 @@ public class InscricaoResource {
 			@RequestParam(value="nomeCrianca",required = false) String nome,
 			@RequestParam(value="projeto",required = false) Integer projeto,
 			@RequestParam(value="ano",required = false) Integer ano,
-			@RequestParam(value="espera",required = false) Boolean espera) {
+			@RequestParam(value="espera",required = false) String espera) {
+		
+		Boolean listaEspera;
+		if (espera.equals("null")) {
+			listaEspera = null;
+		}
+		else {
+			listaEspera = Boolean.valueOf(espera);
+		}
 		
 		
 		if (page > 0) {
@@ -98,7 +115,7 @@ public class InscricaoResource {
 			}
 		}
 		
-		InscricaoReportDTO dto = service.searchRelatorio(nome, projetoEnum,espera,ano, page,linesPerPage,orderBy,direction);
+		InscricaoReportDTO dto = service.searchRelatorio(nome, projetoEnum,listaEspera,ano, page,linesPerPage,orderBy,direction);
 		
 		return ResponseEntity.ok().body(dto);
 	}
@@ -113,7 +130,6 @@ public class InscricaoResource {
 			@RequestParam(value="direction",defaultValue="DESC") String direction,
 			@RequestParam(value="projeto",required = false) Integer projeto,
 			@RequestParam(value="ano",required = false) Integer ano,
-			@RequestParam(value="espera",required = false) Boolean espera,
 			@PathVariable Integer idCrianca ) {
 		
 		

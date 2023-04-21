@@ -17,7 +17,7 @@ public interface InscricaoRepository extends JpaRepository<Inscricao, Integer>{
 
 //	@Transactional(readOnly=true)
 	@Query("SELECT DISTINCT obj FROM Inscricao obj LEFT JOIN obj.crianca c WHERE ( (:nome is null or c.nome LIKE %:nome%)  AND (:espera  is null OR obj.listaEspera = :espera) AND (:projeto is null OR obj.projeto = :projeto)AND (:ano is null OR obj.ano = :ano) )" )
-	Page<Inscricao> searchQuery(@Param("nome") String nome, @Param("projeto") ProjetoEnum projeto ,@Param("espera") boolean espera,@Param ("ano") Integer ano, Pageable pageRequest);
+	Page<Inscricao> searchQuery(@Param("nome") String nome, @Param("projeto") ProjetoEnum projeto ,@Param("espera") Boolean espera,@Param ("ano") Integer ano, Pageable pageRequest);
 	
 //	@Transactional(readOnly=true)
 //	@Query("SELECT DISTINCT obj FROM Crianca obj WHERE ( (:nome is null or obj.nome LIKE %:nome%) AND (:matriculado  is null OR obj.matriculado = :matriculado) )" )

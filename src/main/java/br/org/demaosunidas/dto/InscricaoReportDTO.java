@@ -10,15 +10,21 @@ public class InscricaoReportDTO implements Serializable {
 	
 	private Integer totalInscritos = 0;
 	
+	private Integer totalEspera = 0;
+	
 	private Integer totalManha = 0;
 	
 	private Integer totalTarde = 0;
+	
+	private Integer totalManhaEspera = 0;
+	
+	private Integer totalTardeEspera = 0;
 	
 	private Integer totalFocar = 0;
 	
 	private Integer totalSCFV = 0;
 	
-	private Integer totalEspera = 0;
+
 	
 	private List<InscricaoDTO> listInscricao = new ArrayList<>();
 
@@ -76,6 +82,22 @@ public class InscricaoReportDTO implements Serializable {
 
 	public void setTotalEspera(Integer totalEspera) {
 		this.totalEspera = totalEspera;
+	}
+
+	public Integer getTotalManhaEspera() {
+		return totalManhaEspera;
+	}
+
+	public void setTotalManhaEspera(Integer totalManhaEspera) {
+		this.totalManhaEspera = totalManhaEspera;
+	}
+
+	public Integer getTotalTardeEspera() {
+		return totalTardeEspera;
+	}
+
+	public void setTotalTardeEspera(Integer totalTardeEspera) {
+		this.totalTardeEspera = totalTardeEspera;
 	}
 	
 	

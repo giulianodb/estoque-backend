@@ -95,21 +95,22 @@ public class InscricaoService {
 			for (Inscricao i : lista) {
 				if (i.getListaEspera()) {
 					dto.setTotalEspera(dto.getTotalEspera() + 1);
+					
+					if (i.getPeriodo().equals(PeriodoEnum.MANHA)) {
+						dto.setTotalManhaEspera (dto.getTotalManhaEspera() + 1);
+					} else {
+						dto.setTotalTardeEspera(dto.getTotalTardeEspera() + 1);
+					}
+					
 				} else {
 					dto.setTotalInscritos(dto.getTotalInscritos() + 1);
+					if (i.getPeriodo().equals(PeriodoEnum.MANHA)) {
+						dto.setTotalManha(dto.getTotalManha() + 1);
+					} else {
+						dto.setTotalTarde(dto.getTotalTarde() + 1);
+					}
 				}
 				
-				if (i.getProjeto().equals(ProjetoEnum.FOCAR)) {
-					dto.setTotalFocar(dto.getTotalFocar());
-				} else {
-					dto.setTotalSCFV(dto.getTotalSCFV());
-				}
-				
-				if (i.getPeriodo().equals(PeriodoEnum.MANHA)) {
-					dto.setTotalManha(dto.getTotalManha() + 1);
-				} else {
-					dto.setTotalTarde(dto.getTotalTarde() + 1);
-				}
 				
 				dto.getListInscricao().add(new InscricaoDTO(i));
 			}

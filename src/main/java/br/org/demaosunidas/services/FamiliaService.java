@@ -12,12 +12,15 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.org.demaosunidas.domain.Familia;
+import br.org.demaosunidas.domain.Instituicao;
 import br.org.demaosunidas.domain.MembroFamilia;
 import br.org.demaosunidas.domain.Moradia;
 import br.org.demaosunidas.domain.Motivo;
 import br.org.demaosunidas.domain.ProgramasSociais;
 import br.org.demaosunidas.domain.VisitaDomiciliar;
 import br.org.demaosunidas.domain.enums.Status;
+import br.org.demaosunidas.dto.FamiliaDTO;
+import br.org.demaosunidas.dto.InstituicaoDTO;
 import br.org.demaosunidas.repository.FamiliaRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
 
@@ -31,7 +34,7 @@ public class FamiliaService {
 	private FamiliaMembroService serviceMembroFamilia;
 	
 	public List<Familia> listar() {
-		return repo.findAll();
+		return repo.findAllByOrderByNomeResponsavel();
 	}
 	
 	public Page<Familia> search (String nome, Integer page,Integer linesPerPage, String orderBy, String direction) {
@@ -232,6 +235,13 @@ public class FamiliaService {
 		
 	}
 
-	
+	public static FamiliaDTO entityToDto(Familia entity) {
+		FamiliaDTO dto = new FamiliaDTO();
+		
+		dto.setId(entity.getId());
+		dto.setNomeResponsavel(entity.getNomeResponsavel());
+		
+		return dto;
+	}
 	
 }

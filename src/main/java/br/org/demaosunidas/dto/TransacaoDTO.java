@@ -4,11 +4,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.persistence.Enumerated;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.org.demaosunidas.domain.Transacao;
+import br.org.demaosunidas.domain.enums.TipoParceiroEnum;
 import br.org.demaosunidas.domain.enums.TipoTransacaoEnum;
 
 public class TransacaoDTO implements Serializable{
@@ -29,7 +32,23 @@ public class TransacaoDTO implements Serializable{
 	
 	private TipoTransacaoEnum tipoTransacaoEnum;
 	
+	private FamiliaDTO familia;
+	
+	private DoadorDTO doador;
+	
+	private InstituicaoDTO instituicao;
+	
+	@Enumerated
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	private TipoParceiroEnum tipoParceiro;
+	
 	private BigDecimal saldo;
+	
+	private Integer idDoador;
+	
+	private Integer idFamilia;
+	
+	private Integer idInstituicao;
 	
 	public TransacaoDTO() {
 		super();
@@ -59,7 +78,31 @@ public class TransacaoDTO implements Serializable{
 		}
 		this.saldo = obj.getValor().add(saldoAnterior);
 	}
-
+	
+	public void definirObjetos() {
+		if (tipoParceiro.equals(TipoParceiroEnum.FAMILIA)) {
+			FamiliaDTO f = new FamiliaDTO();
+			f.setId(this.idFamilia);
+			
+			idDoador = null;
+			idInstituicao = null;
+			this.familia = f;
+		} else if (tipoParceiro.equals(TipoParceiroEnum.DOADOR)) {
+			DoadorDTO d = new DoadorDTO();
+			d.setId(idDoador);
+			idInstituicao = null;
+			idFamilia = null;
+			this.doador = d;
+		} else {
+			InstituicaoDTO i = new InstituicaoDTO();
+			i.setId(idInstituicao);
+			this.instituicao = i;
+			idFamilia = null;
+			idDoador = null;
+		}
+		
+	}
+	
 	public Integer getId() {
 		return id;
 	}
@@ -115,6 +158,63 @@ public class TransacaoDTO implements Serializable{
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public FamiliaDTO getFamilia() {
+		return familia;
+	}
+
+	public void setFamilia(FamiliaDTO familia) {
+		this.familia = familia;
+	}
+
+	public DoadorDTO getDoador() {
+		return doador;
+	}
+
+	public void setDoador(DoadorDTO doador) {
+		this.doador = doador;
+	}
+
+	public InstituicaoDTO getInstituicao() {
+		return instituicao;
+	}
+
+	public void setInstituicao(InstituicaoDTO instituicao) {
+		this.instituicao = instituicao;
+	}
+
+	public TipoParceiroEnum getTipoParceiro() {
+		return tipoParceiro;
+	}
+
+	public void setTipoParceiro(TipoParceiroEnum tipoParceiro) {
+		this.tipoParceiro = tipoParceiro;
+	}
+
+
+	public Integer getIdFamilia() {
+		return idFamilia;
+	}
+
+	public void setIdFamilia(Integer idFamilia) {
+		this.idFamilia = idFamilia;
+	}
+
+	public Integer getIdInstituicao() {
+		return idInstituicao;
+	}
+
+	public void setIdInstituicao(Integer idInstituicao) {
+		this.idInstituicao = idInstituicao;
+	}
+
+	public Integer getIdDoador() {
+		return idDoador;
+	}
+
+	public void setIdDoador(Integer idDoador) {
+		this.idDoador = idDoador;
 	}
 
 	

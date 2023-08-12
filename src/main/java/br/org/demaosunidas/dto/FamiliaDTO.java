@@ -13,8 +13,10 @@ public class FamiliaDTO implements Serializable{
 	private String nomeResponsavel;
 
 	public FamiliaDTO(Familia familia) {
-		this.id = familia.getId();
-		this.nomeResponsavel = familia.getNomeResponsavel();
+		if (familia != null) {
+			this.id = familia.getId();
+			this.nomeResponsavel = familia.getNomeResponsavel();
+		}
 	}
 	
 	public FamiliaDTO() {

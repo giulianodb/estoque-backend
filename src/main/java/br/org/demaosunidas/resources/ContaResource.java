@@ -94,11 +94,11 @@ public class ContaResource {
 	@RequestMapping(method=RequestMethod.POST)
 	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
 	public ResponseEntity<Void> insert(@RequestBody ContaDTO conta){
-		Conta obj = new Conta(conta);
-		obj = service.insert(obj);
+		
+		conta = service.insert(conta);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-				path("/{id}").buildAndExpand(obj.getId()).toUri();
+				path("/{id}").buildAndExpand(conta.getId()).toUri();
 		
 		return ResponseEntity.created(uri).build();
 		
@@ -108,7 +108,8 @@ public class ContaResource {
 	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
 	public ResponseEntity<Void> update(@PathVariable Integer id,@RequestBody ContaDTO contaDTO){
 		contaDTO.setId(id);
-		service.update(new Conta(contaDTO));
+		
+		service.update(contaDTO);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
 				path("/{id}").buildAndExpand(id).toUri();

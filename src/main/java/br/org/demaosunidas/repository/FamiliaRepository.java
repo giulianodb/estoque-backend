@@ -1,5 +1,7 @@
 package br.org.demaosunidas.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +28,7 @@ public interface FamiliaRepository extends JpaRepository<Familia, Integer>{
 	
 	@Transactional(readOnly=true)
 	Familia findByCpfResponsavel(@Param("cpfResponsavel") String cpfResponsavel);
+	
+	@Transactional(readOnly=true)
+	List<Familia> findAllByOrderByNomeResponsavel();
 }

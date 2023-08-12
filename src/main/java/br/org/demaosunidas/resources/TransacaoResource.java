@@ -2,14 +2,9 @@ package br.org.demaosunidas.resources;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.org.demaosunidas.domain.Transacao;
 import br.org.demaosunidas.dto.TransacaoDTO;
 import br.org.demaosunidas.services.TransacaoService;
 
@@ -67,10 +61,11 @@ public class TransacaoResource {
 	public ResponseEntity<Void> insert(@RequestBody TransacaoDTO obj){
 		
 		try {
-			Transacao ret = service.insert(new Transacao(obj));
+			obj.definirObjetos();
+			obj = service.insert(obj);
 			
 			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-					path("/{id}").buildAndExpand(ret.getId()).toUri();
+					path("/{id}").buildAndExpand(obj.getId()).toUri();
 			return ResponseEntity.created(uri).build();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -85,8 +80,9 @@ public class TransacaoResource {
 	public ResponseEntity<Void> update(@RequestBody TransacaoDTO obj, @PathVariable("id") Integer id){
 		
 		try {
+			obj.definirObjetos();
 			obj.setId(id);
-			service.update(new Transacao(obj));
+			service.update(obj);
 			
 			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
 					path("/{id}").buildAndExpand(obj.getId()).toUri();

@@ -2,23 +2,26 @@ package br.org.demaosunidas.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.demaosunidas.domain.Conta;
+import br.org.demaosunidas.domain.Doador;
+import br.org.demaosunidas.domain.Familia;
+import br.org.demaosunidas.domain.Instituicao;
 import br.org.demaosunidas.domain.Saldo;
 import br.org.demaosunidas.domain.Transacao;
+import br.org.demaosunidas.domain.enums.TipoTransacaoEnum;
+import br.org.demaosunidas.dto.ContaDTO;
+import br.org.demaosunidas.dto.FamiliaDTO;
 import br.org.demaosunidas.dto.TransacaoDTO;
 import br.org.demaosunidas.repository.TransacaoRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
@@ -31,7 +34,13 @@ public class TransacaoService {
 	
 	@Autowired
 	private SaldoService saldoService;
-
+	@Autowired
+	private FamiliaService familiaService;
+	@Autowired
+	private DoadorService doadorService;
+	@Autowired
+	private InstituicaoService instituicaoService;
+	
 	public List<Transacao> listar() {
 		// TODO Auto-generated method stub
 		return repo.findAll();
@@ -55,7 +64,16 @@ public class TransacaoService {
 		
 		for (Transacao x : listaTransacao) {
 			TransacaoDTO dto = new TransacaoDTO(x,valorASomar,true);
+			if (x.getFamilia() != null)
+				dto.setIdFamilia(x.getFamilia().getId());
+			if (x.getDoador() != null)
+				dto.setIdDoador(x.getDoador().getId());
+			if (x.getInstituicao() != null)	
+				dto.setIdInstituicao(x.getInstituicao().getId());
+			
+			dto.setTipoParceiro(x.getTipoParceiroEnum());
 			valorASomar = dto.getSaldo();
+			
 			listaTransacaoDTO.add(dto);
 		}
         Collections.reverse(listaTransacaoDTO);
@@ -70,21 +88,76 @@ public class TransacaoService {
 	}
 	
 	@Transactional
-	public Transacao insert(Transacao obj) {
-		obj.setId(null);
+	public TransacaoDTO insert(TransacaoDTO dto) {
+		dto.setId(null);
+		
+		Transacao entity =  TransacaoService.dtoToEntity (dto);
+		ajustarParceiro(entity);
+		
+		if (dto.getTipoTransacaoEnum().equals(TipoTransacaoEnum.PAGAMENTO) && dto.getValor().floatValue() > 0f) {
+			entity.setValor(dto.getValor().negate());
+		} else if(dto.getTipoTransacaoEnum().equals(TipoTransacaoEnum.RECEITA) && dto.getValor().floatValue() < 0f) {
+			entity.setValor(dto.getValor().negate());
+		}
 		
 		Saldo s = new Saldo();
-		s.setConta(obj.getConta());
-		s.setData(obj.getData());
-		s.setValor(obj.getValor());
+		s.setConta((entity.getConta()));
+		s.setData(entity.getData());
+		s.setValor(entity.getValor());
 		
 		saldoService.insert(s);
 		
-		return repo.save(obj);
+		entity = repo.save(entity);
+		
+		return TransacaoService.entityToDto(entity);
 	}
 	
+	private static Transacao dtoToEntity(TransacaoDTO dto) {
+		Transacao entity = new Transacao();
+		
+		entity.setId(dto.getId());
+		
+		entity.setData(dto.getData());
+		entity.setDescricao(dto.getDescricao());
+		entity.setDoador( new Doador(dto.getIdDoador()));
+		entity.setFamilia(new Familia(dto.getIdFamilia()));
+		entity.setInstituicao( new Instituicao(dto.getIdInstituicao()));
+		entity.setTipoTransacaoEnum(dto.getTipoTransacaoEnum());
+		entity.setValor(dto.getValor());
+		entity.setTipoParceiroEnum(dto.getTipoParceiro());
+		Conta entityConta = new Conta(dto.getConta());
+		entity.setConta(entityConta);
+		
+		return entity;
+	}
+	
+	
+	private static TransacaoDTO entityToDto(Transacao entity) {
+		TransacaoDTO dto = new TransacaoDTO();
+		
+		dto.setId(entity.getId());
+		
+		dto.setData(entity.getData());
+		dto.setDescricao(entity.getDescricao());
+		dto.setDoador(  DoadorService.entityToDto(entity.getDoador()) );
+		dto.setFamilia(new FamiliaDTO(entity.getFamilia()));
+		
+		dto.setInstituicao(InstituicaoService.entityToDto(entity.getInstituicao()));
+		dto.setTipoTransacaoEnum(entity.getTipoTransacaoEnum());
+		dto.setValor(entity.getValor());
+		dto.setTipoParceiro(entity.getTipoParceiroEnum());
+
+		
+		ContaDTO contaDTO = new ContaDTO(entity.getConta());
+		dto.setConta(contaDTO);
+		
+		return dto;
+	}
+
 	@Transactional
-	public void update(Transacao obj) {
+	public void update(TransacaoDTO dto) {
+		
+		Transacao obj = TransacaoService.dtoToEntity(dto);
 		
 		Transacao transacaoBanco = repo.findById(obj.getId()).get();
 		
@@ -134,6 +207,22 @@ public class TransacaoService {
 		transacaoBanco.setTipoTransacaoEnum(obj.getTipoTransacaoEnum());
 		transacaoBanco.setValor(obj.getValor());
 		
+		if (dto.getIdDoador() != null) {
+			transacaoBanco.setDoador(obj.getDoador());
+			transacaoBanco.setFamilia(null);
+			transacaoBanco.setInstituicao(null);
+		} else if (dto.getIdFamilia() != null) {
+			transacaoBanco.setFamilia(obj.getFamilia());
+			transacaoBanco.setDoador(null);
+			transacaoBanco.setInstituicao(null);
+		} else {
+			transacaoBanco.setDoador(null);
+			transacaoBanco.setFamilia(null);
+			transacaoBanco.setInstituicao(obj.getInstituicao());
+		}
+
+		transacaoBanco.setTipoParceiroEnum(obj.getTipoParceiroEnum());
+		
 		repo.save(transacaoBanco);
 	}
 	
@@ -150,5 +239,28 @@ public class TransacaoService {
 		
 		return repo.findByConta(lote);
 	}
+	
+	
+	private void ajustarParceiro(Transacao obj) {
+	switch (obj.getTipoParceiroEnum()) {
+	case DOADOR:
+		obj.setFamilia(null);
+		obj.setInstituicao(null);
+		obj.setDoador(doadorService.findById(obj.getDoador().getId()));
+		
+		break;
+	case FAMILIA:
+		obj.setDoador(null);
+		obj.setInstituicao(null);
+		obj.setFamilia(familiaService.findById(obj.getFamilia().getId()));
+		
+		break;
+	default:
+		obj.setDoador(null);
+		obj.setFamilia(null);
+		obj.setInstituicao(instituicaoService.findById(obj.getInstituicao().getId()));
+		break;
+	}
+}
 	
 }

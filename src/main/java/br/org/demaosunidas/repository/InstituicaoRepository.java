@@ -1,5 +1,7 @@
 package br.org.demaosunidas.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +19,8 @@ public interface InstituicaoRepository extends JpaRepository<Instituicao, Intege
 	@Transactional(readOnly=true)
 	@Query("SELECT DISTINCT obj FROM Instituicao obj WHERE ( :nome is null or obj.nome LIKE %:nome% )" )
 	Page<Instituicao> searchQuery(@Param("nome") String nome, Pageable pageRequest);
+	
+	@Transactional(readOnly=true)
+	List<Instituicao> findAllByOrderByNome();
 	
 }

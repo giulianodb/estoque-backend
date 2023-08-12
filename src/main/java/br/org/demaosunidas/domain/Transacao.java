@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.org.demaosunidas.domain.enums.TipoParceiroEnum;
 import br.org.demaosunidas.domain.enums.TipoTransacaoEnum;
 import br.org.demaosunidas.dto.TransacaoDTO;
 
@@ -31,54 +32,49 @@ public class Transacao implements Serializable{
 	
 	private String descricao;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	private Conta conta;
-	
 	private BigDecimal valor;
 	
 //	@Temporal(value=TemporalType.TIMESTAMP )
 	@Column(name="data")
 	private LocalDate data;
 	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Familia familia;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Instituicao instituicao;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Doador doador;
+	
 	@Enumerated
 	private TipoTransacaoEnum tipoTransacaoEnum;
 	
-
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Conta conta;
+	
+	@Enumerated
+	private TipoParceiroEnum tipoParceiroEnum;
+	
 	public Transacao() {
 		super();
 	}
-	
-	public Transacao(TransacaoDTO obj) {
-		this.id = obj.getId();
-		this.conta = new Conta(obj.getConta());
-		this.valor = obj.getValor();
-		this.data = obj.getData();
-		this.descricao = obj.getDescricao();	      
-		
-		this.tipoTransacaoEnum = obj.getTipoTransacaoEnum();
-		
-	}
-
 
 	public Integer getId() {
 		return id;
 	}
 
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 
 	public Conta getConta() {
 		return conta;
 	}
 
-
 	public void setConta(Conta conta) {
 		this.conta = conta;
 	}
-
 
 	public BigDecimal getValor() {
 		return valor;
@@ -115,6 +111,40 @@ public class Transacao implements Serializable{
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public Familia getFamilia() {
+		return familia;
+	}
+
+	public void setFamilia(Familia familia) {
+		this.familia = familia;
+	}
+
+	public Instituicao getInstituicao() {
+		return instituicao;
+	}
+
+	public void setInstituicao(Instituicao instituicao) {
+		this.instituicao = instituicao;
+	}
+
+	public Doador getDoador() {
+		return doador;
+	}
+
+	public void setDoador(Doador doador) {
+		this.doador = doador;
+	}
+
+
+	public TipoParceiroEnum getTipoParceiroEnum() {
+		return tipoParceiroEnum;
+	}
+
+
+	public void setTipoParceiroEnum(TipoParceiroEnum tipoParceiroEnum) {
+		this.tipoParceiroEnum = tipoParceiroEnum;
 	}
 
 

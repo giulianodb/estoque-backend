@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import br.org.demaosunidas.domain.Conta;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.domain.enums.TipoContaEnum;
+import br.org.demaosunidas.domain.enums.TipoParceiroEnum;
 
 public class ContaDTO implements Serializable{
 

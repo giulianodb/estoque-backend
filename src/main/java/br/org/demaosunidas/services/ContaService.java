@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import br.org.demaosunidas.domain.Conta;
 import br.org.demaosunidas.domain.enums.Status;
+import br.org.demaosunidas.domain.enums.TipoParceiroEnum;
+import br.org.demaosunidas.dto.ContaDTO;
 import br.org.demaosunidas.repository.ContaRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
 
@@ -36,13 +38,23 @@ public class ContaService {
 	}
 	
 	
-	public Conta insert(Conta obj) {
+	public ContaDTO insert(ContaDTO obj) {
 		obj.setId(null);
-		return repo.save(obj);
+		
+				Conta entity = new Conta(obj);
+		repo.save(entity);
+		obj.setId(entity.getId());
+		
+		return obj;
 	}
+
 	
-	public Conta update(Conta objAlterado) {
+	public Conta update(ContaDTO objDTO) {
+
+		Conta objAlterado = new Conta(objDTO);
+		
 		Conta objBanco = findById(objAlterado.getId());
+		
 		updateData(objBanco,objAlterado);
 		return repo.save(objBanco);
 	}

@@ -1,5 +1,7 @@
-Inserir perguntas de contexto
+/*
+	Inserir perguntas de contexto
 
+*/
 insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (1,'Tem desafasagem superior ou igual a dois anos?',0);
 insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (2,'Está ou esteve em situação de acolhimento?',0);
 insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (3,'Está cumprindo ou cumpriu medida socioeducativa?',0);
@@ -21,3 +23,11 @@ insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) v
 insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (19,'Existe na familia algum membro que está em cumprimento de medida socioeducativa ou é egresso do sistema penal.',1);
 insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (20,'Na familia algum membro faz uso abusivo de alcool ou drogas.',1);
 insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) values (21,'A familia identifica no território em que reside situações de insegurança social.',1);
+
+/*
+	Papel
+*/
+
+INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(1, 'Administrador', 'Administrador');
+INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(2, 'AssistenteSocial', 'AssistenteSocial');
+INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(3, 'Estoque', 'Estoque')

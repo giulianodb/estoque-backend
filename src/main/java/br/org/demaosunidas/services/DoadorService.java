@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import br.org.demaosunidas.domain.Doador;
 import br.org.demaosunidas.domain.enums.Status;
+import br.org.demaosunidas.dto.DoadorDTO;
 import br.org.demaosunidas.repository.DoadorRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
 
@@ -22,7 +23,7 @@ public class DoadorService {
 	
 	public List<Doador> listar() {
 		// TODO Auto-generated method stub
-		return repo.findAll();
+		return repo.findAllByOrderByNome();
 	}
 	
 	public Page<Doador> search (String nome, Integer page,Integer linesPerPage, String orderBy, String direction) {
@@ -71,6 +72,54 @@ public class DoadorService {
 		
 	}
 
+	
+	public static DoadorDTO entityToDto(Doador entity) {
+		if (entity == null) {
+			return null;
+		}
+		
+		DoadorDTO dto = new DoadorDTO();
+		
+		dto.setId(entity.getId());
+		dto.setBairro(entity.getBairro());
+		dto.setCelular(entity.getCelular());
+		dto.setCidade(entity.getCidade());
+		dto.setCpf(entity.getCpf());
+		dto.setDataNascimento(entity.getDataNascimento());
+		dto.setEmail(entity.getEmail());
+		dto.setEstado(entity.getEstado());
+		dto.setNome(entity.getNome());
+		dto.setRg(entity.getRg());
+		dto.setRua(entity.getRua());
+		dto.setTelefone(entity.getTelefone());
+		dto.setStatus(entity.getStatus());
+		
+		return dto;
+	}
+	
+	public static Doador dtoToEntity(DoadorDTO dto) {
+		if (dto == null) {
+			return null;
+		}
+		
+		Doador entity = new Doador();
+		
+		entity.setId(dto.getId());
+		entity.setBairro(dto.getBairro());
+		entity.setCelular(dto.getCelular());
+		entity.setCidade(dto.getCidade());
+		entity.setCpf(dto.getCpf());
+		entity.setDataNascimento(dto.getDataNascimento());
+		entity.setEmail(dto.getEmail());
+		entity.setEstado(dto.getEstado());
+		entity.setNome(dto.getNome());
+		entity.setRg(dto.getRg());
+		entity.setRua(dto.getRua());
+		entity.setTelefone(dto.getTelefone());
+		entity.setStatus(dto.getStatus());
+		
+		return entity;
+	}
 	
 	
 }

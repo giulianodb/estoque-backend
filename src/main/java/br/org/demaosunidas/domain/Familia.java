@@ -116,8 +116,10 @@ public class Familia implements Serializable{
 	}
 
 	public Familia(FamiliaDTO dto) {
-		this.id = dto.getId();
-		this.nomeResponsavel = dto.getNomeResponsavel();
+		if (dto != null) {
+			this.id = dto.getId();
+			this.nomeResponsavel = dto.getNomeResponsavel();
+		}
 	}
 	
 

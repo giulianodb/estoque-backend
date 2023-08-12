@@ -1,5 +1,7 @@
 package br.org.demaosunidas.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +19,7 @@ public interface DoadorRepository extends JpaRepository<Doador, Integer>{
 	@Transactional(readOnly=true)
 	@Query("SELECT DISTINCT obj FROM Doador obj WHERE ( :nome is null or obj.nome LIKE %:nome% )" )
 	Page<Doador> searchQuery(@Param("nome") String nome, Pageable pageRequest);
+	
+	List<Doador> findAllByOrderByNome();
 	
 }

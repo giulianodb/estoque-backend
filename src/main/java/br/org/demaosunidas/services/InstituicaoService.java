@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import br.org.demaosunidas.domain.Instituicao;
 import br.org.demaosunidas.domain.enums.Status;
+import br.org.demaosunidas.dto.InstituicaoDTO;
 import br.org.demaosunidas.repository.InstituicaoRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
 
@@ -22,7 +23,7 @@ public class InstituicaoService {
 	
 	public List<Instituicao> listar() {
 		// TODO Auto-generated method stub
-		return repo.findAll();
+		return repo.findAllByOrderByNome();
 	}
 	
 	public Page<Instituicao> search (String nome, Integer page,Integer linesPerPage, String orderBy, String direction) {
@@ -49,5 +50,31 @@ public class InstituicaoService {
 		repo.save(obj);
 	}
 	
+	public static InstituicaoDTO entityToDto(Instituicao entity) {
+		if (entity == null) {
+			return null;
+		}
+		
+		InstituicaoDTO dto = new InstituicaoDTO();
+		
+		dto.setId(entity.getId());
+		dto.setNome(entity.getNome());
+		
+		return dto;
+	}
 	
+	public static Instituicao dtoToEntity(InstituicaoDTO dto) {
+		if (dto == null) {
+			return null;
+		}
+		
+		Instituicao entity = new Instituicao();
+		
+		entity.setId(dto.getId());
+		entity.setNome(dto.getNome());
+		
+		
+		
+		return entity;
+	}
 }

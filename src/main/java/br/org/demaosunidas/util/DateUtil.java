@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 public class DateUtil {
 	private DateUtil() {
@@ -72,6 +73,13 @@ public class DateUtil {
 		String retorno = formato.format(data);
 
 		return retorno;
+	}
+	
+	public static String dataToString(LocalDate localDate) {
+	   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ITALY);
+       String output = dtf.format(localDate);
+		
+		return output;
 	}
 
 	public static String dataToString(Date data, String formato) {

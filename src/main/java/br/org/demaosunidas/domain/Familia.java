@@ -102,6 +102,11 @@ public class Familia implements Serializable{
 //	@Cascade(CascadeType.ALL)
 	private Set<MembroFamilia> listMembroFamilia;
 	
+	@OneToMany(mappedBy = "familia",fetch = FetchType.LAZY)
+	@OrderBy("nome asc")
+//	@Cascade(CascadeType.ALL)
+	private Set<Crianca> listCrianca;
+	
 	@Transient
 	private List<MembroFamilia> teste;
 

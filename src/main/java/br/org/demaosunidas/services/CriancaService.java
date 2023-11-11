@@ -28,13 +28,23 @@ public class CriancaService {
 //		return repo.findAll();
 //	}
 	
-	public Page<Crianca> search (String nome,ProjetoEnum projeto,Boolean matriculada, Boolean espera, Integer page,Integer linesPerPage, String orderBy, String direction) {
+	public Page<Crianca> search (String nome,ProjetoEnum projeto,Boolean matriculada, Boolean espera, Integer page,Integer linesPerPage, String orderBy, String direction, Integer idCrianca) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		
 //		return repo. searchQuery(nome,projeto,matriculada,espera,pageRequest);
 		return repo. searchQuery(nome,pageRequest);
 //		return repo. searchQueryTeste(nome,matriculada,pageRequest);
 	}
+	
+	
+	public Page<Crianca> searchPorId (Integer page,Integer linesPerPage, String orderBy, String direction, Integer idCrianca) {
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		
+//		return repo. searchQuery(nome,projeto,matriculada,espera,pageRequest);
+		return repo.searchQueryIdCrianca(idCrianca,pageRequest);
+//		return repo. searchQueryTeste(nome,matriculada,pageRequest);
+	}
+	
 	
 	public Crianca findById(Integer id) {
 		Optional<Crianca> obj = repo.findById(id);

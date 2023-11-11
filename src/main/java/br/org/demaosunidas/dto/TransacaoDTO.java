@@ -50,6 +50,10 @@ public class TransacaoDTO implements Serializable{
 	
 	private Integer idInstituicao;
 	
+	private CentroCustoDTO centroCusto;
+	
+	private CategoriaDTO categoria;
+	
 	public TransacaoDTO() {
 		super();
 	}
@@ -215,6 +219,40 @@ public class TransacaoDTO implements Serializable{
 
 	public void setIdDoador(Integer idDoador) {
 		this.idDoador = idDoador;
+	}
+
+	public CentroCustoDTO getCentroCusto() {
+		return centroCusto;
+	}
+
+	public void setCentroCusto(CentroCustoDTO centroCusto) {
+		this.centroCusto = centroCusto;
+	}
+
+	public CategoriaDTO getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(CategoriaDTO categoria) {
+		this.categoria = categoria;
+	}
+
+	public String getNomeParceiro() {
+		if (tipoParceiro.equals(TipoParceiroEnum.FAMILIA)) {
+			if (familia != null) {
+				return familia.getNomeResponsavel();
+			}
+		} else if (tipoParceiro.equals(TipoParceiroEnum.DOADOR)) {
+			if (doador != null) {
+				return doador.getNome();
+			}
+		} else {
+			if (instituicao != null) {
+				return instituicao.getNome();
+			}
+		}
+		
+		return "";
 	}
 
 	

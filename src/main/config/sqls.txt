@@ -31,3 +31,171 @@ insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) v
 INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(1, 'Administrador', 'Administrador');
 INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(2, 'AssistenteSocial', 'AssistenteSocial');
 INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(3, 'Estoque', 'Estoque')
+
+/*
+Inserir centro de custo
+*/
+
+
+insert into estoque.centro_custo (id,nome, descricao,status) values (1,'Administração DMU - Recursos Livres', null ,0);
+insert into estoque.centro_custo (id,nome, descricao,status) values (2,'Comunidade Mãe da Unidade', null ,0);
+insert into estoque.centro_custo (id,nome, descricao,status) values (3,'Serviço de convivência e Fortalecimento', null ,0);
+
+/*
+	Grupo categoria
+*/
+
+
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (1,'Campanhas',0,1);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (2,'Doações Recebidas',0,1);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (3,'Financeiro',0,1);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (4,'Investimentos',0,1);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (5,'Administrativo',0,0);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (6,'Bazar - Custos e despesas',0,0);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (7,'Celebrações Liturgicas',0,0);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (8,'Copa e Cozinha',0,0);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (9,'Doações Realizadas',0,0);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (10,'Financeiro',0,0);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (11,'Impostos/ Taxas',0,0);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (12,'Manutenção',0,0);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (13,'Pessoal',0,0);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (14,'Serviços Públicos',0,0);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (15,'Suprimentos',0,0);
+insert into estoque.grupo_categoria (id,nome,status,tipo_transacao) values (16,'Transporte',0,0);
+
+
+/*
+CATEGORIAS
+*/
+
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (1,'Costelada - De Mãos Unidas',0,1);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (2,'Feijoada "De Mãos Unidas"',0,1);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (3,'Festa Junina',0,1);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (4,'Noite do Pastel',0,1);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (5,'Bazar PF',0,2);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (6,'Doações PF"',0,2);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (7,'Doações PJ',0,2);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (8,'Doações em Produtos - Estoque',0,2);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (9,'Nota Paraná',0,2);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (10,'Reembolso',0,3);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (11,'Venda de Bens - Ativo Imobilizado',0,3);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (110,'Saldo',0,3);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (12,'Dividendos/ Dist. Lucros/Sobras',0,4);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (13,'Ganhos de Capital',0,4);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (14,'Rendas de Aplicações Financeiras',0,4);
+
+--Administravio-despesas
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (15,'Aluguel de Bens Imóveis',0,5);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (16,'Consórcio',0,5);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (17,'Certificado Digital',0,5);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (18,'Correios',0,5);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (19,'Equipamentos',0,5);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (20,'Equipamentos de Informática - Aquisição',0,5);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (21,'Material de Consumo - Aquisição',0,5);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (22,'Material de Expediente - Aquisição',0,5);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (23,'Móveis e Utensilios - Aquisição',0,5);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (24,'Propaganda e Publicidade',0,5);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (25,'Seguro c/Incendio Imoveis',0,5);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (26,'Serviços de cartórios',0,5);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (27,'Custo dos Produtos - Bazar',0,6);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (28,'Material Liturgico',0,7);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (29,'Plantas e Flores',0,7);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (30,'Gas de Cozinha',0,8);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (31,'Material de Cozinha - Aquisição',0,8);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (108,'Caderno Limpinho',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (32,'Campanha Reforma DMU',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (33,'Campanha do Natal',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (34,'Comunidade Mãe da Unidade',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (35,'Dia das Crianças',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (36,'Enchente',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (37,'Escola de Pais',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (38,'Familias Assistidas',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (39,'Feijoada Beneficente',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (40,'Festa Junina/Julina',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (41,'Instituições Assistidas',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (42,'Inverno Solidário',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (43,'Nucleo de Formação Indicador',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (44,'Pascoa Solidária',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (45,'Projeto FOCAR',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (46,'Projeto Saude e Qualidade de Vida',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (47,'Serviço de Convivência e Fortalecimento de Vinculos',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (48,'DMU - Custos Administrativos',0,9);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (49,'Contabilidade',0,10);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (50,'Estorno',0,10);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (51,'Honorários PJ',0,10);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (52,'Juros por Atraso no Pagamento',0,10);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (53,'Manutenção de Marcas e Patentes',0,10);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (54,'Saque',0,10);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (55,'Tarifa Bancária',0,10);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (109,'COFINS',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (56,'CPMF',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (57,'CSLL',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (58,'ICMS',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (59,'INSS',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (60,'IOF',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (61,'IPTU',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (62,'IRPJ',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (63,'IRR Fonte',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (64,'ISS',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (65,'Importação',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (66,'PIS',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (67,'Taxa de Vigilancia Sanitária',0,11);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (68,'Taxa de Vistorias do Corpo de Bombeiro',0,11);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (69,'Jardinagem',0,12);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (70,'Limpeza',0,12);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (71,'Manutenção de Equipamentos Informática',0,12);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (72,'Manutenção de Instalações - Reforma',0,12);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (73,'Manutenção de Móveis e Utensilios',0,12);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (74,'Manutenção de Sites Internet',0,12);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (75,'Monitoramento e Vigilância',0,12);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (76,'Pequenos Reparos',0,12);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (77,'Pintura',0,12);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (78,'13o. Salário',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (79,'Confraternizações',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (80,'Cursos e Treinamentos',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (81,'FGTS',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (82,'FGTS Rescisões',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (83,'Férias',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (84,'Horas Extras',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (85,'INSS Retido s/Fl de Pagamento',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (86,'Medicamentos e Mat Curativo',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (87,'Plano de Saúde',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (88,'Rescisões de Contrato',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (89,'Salário',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (90,'Seguros de Vida',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (91,'Sindicato',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (92,'Uniformes',0,13);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (93,'Vale Transporte',0,13);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (94,'Eletricidade',0,14);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (95,'Telefone Celular',0,14);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (96,'Telefone Fixo/Internet',0,14);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (97,'Água e Esgoto',0,14);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (98,'Dispensa',0,15);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (99,'Impressões/Fotocópias',0,15);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (100,'Limpeza/Higiene',0,15);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (101,'Papelaria',0,15);
+
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (102,'Combustível',0,16);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (103,'Estacionamento',0,16);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (104,'Licenciamento de Veículos',0,16);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (105,'Manutenção de Veículos',0,16);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (106,'Multas de Trânsito',0,16);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (107,'Seguro de Veículos',0,16);
+
+
+
+

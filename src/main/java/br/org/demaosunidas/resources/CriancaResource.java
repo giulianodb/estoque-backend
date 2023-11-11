@@ -44,9 +44,10 @@ public class CriancaResource {
 			@RequestParam(value="nome",required = false) String nome,
 			@RequestParam(value="projeto",required = false) Integer projeto,
 			@RequestParam(value="matriculado",required = false) Boolean matriculado,
-			@RequestParam(value="espera",required = false) Boolean espera) {
+			@RequestParam(value="espera",required = false) Boolean espera,
+			@RequestParam(value="idCrianca",required = false) Integer idCrianca) {
 		
-		
+		System.out.println("CHAMEI O FIND PAGE");
 		if (page > 0) {
 			page = page - 1;
 		}
@@ -62,7 +63,13 @@ public class CriancaResource {
 			}
 		}
 		
-		Page<Crianca> lista = service.search(nome, projetoEnum,matriculado,espera, page,linesPerPage,orderBy,direction);
+		Page<Crianca> lista = null;
+		if (idCrianca > 0) {
+			lista = service.searchPorId(page,linesPerPage,orderBy,direction,idCrianca);
+		}
+		else {
+			lista = service.search(nome, projetoEnum,matriculado,espera, page,linesPerPage,orderBy,direction,idCrianca);
+		}
 		
 		Page<CriancaGetDTO> listCriancaDTO = lista.map(obj -> new CriancaGetDTO(obj));
 		

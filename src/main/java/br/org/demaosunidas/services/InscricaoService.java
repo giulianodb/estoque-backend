@@ -25,6 +25,7 @@ public class InscricaoService {
 	private InscricaoRepository repo;
 	
 	public Page<Inscricao> search (String nomeCrianca, ProjetoEnum projeto, Boolean espera, Integer ano, Integer page,Integer linesPerPage, String orderBy, String direction) {
+		orderBy = "ano";
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		
 		return repo.searchQuery(nomeCrianca,projeto,espera,ano,pageRequest);

@@ -37,10 +37,14 @@ public class FamiliaService {
 		return repo.findAllByOrderByNomeResponsavel();
 	}
 	
-	public Page<Familia> search (String nome, Integer page,Integer linesPerPage, String orderBy, String direction) {
+	public Page<Familia> search (String nome, Integer page,Integer linesPerPage, String orderBy, String direction, boolean familiaAssistida) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		if (familiaAssistida) {
+			return repo. searchQueryComCriancas(nome, Status.ATIVO, pageRequest);
+		} else {
+			return repo. searchQuery(nome,Status.ATIVO, pageRequest);
+		}
 		
-		return repo. searchQuery(nome,Status.ATIVO, pageRequest);
 		
 	}
 	
@@ -59,6 +63,12 @@ public class FamiliaService {
 	public void insert(Familia obj) {
 		obj.setId(null);
 		obj.setStatus(Status.ATIVO);
+		
+		String cpf = obj.getCpfResponsavel().replace(".","");
+		cpf = cpf.replace("-","");
+		obj.setCpfResponsavel(cpf);
+		
+		
 		Familia familia = repo.save(obj);
 		obj.getListMembroFamilia().forEach(x -> x.setFamilia(familia));
 		
@@ -68,6 +78,7 @@ public class FamiliaService {
 	}
 	
 	public Familia update(Familia objAlterado) {
+		
 		Familia objBanco = findById(objAlterado.getId());
 		updateDataFamilia(objBanco,objAlterado);
 		updateDataMembros(objBanco,objAlterado);
@@ -77,7 +88,7 @@ public class FamiliaService {
 		return objAlterado;
 	}
 	
-	
+
 	public void updateDataMembros(Familia objBanco, Familia objAlterado) {
 		
 		Set<MembroFamilia> membroBanco = objBanco.getListMembroFamilia();
@@ -147,7 +158,11 @@ public class FamiliaService {
 	
 	private void updateDataFamilia(Familia objBanco, Familia objAnterado) {
 		objBanco.setNomeResponsavel(objAnterado.getNomeResponsavel());
-		objBanco.setCpfResponsavel(objAnterado.getCpfResponsavel());
+		
+		String cpf = objAnterado.getCpfResponsavel().replace(".","");
+		cpf = cpf.replace("-","");
+		
+		objBanco.setCpfResponsavel(cpf);
 		objBanco.setRgResponsavel(objAnterado.getRgResponsavel());
 		objBanco.setBairro(objAnterado.getBairro());
 		objBanco.setRua(objAnterado.getRua());
@@ -203,6 +218,7 @@ public class FamiliaService {
 		ps.setCras(objAnterado.getProgramas().getCras());
 		ps.setNis(objAnterado.getProgramas().getNis());
 		ps.setBeneficioAssistencial(objAnterado.getProgramas().getBeneficioAssistencial());
+		ps.setDataValidadeNis(objAnterado.getProgramas().getDataValidadeNis());
 		objBanco.setProgramas(ps);
 		objBanco.setNacionalidade(objAnterado.getNacionalidade());
 		
@@ -218,7 +234,7 @@ public class FamiliaService {
 		objBanco.setMotivo(motivo);
 		
 		
-		VisitaDomiciliar visita = objAnterado.getVisitaDomiciliar();
+		VisitaDomiciliar visita = objBanco.getVisitaDomiciliar();
 		if (visita == null) {
 			visita = new VisitaDomiciliar();
 		}

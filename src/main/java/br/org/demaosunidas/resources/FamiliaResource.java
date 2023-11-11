@@ -46,6 +46,7 @@ public class FamiliaResource {
 			@RequestParam(value="linesPerPage",defaultValue="200") Integer linesPerPage,
 			@RequestParam(value="orderBy",defaultValue="nomeResponsavel") String orderBy,
 			@RequestParam(value="direction",defaultValue="ASC") String direction,
+			@RequestParam(value="familiaAssistida") boolean familiaAssistida,
 			@RequestParam(value="nome",required = false) String nome, HttpServletRequest request) {
 		
 		if (page > 0) {
@@ -54,7 +55,7 @@ public class FamiliaResource {
 		else {
 			page = 0;
 		}
-		Page<Familia> lista = service.search(nome,page,linesPerPage,orderBy,direction);
+		Page<Familia> lista = service.search(nome,page,linesPerPage,orderBy,direction,familiaAssistida);
 		
 		
 		return ResponseEntity.ok().body(lista);
@@ -115,7 +116,8 @@ public class FamiliaResource {
 	@CrossOrigin
 	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
 	public ResponseEntity<Familia> findCpf(@PathVariable String cpf){
-			
+		cpf = cpf.replace(".", "");
+		cpf = cpf.replace("-", "");
 		Familia obj = service.findByCpfResponsavel(cpf);
 		if (obj == null ) {
 			return ResponseEntity.noContent().build();

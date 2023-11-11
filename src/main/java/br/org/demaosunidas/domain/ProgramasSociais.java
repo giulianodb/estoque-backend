@@ -183,5 +183,13 @@ public class ProgramasSociais implements Serializable{
 	public void setBeneficioAssistencial(String beneficioAssistencial) {
 		this.beneficioAssistencial = beneficioAssistencial;
 	}
+
+	public Date getDataValidadeNis() {
+		return dataValidadeNis;
+	}
+
+	public void setDataValidadeNis(Date dataValidadeNis) {
+		this.dataValidadeNis = dataValidadeNis;
+	}
 	
 }

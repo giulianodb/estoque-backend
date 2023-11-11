@@ -17,7 +17,6 @@ import javax.persistence.Table;
 
 import br.org.demaosunidas.domain.enums.TipoParceiroEnum;
 import br.org.demaosunidas.domain.enums.TipoTransacaoEnum;
-import br.org.demaosunidas.dto.TransacaoDTO;
 
 @Entity
 @Table(name="transacao",schema="estoque")
@@ -46,12 +45,18 @@ public class Transacao implements Serializable{
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Doador doador;
+
+	@ManyToOne(fetch=FetchType.EAGER)
+	private CentroCusto centroCusto;
 	
 	@Enumerated
 	private TipoTransacaoEnum tipoTransacaoEnum;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Conta conta;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Categoria categoria;
 	
 	@Enumerated
 	private TipoParceiroEnum tipoParceiroEnum;
@@ -145,6 +150,22 @@ public class Transacao implements Serializable{
 
 	public void setTipoParceiroEnum(TipoParceiroEnum tipoParceiroEnum) {
 		this.tipoParceiroEnum = tipoParceiroEnum;
+	}
+
+	public CentroCusto getCentroCusto() {
+		return centroCusto;
+	}
+
+	public void setCentroCusto(CentroCusto centroCusto) {
+		this.centroCusto = centroCusto;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 
 

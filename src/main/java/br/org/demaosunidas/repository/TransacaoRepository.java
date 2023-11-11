@@ -30,8 +30,11 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Integer>{
 	
 	@Transactional(readOnly=true)
 	@Query("SELECT obj FROM Transacao obj WHERE obj.data >= :dataInicio AND obj.data <= :dataFim AND obj.conta.id = :idConta ORDER BY obj.data ASC" )
-	Page <Transacao> obterTransacoesPorData(@Param("dataInicio") LocalDate dataInicio,@Param("dataFim") LocalDate dataFim, @Param("idConta") Integer idConta, Pageable pageRequest);
-		
+	Page <Transacao> obterTransacoesPorDataEConta(@Param("dataInicio") LocalDate dataInicio,@Param("dataFim") LocalDate dataFim, @Param("idConta") Integer idConta, Pageable pageRequest);
+	
+	@Transactional(readOnly=true)
+	@Query("SELECT obj FROM Transacao obj WHERE obj.data >= :dataInicio AND obj.data <= :dataFim ORDER BY obj.data ASC" )
+	List<Transacao> obterTransacoesPorData(@Param("dataInicio") LocalDate dataInicio,@Param("dataFim") LocalDate dataFim);
 	
 	List<Transacao> findByConta(Conta conta);
 	

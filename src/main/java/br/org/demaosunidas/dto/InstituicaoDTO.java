@@ -9,6 +9,12 @@ public class InstituicaoDTO implements Serializable {
 	
 	private String nome;
 	
+	private Boolean cliente;
+	
+	private Boolean fornecedor;
+	
+	private Boolean estoque;
+	
 	public InstituicaoDTO() {
 	
 	}
@@ -32,6 +38,30 @@ public class InstituicaoDTO implements Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public Boolean getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Boolean cliente) {
+		this.cliente = cliente;
+	}
+
+	public Boolean getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Boolean fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+
+	public Boolean getEstoque() {
+		return estoque;
+	}
+
+	public void setEstoque(Boolean estoque) {
+		this.estoque = estoque;
 	}
 
 }

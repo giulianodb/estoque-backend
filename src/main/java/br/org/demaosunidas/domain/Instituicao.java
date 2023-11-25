@@ -38,6 +38,12 @@ public class Instituicao implements Serializable {
 	@Column(name="status")
 	private Status status;
 	
+	private Boolean cliente;
+	
+	private Boolean fornecedor;
+	
+	private Boolean estoque;
+	
 	public Instituicao() {
 	
 	}
@@ -138,6 +144,30 @@ public class Instituicao implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public Boolean getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Boolean cliente) {
+		this.cliente = cliente;
+	}
+
+	public Boolean getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Boolean fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+
+	public Boolean getEstoque() {
+		return estoque;
+	}
+
+	public void setEstoque(Boolean estoque) {
+		this.estoque = estoque;
 	}
 	
 }

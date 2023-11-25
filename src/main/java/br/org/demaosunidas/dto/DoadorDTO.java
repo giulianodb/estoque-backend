@@ -34,7 +34,13 @@ public class DoadorDTO implements Serializable {
 	private Date dataNascimento;
 	
 	private Status status;
-
+	
+	private Boolean cliente;
+	
+	private Boolean fornecedor;
+	
+	private Boolean estoque;
+	
 	public DoadorDTO() {
 		super();
 	}
@@ -141,6 +147,30 @@ public class DoadorDTO implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Boolean getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Boolean cliente) {
+		this.cliente = cliente;
+	}
+
+	public Boolean getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Boolean fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+
+	public Boolean getEstoque() {
+		return estoque;
+	}
+
+	public void setEstoque(Boolean estoque) {
+		this.estoque = estoque;
 	}
 	
 }

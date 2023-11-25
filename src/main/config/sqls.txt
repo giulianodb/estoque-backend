@@ -111,21 +111,21 @@ insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (30,'
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (31,'Material de Cozinha - Aquisição',0,8);
 
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (108,'Caderno Limpinho',0,9);
-insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (32,'Campanha Reforma DMU',0,9);
+--insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (32,'Campanha Reforma DMU',0,9);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (33,'Campanha do Natal',0,9);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (34,'Comunidade Mãe da Unidade',0,9);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (35,'Dia das Crianças',0,9);
-insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (36,'Enchente',0,9);
-insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (37,'Escola de Pais',0,9);
+--insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (36,'Enchente',0,9);
+--insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (37,'Escola de Pais',0,9);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (38,'Familias Assistidas',0,9);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (39,'Feijoada Beneficente',0,9);
-insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (40,'Festa Junina/Julina',0,9);
+--insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (40,'Festa Junina/Julina',0,9);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (41,'Instituições Assistidas',0,9);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (42,'Inverno Solidário',0,9);
-insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (43,'Nucleo de Formação Indicador',0,9);
-insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (44,'Pascoa Solidária',0,9);
-insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (45,'Projeto FOCAR',0,9);
-insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (46,'Projeto Saude e Qualidade de Vida',0,9);
+--insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (43,'Nucleo de Formação Indicador',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (44,'Páscoa Solidária',0,9);
+--insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (45,'Projeto FOCAR',0,9);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (46,'Projeto Saúde e Qualidade de Vida',0,9);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (47,'Serviço de Convivência e Fortalecimento de Vinculos',0,9);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (48,'DMU - Custos Administrativos',0,9);
 

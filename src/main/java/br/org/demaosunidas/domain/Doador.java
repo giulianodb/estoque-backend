@@ -46,6 +46,12 @@ public class Doador implements Serializable {
 	
 	private String email;
 	
+	private Boolean cliente;
+	
+	private Boolean fornecedor;
+	
+	private Boolean estoque;
+	
 	@Column(name="datanascimento")
 	private Date dataNascimento;
 	
@@ -191,6 +197,30 @@ public class Doador implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public Boolean getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Boolean cliente) {
+		this.cliente = cliente;
+	}
+
+	public Boolean getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Boolean fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+
+	public Boolean getEstoque() {
+		return estoque;
+	}
+
+	public void setEstoque(Boolean estoque) {
+		this.estoque = estoque;
 	}
 	
 	

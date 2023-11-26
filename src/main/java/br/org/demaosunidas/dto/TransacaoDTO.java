@@ -54,6 +54,8 @@ public class TransacaoDTO implements Serializable{
 	
 	private CategoriaDTO categoria;
 	
+	private Boolean anonimo;
+	
 	public TransacaoDTO() {
 		super();
 	}
@@ -84,25 +86,26 @@ public class TransacaoDTO implements Serializable{
 	}
 	
 	public void definirObjetos() {
-		if (tipoParceiro.equals(TipoParceiroEnum.FAMILIA)) {
-			FamiliaDTO f = new FamiliaDTO();
-			f.setId(this.idFamilia);
-			
-			idDoador = null;
-			idInstituicao = null;
-			this.familia = f;
-		} else if (tipoParceiro.equals(TipoParceiroEnum.DOADOR)) {
+		if (tipoParceiro.equals(TipoParceiroEnum.CPF) ||  tipoParceiro.equals(TipoParceiroEnum.FPF)) {
 			DoadorDTO d = new DoadorDTO();
 			d.setId(idDoador);
 			idInstituicao = null;
 			idFamilia = null;
 			this.doador = d;
-		} else {
+			this.anonimo = false;
+			
+		} else if (tipoParceiro.equals(TipoParceiroEnum.CPJ) ||  tipoParceiro.equals(TipoParceiroEnum.FPJ)) {
 			InstituicaoDTO i = new InstituicaoDTO();
 			i.setId(idInstituicao);
 			this.instituicao = i;
 			idFamilia = null;
 			idDoador = null;
+			this.anonimo = false;
+		} else if(tipoParceiro.equals(TipoParceiroEnum.ANONIMO)) {
+			idFamilia = null;
+			idDoador = null;
+			idInstituicao = null;
+			this.anonimo = true;
 		}
 		
 	}
@@ -238,21 +241,34 @@ public class TransacaoDTO implements Serializable{
 	}
 
 	public String getNomeParceiro() {
+		
+		
+		
 		if (tipoParceiro.equals(TipoParceiroEnum.FAMILIA)) {
 			if (familia != null) {
 				return familia.getNomeResponsavel();
 			}
-		} else if (tipoParceiro.equals(TipoParceiroEnum.DOADOR)) {
+		} else if (tipoParceiro.equals(TipoParceiroEnum.CPF) || tipoParceiro.equals(TipoParceiroEnum.FPF)) {
 			if (doador != null) {
 				return doador.getNome();
 			}
-		} else {
+		} else if (tipoParceiro.equals(TipoParceiroEnum.CPJ) || tipoParceiro.equals(TipoParceiroEnum.FPJ)) {
 			if (instituicao != null) {
 				return instituicao.getNome();
 			}
+		} else {
+			return "Anônimo";
 		}
 		
 		return "";
+	}
+
+	public Boolean getAnonimo() {
+		return anonimo;
+	}
+
+	public void setAnonimo(Boolean anonimo) {
+		this.anonimo = anonimo;
 	}
 
 	

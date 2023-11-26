@@ -1,7 +1,6 @@
 package br.org.demaosunidas.services;
 
 import java.io.BufferedReader;
-import java.io.DataInput;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,10 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +27,6 @@ import br.org.demaosunidas.domain.CentroCusto;
 import br.org.demaosunidas.domain.Conta;
 import br.org.demaosunidas.domain.Doador;
 import br.org.demaosunidas.domain.Familia;
-import br.org.demaosunidas.domain.GrupoCategoria;
 import br.org.demaosunidas.domain.Instituicao;
 import br.org.demaosunidas.domain.Saldo;
 import br.org.demaosunidas.domain.Transacao;
@@ -47,6 +42,7 @@ import br.org.demaosunidas.repository.GrupoCategoriaRepository;
 import br.org.demaosunidas.repository.TransacaoRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
 import br.org.demaosunidas.util.DateUtil;
+import br.org.demaosunidas.util.NumeroUtil;
 
 @Service
 public class TransacaoService {
@@ -68,6 +64,12 @@ public class TransacaoService {
 	
 	@Value("${caminho.html.razao}")
 	private String caminhoDiretorioReport;
+	
+	@Value("${caminho.html.recibo}")
+	private String caminhoDiretorioReportRecibo;
+	
+	@Value("${url.logo}")
+	private String caminhoLogo;
 	
 	public List<Transacao> listar() {
 		// TODO Auto-generated method stub
@@ -210,10 +212,19 @@ public class TransacaoService {
 		
 	}
 	
-	
+	@Transactional
 	public Transacao findById(Integer id) {
 		Optional<Transacao> obj = repo.findById(id);
-
+		
+		if (obj.get().getDoador() != null && obj.get().getDoador().getId() != null) {
+			obj.get().setDoador(doadorService.findById(obj.get().getDoador().getId()));
+		}
+		
+		if (obj.get().getInstituicao() != null && obj.get().getInstituicao().getId() != null) {
+			obj.get().setInstituicao  (instituicaoService.findById(obj.get().getInstituicao().getId()));
+		}
+		
+		obj.get().getInstituicao();
 		return obj. orElseThrow(() -> new ObjectNotFoudException("Objet non trouvé"));
 	}
 	
@@ -272,7 +283,7 @@ public class TransacaoService {
 	}
 	
 	
-	private static TransacaoDTO entityToDto(Transacao entity) {
+	public static TransacaoDTO entityToDto(Transacao entity) {
 		TransacaoDTO dto = new TransacaoDTO();
 		
 		dto.setId(entity.getId());
@@ -305,7 +316,7 @@ public class TransacaoService {
 	}
 
 	@Transactional
-	public void update(TransacaoDTO dto) {
+	public TransacaoDTO update(TransacaoDTO dto) {
 		
 		Transacao obj = TransacaoService.dtoToEntity(dto);
 		
@@ -374,6 +385,8 @@ public class TransacaoService {
 		transacaoBanco.setTipoParceiroEnum(obj.getTipoParceiroEnum());
 		
 		repo.save(transacaoBanco);
+		
+		return TransacaoService.entityToDto(transacaoBanco);
 	}
 	
 	
@@ -393,22 +406,45 @@ public class TransacaoService {
 	
 	private void ajustarParceiro(Transacao obj) {
 	switch (obj.getTipoParceiroEnum()) {
-	case DOADOR:
+	
+	case CPF:
 		obj.setFamilia(null);
 		obj.setInstituicao(null);
+		obj.setAnonimo(false);
 		obj.setDoador(doadorService.findById(obj.getDoador().getId()));
 		
 		break;
-	case FAMILIA:
-		obj.setDoador(null);
-		obj.setInstituicao(null);
-		obj.setFamilia(familiaService.findById(obj.getFamilia().getId()));
-		
-		break;
-	default:
-		obj.setDoador(null);
+	case CPJ:
 		obj.setFamilia(null);
 		obj.setInstituicao(instituicaoService.findById(obj.getInstituicao().getId()));
+		obj.setAnonimo(false);
+		obj.setDoador(null);
+		
+		break;
+	
+	case FPF:
+		obj.setFamilia(null);
+		obj.setInstituicao(null);
+		obj.setAnonimo(false);
+		obj.setDoador(doadorService.findById(obj.getDoador().getId()));
+		
+		break;
+	
+	case FPJ:
+		obj.setFamilia(null);
+		obj.setInstituicao(instituicaoService.findById(obj.getInstituicao().getId()));
+		obj.setAnonimo(false);
+		obj.setDoador(null);
+		
+		break;
+	
+	case ANONIMO:
+		obj.setDoador(null);
+		obj.setFamilia(null);
+		obj.setInstituicao(null);
+		obj.setAnonimo(true);
+		break;
+	default:
 		break;
 	}
 }
@@ -553,6 +589,29 @@ public class TransacaoService {
             builder.run();
         }
     }
+    
+public void gerarRecibo (TransacaoDTO dto) throws Exception {
+    	
+    	String recibo = readFile(caminhoDiretorioReportRecibo + "recibo.txt");
+    	recibo = recibo.replace("${urlLogo}", caminhoLogo);
+    	recibo = recibo.replace("${numeroRecibo}", dto.getId().toString());
+    	recibo = recibo.replace("${valorRecibo}", NumeroUtil.formatarMoeda(dto.getValor()));
+    	recibo = recibo.replace("${nomeDoador}", dto.getNomeParceiro());
+    	recibo = recibo.replace("${valorReciboExtenso}", NumeroUtil.converterValorPorExtenso(dto.getValor()));
+    	recibo = recibo.replace("${referente}", dto.getDescricao());
+    	recibo = recibo.replace("${data}", "Curitiba, "+ dto.getData().getDayOfMonth()+ " de "+DateUtil.obterMes(Integer.toString(dto.getData().getMonthValue())) +" de " + dto.getData().getYear());
+    	
+    	System.out.println(recibo);
+    	
+        try (OutputStream os = new FileOutputStream("/tmp/recibo.pdf")) {
+            PdfRendererBuilder builder = new PdfRendererBuilder();
+            builder.useFastMode();
+            builder.withHtmlContent( recibo, null);
+            
+            builder.toStream(os);
+            builder.run();
+        }
+    } 
     
     public static String readFile(String file) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader (file));

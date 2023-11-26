@@ -9,7 +9,12 @@ public enum TipoParceiroEnum {
 	 */
 	FAMILIA(0,"Família"),
 	DOADOR(1,"Doador"),
-	INSTITUICAO(2,"Instituição");
+	INSTITUICAO(2,"Instituição"),
+	CPF(3,"Cliente PF"),
+	FPF(4,"Fornecedor PF"),
+	CPJ(5,"Cliente PJ "),
+	FPJ(6,"Fornecedor PJ"),
+	ANONIMO(7,"Anônimo");
 	
 	private String descricao;
 	private int cod;

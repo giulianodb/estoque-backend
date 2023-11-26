@@ -43,7 +43,18 @@ public class ParceiroService {
 	public ParceiroDTO obterParceiros() {
 		
 		List<InstituicaoDTO> listInstituicaos = new ArrayList<>();
+		
+		List<InstituicaoDTO> listInstituicaosCliente = new ArrayList<>();
+		List<InstituicaoDTO> listInstituicaosFornecedor = new ArrayList<>();
+		List<InstituicaoDTO> listInstituicaosEstoque = new ArrayList<>();
+		
 		List<DoadorDTO> listDoador = new ArrayList<>();
+		
+		List<DoadorDTO> listDoadorCliente = new ArrayList<>();
+		List<DoadorDTO> listDoadorFornecedor = new ArrayList<>();
+		List<DoadorDTO> listDoadorEstoque = new ArrayList<>();
+		
+		
 		List<FamiliaDTO> listFamilia = new ArrayList<>();
 		
 		instituicaoService.listar().forEach(x -> {
@@ -51,12 +62,39 @@ public class ParceiroService {
 		});
 		
 		doadorService.listar().forEach(x -> listDoador.add(DoadorService.entityToDto(x)));
-		familiaService.listar().forEach(x -> listFamilia.add(FamiliaService.entityToDto(x)));
+//		familiaService.listar().forEach(x -> listFamilia.add(FamiliaService.entityToDto(x)));
+		
+		listInstituicaos.forEach(i -> {
+			if (i.getEstoque()) 
+				listInstituicaosEstoque.add(i);
+			if(i.getCliente())
+				listInstituicaosCliente.add(i);
+			if (i.getFornecedor())
+				listInstituicaosFornecedor.add(i);
+		});
+		
+		listDoador.forEach(d -> {
+			if (d.getEstoque()) 
+				listDoadorEstoque.add(d);
+			if(d.getCliente())
+				listDoadorCliente.add(d);
+			if (d.getFornecedor())
+				listDoadorFornecedor.add(d);
+		});
+		
 		
 		ParceiroDTO dto = new ParceiroDTO();
-		dto.setListaDoador(listDoador);
-		dto.setListaFamilia(listFamilia);
-		dto.setListaInstituicaoDTOs(listInstituicaos);
+//		dto.setListaDoador(listDoador);
+//		dto.setListaFamilia(listFamilia);
+//		dto.setListaInstituicaoDTOs(listInstituicaos);
+		
+		dto.setListaDoadorCliente(listDoadorCliente);
+		dto.setListaDoadorFornecedor(listDoadorFornecedor);
+		dto.setListaDoadorEstoque(listDoadorEstoque);
+		
+		dto.setListaInstituicaoCliente(listInstituicaosCliente);
+		dto.setListaInstituicaoFornecedor(listInstituicaosFornecedor);
+		dto.setListaInstituicaoEstoque(listInstituicaosEstoque);
 		
 		
 		return dto;

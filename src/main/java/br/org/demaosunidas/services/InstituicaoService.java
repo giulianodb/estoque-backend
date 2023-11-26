@@ -23,14 +23,13 @@ public class InstituicaoService {
 	
 	public List<Instituicao> listar() {
 		// TODO Auto-generated method stub
-		return repo.findAllByOrderByNome();
+		return repo.findByStatusOrderByNome(Status.ATIVO);
 	}
 	
 	public Page<Instituicao> search (String nome, Integer page,Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 				
-		
-		return repo. searchQuery(nome,pageRequest);
+		return repo. searchQuery(nome, Status.ATIVO, pageRequest);
 	}
 	
 	public Instituicao findById(Integer id) {
@@ -41,6 +40,7 @@ public class InstituicaoService {
 	
 	public void insert(Instituicao obj) {
 		obj.setId(null);
+		obj.setStatus(Status.ATIVO);
 		repo.save(obj);
 	}
 	
@@ -59,6 +59,9 @@ public class InstituicaoService {
 		
 		dto.setId(entity.getId());
 		dto.setNome(entity.getNome());
+		dto.setCliente(entity.getCliente());
+		dto.setEstoque(entity.getEstoque());
+		dto.setFornecedor(entity.getFornecedor());
 		
 		return dto;
 	}

@@ -9,8 +9,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -136,17 +134,64 @@ public class TransacaoResource {
 		 
 	}
 	
+	    @GetMapping("/recibo")
+		@CrossOrigin
+		@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
+		public ResponseEntity<byte[]> getRecibo (
+				@RequestParam(value="cod",defaultValue="false") Integer codTransacao
+				
+				) throws IOException {
+			
+			TransacaoDTO dto = TransacaoService.entityToDto(service.findById(codTransacao));
+			
+			try {
+				service.gerarRecibo(dto);
+				 String pathToPDF = "/tmp/recibo.pdf";
+			        Path pdfPath = Paths.get(pathToPDF);
+			        byte[] pdfBytes = Files.readAllBytes(pdfPath);
+
+			        HttpHeaders headers = new HttpHeaders();
+			        headers.setContentType(MediaType.APPLICATION_PDF); // Configurando o Content-Type
+
+			        return ResponseEntity
+			                .ok()
+			                .headers(headers)
+			                .body(pdfBytes);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+	
+			 
+		}
+	
 	@RequestMapping(method=RequestMethod.POST)
 	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
-	public ResponseEntity<Void> insert(@RequestBody TransacaoDTO obj){
+	public ResponseEntity<byte[]> insert(@RequestBody TransacaoDTO obj){
 		
 		try {
 			obj.definirObjetos();
 			obj = service.insert(obj);
 			
-			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-					path("/{id}").buildAndExpand(obj.getId()).toUri();
-			return ResponseEntity.created(uri).build();
+			service.gerarRecibo(obj);
+			
+			 	String pathToPDF = "/tmp/recibo.pdf";
+		        Path pdfPath = Paths.get(pathToPDF);
+		        byte[] pdfBytes = Files.readAllBytes(pdfPath);
+
+		        HttpHeaders headers = new HttpHeaders();
+		        headers.setContentType(MediaType.APPLICATION_PDF); // Configurando o Content-Type
+
+		        return ResponseEntity
+		                .ok()
+		                .headers(headers)
+		                .body(pdfBytes);
+			
+			
+//			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
+//					path("/{id}").buildAndExpand(obj.getId()).toUri();
+//			return ResponseEntity.created(uri).build();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -157,16 +202,28 @@ public class TransacaoResource {
 	
 	@RequestMapping(method=RequestMethod.PUT,value = "/{id}")
 	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
-	public ResponseEntity<Void> update(@RequestBody TransacaoDTO obj, @PathVariable("id") Integer id){
+	public ResponseEntity<byte[]> update(@RequestBody TransacaoDTO obj, @PathVariable("id") Integer id){
 		
 		try {
 			obj.definirObjetos();
 			obj.setId(id);
-			service.update(obj);
+			obj = service.update(obj);
+			obj = TransacaoService.entityToDto(service.findById(id));
+			service.gerarRecibo(obj);
 			
-			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-					path("/{id}").buildAndExpand(obj.getId()).toUri();
-			return ResponseEntity.created(uri).build();
+		 	String pathToPDF = "/tmp/recibo.pdf";
+	        Path pdfPath = Paths.get(pathToPDF);
+	        byte[] pdfBytes = Files.readAllBytes(pdfPath);
+
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(MediaType.APPLICATION_PDF); // Configurando o Content-Type
+
+	        return ResponseEntity
+	                .ok()
+	                .headers(headers)
+	                .body(pdfBytes);
+			
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

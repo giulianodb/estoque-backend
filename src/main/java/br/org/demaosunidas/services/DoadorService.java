@@ -23,7 +23,7 @@ public class DoadorService {
 	
 	public List<Doador> listar() {
 		// TODO Auto-generated method stub
-		return repo.findAllByOrderByNome();
+		return repo.findByStatusOrderByNome(Status.ATIVO);
 	}
 	
 	public Page<Doador> search (String nome, Integer page,Integer linesPerPage, String orderBy, String direction) {
@@ -93,6 +93,10 @@ public class DoadorService {
 		dto.setRua(entity.getRua());
 		dto.setTelefone(entity.getTelefone());
 		dto.setStatus(entity.getStatus());
+		
+		dto.setCliente(entity.getCliente());
+		dto.setEstoque(entity.getEstoque());
+		dto.setFornecedor(entity.getFornecedor());
 		
 		return dto;
 	}

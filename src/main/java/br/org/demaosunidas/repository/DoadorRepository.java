@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.demaosunidas.domain.Doador;
+import br.org.demaosunidas.domain.enums.Status;
 
 @Repository
 public interface DoadorRepository extends JpaRepository<Doador, Integer>{
@@ -22,4 +23,5 @@ public interface DoadorRepository extends JpaRepository<Doador, Integer>{
 	
 	List<Doador> findAllByOrderByNome();
 	
+	List<Doador> findByStatusOrderByNome(Status status);
 }

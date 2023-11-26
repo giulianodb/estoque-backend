@@ -198,4 +198,5 @@ insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (107,
 
 
 
-
+update estoque.instituicao set estoque = true, cliente = false, fornecedor = false;
+update estoque.pessoa set estoque = true, cliente = false, fornecedor = false; 

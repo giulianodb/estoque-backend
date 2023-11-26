@@ -35,6 +35,9 @@ public class InstituicaoResource {
 			@RequestParam(value="direction",defaultValue="ASC") String direction,
 			@RequestParam(value="nome",required = false) String nome) {
 		
+		if (page > 0) {
+			page = page - 1;
+		}
 		
 		Page<Instituicao> lista = service.search(nome,page,linesPerPage,orderBy,direction);
 		

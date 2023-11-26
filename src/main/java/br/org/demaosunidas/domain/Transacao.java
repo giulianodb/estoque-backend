@@ -61,6 +61,8 @@ public class Transacao implements Serializable{
 	@Enumerated
 	private TipoParceiroEnum tipoParceiroEnum;
 	
+	private Boolean anonimo;
+	
 	public Transacao() {
 		super();
 	}
@@ -166,6 +168,14 @@ public class Transacao implements Serializable{
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	public Boolean isAnonimo() {
+		return anonimo;
+	}
+
+	public void setAnonimo(Boolean anonimo) {
+		this.anonimo = anonimo;
 	}
 
 

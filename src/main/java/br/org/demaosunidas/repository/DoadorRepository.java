@@ -18,8 +18,8 @@ public interface DoadorRepository extends JpaRepository<Doador, Integer>{
 
 
 	@Transactional(readOnly=true)
-	@Query("SELECT DISTINCT obj FROM Doador obj WHERE ( :nome is null or obj.nome LIKE %:nome% )" )
-	Page<Doador> searchQuery(@Param("nome") String nome, Pageable pageRequest);
+	@Query("SELECT DISTINCT obj FROM Doador obj WHERE (:nome IS NULL OR LOWER(obj.nome) LIKE CONCAT('%', LOWER(:nome), '%')   AND obj.status = :status)" )
+	Page<Doador> searchQuery(@Param("nome") String nome, @Param("status") Status status, Pageable pageRequest);
 	
 	List<Doador> findAllByOrderByNome();
 	

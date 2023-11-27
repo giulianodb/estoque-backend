@@ -30,7 +30,7 @@ public class DoadorService {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 				
 		
-		return repo. searchQuery(nome,pageRequest);
+		return repo. searchQuery(nome, Status.ATIVO, pageRequest);
 	}
 	
 	public Doador findById(Integer id) {
@@ -41,6 +41,7 @@ public class DoadorService {
 	
 	public void insert(Doador obj) {
 		obj.setId(null);
+		obj.setStatus(Status.ATIVO);
 		repo.save(obj);
 	}
 	

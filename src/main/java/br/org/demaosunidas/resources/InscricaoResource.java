@@ -1,6 +1,7 @@
 package br.org.demaosunidas.resources;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.dto.InscricaoDTO;
 import br.org.demaosunidas.dto.InscricaoReportDTO;
+import br.org.demaosunidas.dto.PedagogicoDashDTO;
 import br.org.demaosunidas.services.InscricaoService;
 
 @RestController
@@ -183,6 +186,20 @@ public class InscricaoResource {
 		
 		return ResponseEntity.ok().body(new InscricaoDTO(obj));
 	}
+	
+	@GetMapping("/totalizadores")
+	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_AssistenteSocial')")
+	public ResponseEntity<PedagogicoDashDTO> obterDashboard(){
+		
+		LocalDate date = LocalDate.now();
+		
+		PedagogicoDashDTO obj = service.getTotalDashboard(date.getYear());
+		
+		return ResponseEntity.ok().body(obj);
+		
+	}
+	
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@CrossOrigin

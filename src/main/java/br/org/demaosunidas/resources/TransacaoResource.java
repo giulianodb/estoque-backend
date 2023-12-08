@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.org.demaosunidas.dto.MesesFinanceiroGrafico;
 import br.org.demaosunidas.dto.TransacaoDTO;
 import br.org.demaosunidas.services.TransacaoService;
 
@@ -249,5 +250,18 @@ public class TransacaoResource {
 	}
 	
 	
+	@GetMapping("/grafico")
+	@CrossOrigin
+	@PreAuthorize("hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
+	public ResponseEntity<MesesFinanceiroGrafico> getGrafico() {
+		try {
+			return ResponseEntity.ok().body(service.obterInfosGrafico());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ResponseEntity.badRequest().build();
+
+	}
 	
 }

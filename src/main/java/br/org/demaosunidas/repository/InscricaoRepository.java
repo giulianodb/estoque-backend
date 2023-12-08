@@ -28,4 +28,22 @@ public interface InscricaoRepository extends JpaRepository<Inscricao, Integer>{
 	@Query("SELECT DISTINCT obj FROM Inscricao obj WHERE ( obj.crianca.id = :idCrianca AND obj.status = 0) " )
 	Page<Inscricao> searchQueryPorCrianca(@Param("idCrianca") Integer idCrianca, Pageable pageRequest);
 	
+	@Transactional(readOnly=true)
+	@Query("SELECT COUNT(obj) FROM Inscricao obj WHERE ( obj.ano = :ano AND obj.status = 0 AND obj.listaEspera = false ) " )
+	Integer getTotalInscritosPorAno(@Param("ano") Integer ano);
+	
+	@Transactional(readOnly=true)
+	@Query("SELECT COUNT(obj) FROM Inscricao obj WHERE ( obj.ano = :ano AND obj.status = 0 AND obj.listaEspera = true) " )
+	Integer getTotalEsperaPorAno(@Param("ano") Integer ano);
+	
+	@Transactional(readOnly=true)
+	@Query("SELECT COUNT(obj) FROM Inscricao obj WHERE ( obj.ano = :ano AND obj.status = 0 AND obj.listaEspera = false AND obj.periodo = 0) " )
+	Integer getTotalInscritosPorAnoManha(@Param("ano") Integer ano);
+	
+	@Transactional(readOnly=true)
+	@Query("SELECT COUNT(obj) FROM Inscricao obj WHERE ( obj.ano = :ano AND obj.status = 0 AND obj.listaEspera = false AND obj.periodo = 1) " )
+	Integer getTotalInscritosPorAnoTarde(@Param("ano") Integer ano);
+	
+	
+	
 }

@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +38,7 @@ import br.org.demaosunidas.dto.CentroCustoDTO;
 import br.org.demaosunidas.dto.ContaDTO;
 import br.org.demaosunidas.dto.FamiliaDTO;
 import br.org.demaosunidas.dto.GrupoCategoriaDTO;
+import br.org.demaosunidas.dto.MesesFinanceiroGrafico;
 import br.org.demaosunidas.dto.RelatorioRazaoDTO;
 import br.org.demaosunidas.dto.TransacaoDTO;
 import br.org.demaosunidas.repository.GrupoCategoriaRepository;
@@ -590,7 +593,7 @@ public class TransacaoService {
         }
     }
     
-public void gerarRecibo (TransacaoDTO dto) throws Exception {
+    public void gerarRecibo (TransacaoDTO dto) throws Exception {
     	
     	String recibo = readFile(caminhoDiretorioReportRecibo + "recibo.txt");
     	recibo = recibo.replace("${urlLogo}", caminhoLogo);
@@ -631,4 +634,45 @@ public void gerarRecibo (TransacaoDTO dto) throws Exception {
         }
     }
 	
+    
+    public MesesFinanceiroGrafico obterInfosGrafico() {
+    	List<String> meses = new ArrayList<>();
+    	List<Double> receitas = new ArrayList<>();
+    	List<Double> despesas = new ArrayList<>();
+    	
+    	LocalDate dataAtual = LocalDate.now();
+    	
+        // Gera os objetos de data para os últimos 9 meses, incluindo o mês atual
+        for (int i = 0; i < 12; i++) {
+            LocalDate primeiroDiaDoMes = dataAtual.withDayOfMonth(1).minusMonths(i);
+            LocalDate ultimoDiaDoMes = primeiroDiaDoMes.with(TemporalAdjusters.lastDayOfMonth());
+            
+            List<Transacao> listT = repo.obterTransacoesPorData(primeiroDiaDoMes, ultimoDiaDoMes);
+            
+            double receita = 0;
+            double despesa = 0;
+            
+            for (Transacao t : listT) {
+				if (t.getTipoTransacaoEnum().equals(TipoTransacaoEnum.RECEITA)) {
+					receita += t.getValor().doubleValue();
+				} else {
+					despesa += t.getValor().doubleValue();
+				}
+			}
+            
+            despesa = despesa *-1;
+            meses.add(DateUtil.obterMes(primeiroDiaDoMes.getMonthValue()).substring(0, 3) );
+            receitas.add(receita);
+            despesas.add(despesa);
+            
+        }
+        
+        MesesFinanceiroGrafico g = new MesesFinanceiroGrafico();
+        g.setDespesa(despesas);
+        g.setMes(meses);
+        g.setReceita(receitas);
+        
+        return g;
+    	
+    }
 }

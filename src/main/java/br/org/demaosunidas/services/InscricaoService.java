@@ -15,6 +15,7 @@ import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.dto.InscricaoDTO;
 import br.org.demaosunidas.dto.InscricaoReportDTO;
+import br.org.demaosunidas.dto.PedagogicoDashDTO;
 import br.org.demaosunidas.repository.InscricaoRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
 
@@ -116,6 +117,18 @@ public class InscricaoService {
 			}
 			
 		// TODO Auto-generated method stub
+		return dto;
+	}
+	
+	public PedagogicoDashDTO getTotalDashboard (Integer ano) {
+		
+		PedagogicoDashDTO dto = new PedagogicoDashDTO();
+		dto.setTotalEspera(repo.getTotalEsperaPorAno(ano));
+		dto.setTotalInscricao(repo.getTotalInscritosPorAno(ano));
+		dto.setTotalInscricaoManha(repo.getTotalInscritosPorAnoManha(ano) );
+		dto.setTotalInscricaoTarde(repo.getTotalInscritosPorAnoTarde(ano) );
+		
+		
 		return dto;
 	}
 

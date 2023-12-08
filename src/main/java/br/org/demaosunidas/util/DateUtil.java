@@ -204,4 +204,16 @@ public class DateUtil {
 		return "Janeiro";
 
 	}
+	
+	public static String obterMes(Integer numero) {
+		List<MesesEnum> listaMeses = new ArrayList<MesesEnum>(Arrays.asList(MesesEnum.values()));
+		for (MesesEnum mesesEnum : listaMeses) {
+			if (mesesEnum.getInteiro() == numero) {
+				return mesesEnum.getDescricao();
+			}
+		}
+
+		return "Janeiro";
+
+	}
 }

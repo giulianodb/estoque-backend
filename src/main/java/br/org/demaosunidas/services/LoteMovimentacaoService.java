@@ -1,6 +1,9 @@
 package br.org.demaosunidas.services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,11 +22,16 @@ import br.org.demaosunidas.domain.Instituicao;
 import br.org.demaosunidas.domain.LoteMovimentacao;
 import br.org.demaosunidas.domain.Movimentacao;
 import br.org.demaosunidas.domain.Produto;
+import br.org.demaosunidas.domain.Transacao;
 import br.org.demaosunidas.domain.enums.TipoMovimentacaoEnum;
+import br.org.demaosunidas.domain.enums.TipoTransacaoEnum;
+import br.org.demaosunidas.dto.FamiliasAtingidasGrafico;
 import br.org.demaosunidas.dto.LoteMovimentacaoGetDTO;
 import br.org.demaosunidas.dto.LoteMovimentacaoInsertDTO;
+import br.org.demaosunidas.dto.MesesFinanceiroGrafico;
 import br.org.demaosunidas.repository.LoteMovimentacaoRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
+import br.org.demaosunidas.util.DateUtil;
 
 @Service
 public class LoteMovimentacaoService {
@@ -176,5 +184,31 @@ public class LoteMovimentacaoService {
 		LoteMovimentacao obj = findById(id);
 		repo.save(obj);
 	}
+	
+    
+    public FamiliasAtingidasGrafico obterInfosGrafico() {
+    	List<String> meses = new ArrayList<>();
+    	List<Long> quantidade = new ArrayList<>();
+    	
+    	LocalDate dataAtual = LocalDate.now();
+    	
+        // Gera os objetos de data para os últimos 9 meses, incluindo o mês atual
+        for (int i = 0; i < 12; i++) {
+            LocalDate primeiroDiaDoMes = dataAtual.withDayOfMonth(1).minusMonths(i);
+            LocalDate ultimoDiaDoMes = primeiroDiaDoMes.with(TemporalAdjusters.lastDayOfMonth());
+            
+            Long l = repo.countDistinctFamilies(primeiroDiaDoMes, ultimoDiaDoMes);
+            
+            meses.add(DateUtil.obterMes(primeiroDiaDoMes.getMonthValue()).substring(0, 3) );
+            quantidade.add(l);
+            
+        }
+        FamiliasAtingidasGrafico f = new FamiliasAtingidasGrafico();
+        f.setMes(meses);
+        f.setQuantidade(quantidade);
+        
+        return f;
+    	
+    }
 	
 }

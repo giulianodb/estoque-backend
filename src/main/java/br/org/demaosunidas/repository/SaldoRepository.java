@@ -35,14 +35,20 @@ public interface SaldoRepository extends JpaRepository<Saldo, Integer>{
 	
 	@Transactional(readOnly=true)
 	Saldo findByContaAndData(Conta conta, LocalDate data);
+	
+//	@Query(value = "SELECT s1 FROM Saldo s1 JOIN (SELECT s2.contaId, MAX(s2.data) AS ultimaData " +
+//            "FROM Saldo s2 WHERE s2.data <= :dataParam GROUP BY s2.contaId) s3 " +
+//            "ON s1.contaId = s3.contaId AND s1.data = s3.ultimaData")
+//	List<Saldo> obterSaldosPorData (LocalDate data);
+	
+	
+	
+	
 
 //	@Transactional(readOnly=true)
 //	@Query( value = "SELECT obj FROM Saldo obj WHERE obj.conta.id = :idConta AND obj.data < :data ORDER BY obj.data ASC " )
 //	Saldo findUltimoSaldoConta(Integer idConta, LocalDateTime data, Pageable pageRequest);
 	
 	
-//	@Transactional(readOnly=true)
-//	@Query("SELECT DISTINCT obj FROM Aluno obj WHERE ( :nome is null or obj.nome LIKE %:nome% )" )
-//	Page<Aluno> searchQuery(@Param("nome") String nome, Pageable pageRequest);
 	
 }

@@ -1,0 +1,8 @@
+                    </tbody>
+                    <tfoot>
+                            <tr class="total-row" >
+                                <td colspan="5">Total:</td>
+                                <td>${totalCategoria}</td>
+                            </tr>
+                        </tfoot>
+                    </table>

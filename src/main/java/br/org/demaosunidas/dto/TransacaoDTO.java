@@ -242,7 +242,9 @@ public class TransacaoDTO implements Serializable{
 
 	public String getNomeParceiro() {
 		
-		
+		if (tipoParceiro == null) {
+			return "";
+		}
 		
 		if (tipoParceiro.equals(TipoParceiroEnum.FAMILIA)) {
 			if (familia != null) {

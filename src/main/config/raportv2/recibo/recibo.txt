@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Recibo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+	
+        #title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        #recibo {
+            border: 1px solid #000;
+            padding: 20px;
+            position: relative;
+        }
+
+        #logo {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            width: 100px; /* Ajuste conforme necessário */
+        }
+
+        #header {
+            text-align: right;
+        }
+
+        #info {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #separator {
+            border-top: 2px solid #000;
+            margin: 20px 0;
+        }
+
+        #footer {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        #signature {
+            margin-top: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="recibo">
+   	 <div id="title">Recibo</div>
+   	 <br></br>
+        <img id="logo" src="${urlLogo}" alt="Logo"/>
+      
+        
+        <div id="header">
+            <div>Número Recibo: <strong>${numeroRecibo}</strong></div>
+            <div>Valor Recebido: <strong>${valorRecibo}</strong></div>
+              <br></br> <br></br>
+        </div>
+        
+        <div id="separator"></div>
+
+        <div id="info">
+            <p>Recebi(emos) de <strong>${nomeDoador}</strong> </p>
+            <p> a importância de <strong>${valorReciboExtenso}</strong> </p>
+            <p> referente à <strong>${referente}</strong>.</p>
+        </div>
+
+        <div id="separator"></div>
+
+        <div id="footer">
+            <p>Para maior clareza, firmamos o presente</p>
+            <p>Emitente: <strong>ASSOCIAÇÃO BENEFICIENTE DE MÃOS UNIDAS</strong></p>
+            <p>Endereço: <strong>Rua Raul Felix 277</strong></p>
+            <p>CPF: <strong>07.208.941/0001-64</strong></p>
+        </div>
+
+        <div id="separator"></div>
+
+        <div id="signature">
+            <p>${data}</p>
+            <br></br>
+            <p>_________________________</p>
+            <p>Assinatura do Emitente</p>
+        </div>
+    </div>
+
+</body>
+</html>
+

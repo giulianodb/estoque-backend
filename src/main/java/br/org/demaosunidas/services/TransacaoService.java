@@ -39,12 +39,14 @@ import br.org.demaosunidas.dto.ContaDTO;
 import br.org.demaosunidas.dto.FamiliaDTO;
 import br.org.demaosunidas.dto.GrupoCategoriaDTO;
 import br.org.demaosunidas.dto.MesesFinanceiroGrafico;
+import br.org.demaosunidas.dto.RelatorioExtratoDTO;
 import br.org.demaosunidas.dto.RelatorioRazaoDTO;
 import br.org.demaosunidas.dto.TransacaoDTO;
 import br.org.demaosunidas.repository.GrupoCategoriaRepository;
 import br.org.demaosunidas.repository.TransacaoRepository;
 import br.org.demaosunidas.services.exception.ObjectNotFoudException;
 import br.org.demaosunidas.util.DateUtil;
+import br.org.demaosunidas.util.FileUtil;
 import br.org.demaosunidas.util.NumeroUtil;
 
 @Service
@@ -67,6 +69,9 @@ public class TransacaoService {
 	
 	@Value("${caminho.html.razao}")
 	private String caminhoDiretorioReport;
+	
+	@Value("${caminho.html.extrato}")
+	private String caminhoDiretorioExtrato;
 	
 	@Value("${caminho.html.recibo}")
 	private String caminhoDiretorioReportRecibo;
@@ -307,11 +312,12 @@ public class TransacaoService {
 		
 		CategoriaDTO categoriaDto = new CategoriaDTO();
 		categoriaDto.setId(entity.getCategoria().getId());
+		categoriaDto.setNome(entity.getCategoria().getNome());
 		dto.setCategoria(categoriaDto);
 		
 		CentroCustoDTO centroCustoDTO = new CentroCustoDTO();
 		centroCustoDTO.setId(entity.getCentroCusto().getId());
-		centroCustoDTO.setId(entity.getCentroCusto().getId());
+		centroCustoDTO.setNome(entity.getCentroCusto().getNome());
 		
 		dto.setCentroCusto(CentroCustoService.entityToDto(entity.getCentroCusto()));
 		
@@ -454,148 +460,148 @@ public class TransacaoService {
 	
 	
 	
+    
     public void gerarRelatorio (RelatorioRazaoDTO razao, LocalDate dataInicio, LocalDate dataFim) throws Exception {
+	String comeco = FileUtil.readFile(caminhoDiretorioReport + "comeco.txt");
+	comeco = comeco.replace("${dataEmissao}", DateUtil.dataToString(new Date()));
+	comeco = comeco.replace("${nomeRelatorio}", "Relatório Razão");
+	comeco = comeco.replace("${periodo}", "de " + DateUtil.dataToString(dataInicio)+ " a " + DateUtil.dataToString(dataFim));
+	
+	for(int z = 0; z<= 1; z++) {
+    	List<GrupoCategoriaDTO> listaTipo = new ArrayList<>();
+    	String valorTotalTipo = "";
+    	String tipo = "";
+		Boolean somarReceita = true;
+		BigDecimal totalReceita = new BigDecimal(0);
+		BigDecimal totalDespesa = new BigDecimal(0);
+		
+    	if (z==0) {
+    		tipo = "Receita";
+    		listaTipo = razao.getGrupoCategoriaReceita();
+    		valorTotalTipo = razao.getTotalReceita().toString();
+    	} else {
+    		tipo = "Despesa";
+    		listaTipo = razao.getGrupoCategoriaDespesa();
+    		valorTotalTipo = razao.getTotalDespesa().toString();
+    		somarReceita = false;
+    	}
     	
-    	String comeco = readFile(caminhoDiretorioReport + "comeco.txt");
-    	comeco = comeco.replace("${dataEmissao}", DateUtil.dataToString(new Date()));
-    	comeco = comeco.replace("${nomeRelatorio}", "Relatório Razão");
-    	comeco = comeco.replace("${periodo}", "de " + DateUtil.dataToString(dataInicio)+ " a " + DateUtil.dataToString(dataFim));
     	
-    	for(int z = 0; z<= 1; z++) {
-	    	List<GrupoCategoriaDTO> listaTipo = new ArrayList<>();
-	    	String valorTotalTipo = "";
-	    	String tipo = "";
-    		Boolean somarReceita = true;
-    		BigDecimal totalReceita = new BigDecimal(0);
-    		BigDecimal totalDespesa = new BigDecimal(0);
+    	String abrirTipoReceita = FileUtil.readFile(caminhoDiretorioReport + "abrir-tipo.txt");
+    	abrirTipoReceita = abrirTipoReceita.replace("${tipo}", tipo);
+    	if (tipo.equals("Despesa")) {
+    		abrirTipoReceita = abrirTipoReceita.replace("${totalTipo}", valorTotalTipo);
+    		abrirTipoReceita = abrirTipoReceita.replace("${cor}", "red");
+    	} else {
+    		abrirTipoReceita = abrirTipoReceita.replace("${totalTipo}", valorTotalTipo);
+    	}
+    	
+    	comeco += abrirTipoReceita;
+    	
+    	String grupoCategoriaAll = "";
+    	
+    	//grupoCategoria
+    	int i = 0;
+    	for (GrupoCategoriaDTO grupo  : listaTipo) {
+    		String abrirGrupoCategoria = FileUtil.readFile(caminhoDiretorioReport + "abrir-grupo-categoria.txt");
+    		abrirGrupoCategoria = abrirGrupoCategoria.replace( "${color}", tipo.equals("Despesa") ? "red" : "" );
+    		abrirGrupoCategoria = abrirGrupoCategoria.replace("${id}", Integer.toString(i))
+    				.replace("${nomeGrupoCategoria}", grupo.getNome())
+    				.replace("${valorTotalGrupoCategoria}", grupo.getValorTotal().toString());
     		
-	    	if (z==0) {
-	    		tipo = "Receita";
-	    		listaTipo = razao.getGrupoCategoriaReceita();
-	    		valorTotalTipo = razao.getTotalReceita().toString();
-	    	} else {
-	    		tipo = "Despesa";
-	    		listaTipo = razao.getGrupoCategoriaDespesa();
-	    		valorTotalTipo = razao.getTotalDespesa().toString();
-	    		somarReceita = false;
-	    	}
-	    	
-	    	
-	    	String abrirTipoReceita = readFile(caminhoDiretorioReport + "abrir-tipo.txt");
-	    	abrirTipoReceita = abrirTipoReceita.replace("${tipo}", tipo);
-	    	if (tipo.equals("Despesa")) {
-	    		abrirTipoReceita = abrirTipoReceita.replace("${totalTipo}", valorTotalTipo);
-	    		abrirTipoReceita = abrirTipoReceita.replace("${cor}", "red");
-	    	} else {
-	    		abrirTipoReceita = abrirTipoReceita.replace("${totalTipo}", valorTotalTipo);
-	    	}
-	    	
-	    	comeco += abrirTipoReceita;
-	    	
-	    	String grupoCategoriaAll = "";
-	    	
-	    	//grupoCategoria
-	    	int i = 0;
-	    	for (GrupoCategoriaDTO grupo  : listaTipo) {
-	    		String abrirGrupoCategoria = readFile(caminhoDiretorioReport + "abrir-grupo-categoria.txt");
-	    		abrirGrupoCategoria = abrirGrupoCategoria.replace( "${color}", tipo.equals("Despesa") ? "red" : "" );
-	    		abrirGrupoCategoria = abrirGrupoCategoria.replace("${id}", Integer.toString(i))
-	    				.replace("${nomeGrupoCategoria}", grupo.getNome())
-	    				.replace("${valorTotalGrupoCategoria}", grupo.getValorTotal().toString());
-	    		
-	    		//categoria
-	    		
-	    		String allCategorias = "";
-	    		
-	    		for ( CategoriaDTO categoria : grupo.getListaCategoria()) {
-	    			String abrirCategoria = readFile(caminhoDiretorioReport + "abrir-categoria.txt");
-	    			abrirCategoria = abrirCategoria.replace("${nomeCategoria}", categoria.getNome());
-	    			
-	    			String abrirMovimento = readFile(caminhoDiretorioReport + "abrir-tabela-movimentos.txt");
-	    			
-	    			for (TransacaoDTO t : categoria.getListaTransacao()) {
-	    				String movimento = readFile(caminhoDiretorioReport + "movimento.txt");
-	    				movimento = movimento.replace("${data}", DateUtil.dataToString(t.getData()))
-	    						.replace("${descricao}", t.getDescricao())
-	    						.replace("${centroCuso}", t.getCentroCusto().getNome())
-	    						.replace("${conta}", t.getConta().getNomeConta())
-	    						.replace("${pessoa}", t.getNomeParceiro())
-	    						.replace("${valor}", t.getValor().toString());
-	    				
-	    				abrirMovimento += movimento;
-	    			}
-	    			
-	    			
-	    			String fecharMovimento = readFile(caminhoDiretorioReport + "fechar-tabela-movimentos.txt");
-	    			fecharMovimento = fecharMovimento.replace("${totalCategoria}", categoria.getSoma().toString());
-	    			
-	    			abrirMovimento += fecharMovimento;
-	    			
-	    			abrirCategoria += abrirMovimento;
-	    			allCategorias += abrirCategoria;
-	    		}
-	    		
-	    		abrirGrupoCategoria += allCategorias;
-	    		
-	    		abrirGrupoCategoria += readFile(caminhoDiretorioReport + "fechar-grupo-categoria.txt");
-	    		
-	    		grupoCategoriaAll += abrirGrupoCategoria;
-	    	}
-	    	
-	    	comeco += grupoCategoriaAll;
-	    	String fecharTipo = readFile(caminhoDiretorioReport + "fechar-tipo.txt.txt");
-			comeco += fecharTipo;
-    	
-		
-    	}
-		
-    	BigDecimal valorFinal = new BigDecimal(0);
-    	valorFinal = razao.getTotalReceita().add(razao.getTotalDespesa());
-    	String corResultadoFinal = "red";
-    	if (valorFinal.doubleValue() > 0) {
-    		corResultadoFinal = "";	
+    		//categoria
+    		
+    		String allCategorias = "";
+    		
+    		for ( CategoriaDTO categoria : grupo.getListaCategoria()) {
+    			String abrirCategoria = FileUtil.readFile(caminhoDiretorioReport + "abrir-categoria.txt");
+    			abrirCategoria = abrirCategoria.replace("${nomeCategoria}", categoria.getNome());
+    			
+    			String abrirMovimento = FileUtil.readFile(caminhoDiretorioReport + "abrir-tabela-movimentos.txt");
+    			
+    			for (TransacaoDTO t : categoria.getListaTransacao()) {
+    				String movimento = FileUtil.readFile(caminhoDiretorioReport + "movimento.txt");
+    				movimento = movimento.replace("${data}", DateUtil.dataToString(t.getData()))
+    						.replace("${descricao}", t.getDescricao())
+    						.replace("${centroCuso}", t.getCentroCusto().getNome())
+    						.replace("${conta}", t.getConta().getNomeConta())
+    						.replace("${pessoa}", t.getNomeParceiro())
+    						.replace("${valor}", t.getValor().toString());
+    				
+    				abrirMovimento += movimento;
+    			}
+    			
+    			
+    			String fecharMovimento = FileUtil.readFile(caminhoDiretorioReport + "fechar-tabela-movimentos.txt");
+    			fecharMovimento = fecharMovimento.replace("${totalCategoria}", categoria.getSoma().toString());
+    			
+    			abrirMovimento += fecharMovimento;
+    			
+    			abrirCategoria += abrirMovimento;
+    			allCategorias += abrirCategoria;
+    		}
+    		
+    		abrirGrupoCategoria += allCategorias;
+    		
+    		abrirGrupoCategoria += FileUtil.readFile(caminhoDiretorioReport + "fechar-grupo-categoria.txt");
+    		
+    		grupoCategoriaAll += abrirGrupoCategoria;
     	}
     	
-    	String fecharTipo = readFile(caminhoDiretorioReport + "fechar-tipo.txt.txt");
-    	
-		String resultadoFinal = "<div class=\"report-section\"> <h1 class=\"section-title\">${tipo} <span style=\"color:${cor}\"> (${totalTipo}) </span></h1> "
-				+ "<div class=\"flex-container\"> ";
-		resultadoFinal += fecharTipo;
-		
-		resultadoFinal = resultadoFinal.replace("${tipo}", "Resultado Final");
-		resultadoFinal = resultadoFinal.replace("${cor}", corResultadoFinal);
-		resultadoFinal = resultadoFinal.replace("${totalTipo}", valorFinal.toString());
-		
-		comeco += resultadoFinal;
-		
-    	String fim = readFile(caminhoDiretorioReport + "fim.txt");
-    	comeco += fim;
-    	
-    	
-    	
-    	/*
-        <div class="report-section">
-        <h1 class="section-title">${tipo} <span style="color:${cor}"> (${totalTipo}) </span></h1>  
-        <div class="flex-container">
-    	
-    	*/
-    	System.out.println(comeco);
-    	
-        try (OutputStream os = new FileOutputStream("/tmp/out.pdf")) {
-            PdfRendererBuilder builder = new PdfRendererBuilder();
-            builder.useFastMode();
-//            builder.withHtmlContent( readFile("/home/giuliano/teste3.html"), null);
-//            builder.withHtmlContent( readFile("/home/giuliano/teste2-2-0.html"), null);
-            builder.withHtmlContent( comeco, null);
-            
-            builder.toStream(os);
-            builder.run();
-        }
+    	comeco += grupoCategoriaAll;
+    	String fecharTipo = FileUtil.readFile(caminhoDiretorioReport + "fechar-tipo.txt.txt");
+		comeco += fecharTipo;
+	
+	
+	}
+	
+	BigDecimal valorFinal = new BigDecimal(0);
+	valorFinal = razao.getTotalReceita().add(razao.getTotalDespesa());
+	String corResultadoFinal = "red";
+	if (valorFinal.doubleValue() > 0) {
+		corResultadoFinal = "";	
+	}
+	
+	String fecharTipo = FileUtil.readFile(caminhoDiretorioReport + "fechar-tipo.txt.txt");
+	
+	String resultadoFinal = "<div class=\"report-section\"> <h1 class=\"section-title\">${tipo} <span style=\"color:${cor}\"> (${totalTipo}) </span></h1> "
+			+ "<div class=\"flex-container\"> ";
+	resultadoFinal += fecharTipo;
+	
+	resultadoFinal = resultadoFinal.replace("${tipo}", "Resultado Final");
+	resultadoFinal = resultadoFinal.replace("${cor}", corResultadoFinal);
+	resultadoFinal = resultadoFinal.replace("${totalTipo}", valorFinal.toString());
+	
+	comeco += resultadoFinal;
+	
+	String fim = FileUtil.readFile(caminhoDiretorioReport + "fim.txt");
+	comeco += fim;
+	
+	
+	
+	/*
+    <div class="report-section">
+    <h1 class="section-title">${tipo} <span style="color:${cor}"> (${totalTipo}) </span></h1>  
+    <div class="flex-container">
+	
+	*/
+	System.out.println(comeco);
+	
+    try (OutputStream os = new FileOutputStream("/tmp/out.pdf")) {
+        PdfRendererBuilder builder = new PdfRendererBuilder();
+        builder.useFastMode();
+//        builder.withHtmlContent( readFile("/home/giuliano/teste3.html"), null);
+//        builder.withHtmlContent( readFile("/home/giuliano/teste2-2-0.html"), null);
+        builder.withHtmlContent( comeco, null);
+        
+        builder.toStream(os);
+        builder.run();
     }
+}
     
     public void gerarRecibo (TransacaoDTO dto) throws Exception {
     	
-    	String recibo = readFile(caminhoDiretorioReportRecibo + "recibo.txt");
+    	String recibo = FileUtil.readFile(caminhoDiretorioReportRecibo + "recibo.txt");
     	recibo = recibo.replace("${urlLogo}", caminhoLogo);
     	recibo = recibo.replace("${numeroRecibo}", dto.getId().toString());
     	recibo = recibo.replace("${valorRecibo}", NumeroUtil.formatarMoeda(dto.getValor()));
@@ -615,25 +621,6 @@ public class TransacaoService {
             builder.run();
         }
     } 
-    
-    public static String readFile(String file) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader (file));
-        String         line = null;
-        StringBuilder  stringBuilder = new StringBuilder();
-        String         ls = System.getProperty("line.separator");
-
-        try {
-            while((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append(ls);
-            }
-
-            return stringBuilder.toString();
-        } finally {
-            reader.close();
-        }
-    }
-	
     
     public MesesFinanceiroGrafico obterInfosGrafico() {
     	List<String> meses = new ArrayList<>();

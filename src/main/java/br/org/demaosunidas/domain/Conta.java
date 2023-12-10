@@ -1,13 +1,17 @@
 package br.org.demaosunidas.domain;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -38,6 +42,14 @@ public class Conta implements Serializable{
 	
 	@Enumerated
 	private Status status;
+	
+	@OneToMany(mappedBy = "conta",fetch = FetchType.LAZY)
+	@OrderBy("data DESC")
+	private Set<Transacao> listTransacao;
+	
+	@OneToMany(mappedBy = "conta",fetch = FetchType.LAZY)
+	@OrderBy("data")
+	private Set<Saldo> listSaldo;
 	
 	public Conta() {
 		// TODO Auto-generated constructor stub
@@ -116,6 +128,22 @@ public class Conta implements Serializable{
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Set<Transacao> getListTransacao() {
+		return listTransacao;
+	}
+
+	public void setListTransacao(Set<Transacao> listTransacao) {
+		this.listTransacao = listTransacao;
+	}
+
+	public Set<Saldo> getListSaldo() {
+		return listSaldo;
+	}
+
+	public void setListSaldo(Set<Saldo> listSaldo) {
+		this.listSaldo = listSaldo;
 	}
 	
 }

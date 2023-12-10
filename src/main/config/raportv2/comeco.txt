@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Relatório Financeiro</title>
+<style type="text/css">
+@page {
+    @top-right {
+        content: "Página " counter(page) " de " counter(pages);
+        font-family: sans-serif;
+        padding-right: 15px;
+        font-size:8px;
+
+    }
+     
+}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+
+        .company-details {
+    text-align: right
+}
+a.logo {
+    display: inline-block;
+    text-decoration: none;
+}
+div.logo-container {
+    float: left;
+}
+        .logo {
+            max-width: 100px;
+            height: auto;
+        }
+        .company-info {
+            text-align: right;
+        }
+        .report-section {
+            margin: 1px;
+            padding: 20px;
+            border: 0.2px solid #ccc;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #778899;
+        }
+        .category-group {
+            margin: 10px 0;
+        }
+        .category-title {
+            font-weight: bold;
+        }
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+                /* page-break-inside: avoid; Evita quebra de página dentro dessa seção */
+    		margin-bottom: 20px; /* Espaçamento entre as seções */
+        }
+        .coluna-comum{
+           font-weight: normal;
+        }
+        .categoria-table th {
+            font-weight: normal;
+        }
+        .transaction-table th,
+        .transaction-table td {
+            padding: 4px;
+            border: 1px solid #ccc;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #B0C4DE;
+        }
+        .flex-container {
+
+        }
+        .flex-item {
+            font-size: 8px;
+            margin-right: 2%; /* Espaço entre as divs */
+         }
+	.table{
+		    page-break-inside: avoid; /* Evita quebra de página dentro dessa seção */
+    		margin-bottom: 20px; /* Espaçamento entre as seções */
+	}
+
+        
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="row">
+            <div class="logo-container">
+                <a class="logo" href="">
+                    <img src="http://localhost:8081/logo.png" alt="Business Logo" />
+                </a>
+            </div>
+            <div class="col company-details">
+                <span class="name">
+                    <a href="">ASSOCIAÇÃO BENEFICIENTE DE MÃOS UNIDAS</a>
+                </span>
+                <div>
+                    Emitido em ${dataEmissao} <br></br>
+                    ${nomeRelatorio}<br></br>
+                    Período: ${periodo}<br></br>
+                </div>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+    </div>

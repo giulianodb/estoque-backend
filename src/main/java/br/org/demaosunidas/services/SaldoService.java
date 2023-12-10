@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import br.org.demaosunidas.domain.Saldo;
 import br.org.demaosunidas.domain.Transacao;
+import br.org.demaosunidas.dto.SaldoDTO;
 import br.org.demaosunidas.repository.SaldoRepository;
 
 @Service
@@ -133,4 +134,24 @@ public class SaldoService {
 		}
 		
 	}
+
+//	public List<Saldo> obterSaldosPorData(LocalDate dataInicio) {
+//		return repo.obterSaldosPorData(dataInicio);
+//	}
+	
+	
+	public static SaldoDTO entityToDto(Saldo entity) {
+		SaldoDTO dto = new SaldoDTO();
+		if (entity.getConta() != null) {
+			dto.setConta(ContaService.entityToDto(entity.getConta()));
+		}
+		
+		dto.setData(entity.getData());
+		dto.setId(entity.getId());
+		dto.setValor(entity.getValor());
+		
+		return dto;
+	}
+	
+	
 }

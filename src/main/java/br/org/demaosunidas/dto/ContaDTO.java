@@ -1,6 +1,8 @@
 package br.org.demaosunidas.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
 
 import javax.persistence.Enumerated;
 
@@ -9,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import br.org.demaosunidas.domain.Conta;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.domain.enums.TipoContaEnum;
-import br.org.demaosunidas.domain.enums.TipoParceiroEnum;
 
 public class ContaDTO implements Serializable{
 
@@ -31,6 +32,16 @@ public class ContaDTO implements Serializable{
 	private Status status;
 	
 	private SaldoDTO saldo;
+	
+	private List<TransacaoDTO> listTransacao;
+	
+	private Integer totalLancamentos;
+	
+	private BigDecimal totalEntradas;
+	
+	private BigDecimal totalSaidas;
+	
+	private BigDecimal saldoFinal;
 	
 	public ContaDTO() {
 		// TODO Auto-generated constructor stub
@@ -111,6 +122,46 @@ public class ContaDTO implements Serializable{
 
 	public void setSaldo(SaldoDTO saldo) {
 		this.saldo = saldo;
+	}
+
+	public List<TransacaoDTO> getListTransacao() {
+		return listTransacao;
+	}
+
+	public void setListTransacao(List<TransacaoDTO> listTransacao) {
+		this.listTransacao = listTransacao;
+	}
+
+	public Integer getTotalLancamentos() {
+		return totalLancamentos;
+	}
+
+	public void setTotalLancamentos(Integer totalLancamentos) {
+		this.totalLancamentos = totalLancamentos;
+	}
+
+	public BigDecimal getTotalEntradas() {
+		return totalEntradas;
+	}
+
+	public void setTotalEntradas(BigDecimal totalEntradas) {
+		this.totalEntradas = totalEntradas;
+	}
+
+	public BigDecimal getTotalSaidas() {
+		return totalSaidas;
+	}
+
+	public void setTotalSaidas(BigDecimal totalSaidas) {
+		this.totalSaidas = totalSaidas;
+	}
+
+	public BigDecimal getSaldoFinal() {
+		return saldoFinal;
+	}
+
+	public void setSaldoFinal(BigDecimal saldoFinal) {
+		this.saldoFinal = saldoFinal;
 	}
 	
 }

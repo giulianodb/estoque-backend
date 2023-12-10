@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            max-width: 100px;
+            height: auto;
+        }
+
+        .company-info {
+            text-align: right;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .summary {
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <!-- Inserir o código da logo da empresa aqui -->
+        </div>
+        <div class="company-info">
+            <p>Nome da Empresa</p>
+            <p>Data de Emissão: [Data]</p>
+            <h1>Relatório de Movimentos Financeiros</h1>
+            <p>Período: [Período]</p>
+        </div>
+    </header>
+
+    <!-- Áreas para cada Conta -->
+    <h2>Conta: [Nome da Conta]</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Número</th>
+                <th>Fornecedor/Pagador</th>
+                <th>Categoria</th>
+                <th>Centro de Custo</th>
+                <th>Valor</th>
+                <th>Saldo</th>
+                <th>C/D</th>
+            </tr>
+        </thead>
+        <tbody>
+           
+           
+           <tr>
+                <td>01/12/2023</td>
+                <td>Compra de Mercadorias</td>
+                <td>12345</td>
+                <td>Fornecedor A</td>
+                <td>Compras</td>
+                <td>Centro 1</td>
+                <td>500,00</td>
+                <td>5.000,00</td>
+                <td>D</td>
+            </tr>
+            <tr>
+                <td>05/12/2023</td>
+                <td>Pagamento de Conta de Luz</td>
+                <td>54321</td>
+                <td>Concessionária de Energia</td>
+                <td>Despesas Gerais</td>
+                <td>Centro 2</td>
+                <td>100,00</td>
+                <td>4.900,00</td>
+                <td>D</td>
+            </tr>
+            <tr>
+                <td>15/12/2023</td>
+                <td>Recebimento de Cliente B</td>
+                <td>78901</td>
+                <td>Cliente B</td>
+                <td>Vendas</td>
+                <td>Centro 3</td>
+                <td>800,00</td>
+                <td>5.700,00</td>
+                <td>C</td>
+            </tr>
+            <tr>
+                <td>20/12/2023</td>
+                <td>Transferência para Conta Poupança</td>
+                <td>13579</td>
+                <td>-</td>
+                <td>Transferências</td>
+                <td>Centro 4</td>
+                <td>200,00</td>
+                <td>5.500,00</td>
+                <td>D</td>
+            </tr>
+           
+           
+        </tbody>
+    </table>
+
+    <!-- Resumo para cada Conta -->
+    <div class="summary">
+      <p>Total de Lançamentos: 4</p>
+        <p>Total de Entradas: 800,00</p>
+        <p>Total de Saídas: 800,00</p>
+        <p>Saldo Final: 5.500,00</p>
+    </div>
+
+    <!-- Resumo Completo -->
+    <div class="summary">
+        <h2>Resumo Completo</h2>
+        <p>Total de Lançamentos: [Total Lançamentos Geral]</p>
+        <p>Total de Entradas: [Total Entradas Geral]</p>
+        <p>Total de Saídas: [Total Saídas Geral]</p>
+        <p>Saldo Final: [Saldo Final Geral]</p>
+    </div>
+
+    <footer>
+        Página: 1 <!-- Adicionar número de página dinamicamente -->
+    </footer>
+
+</body>
+</html>
+

@@ -1,0 +1,8 @@
+       			    <tr>
+                                <th>${data}</th>
+                                <th>${descricao}</th>
+                                <th>${centroCuso}</th>
+                                <th>${conta}</th>
+                                <th>${pessoa}</th>
+                                <th>${valor}</th>
+                            </tr>

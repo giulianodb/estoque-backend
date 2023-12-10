@@ -40,6 +40,7 @@ public class Saldo implements Serializable{
 
 	public Saldo() {
 		super();
+		valor = BigDecimal.ZERO;
 	}
 	
 	public Saldo(SaldoDTO obj) {

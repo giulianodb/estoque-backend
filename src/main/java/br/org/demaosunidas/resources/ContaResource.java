@@ -1,18 +1,29 @@
 package br.org.demaosunidas.resources;
 
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -149,6 +160,41 @@ public class ContaResource {
 //		return ResponseEntity.noContent().build() ;
 //	}
 //	
+	
+  	@GetMapping("/extrato")
+	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Financeiro')")
+	public ResponseEntity<byte[]> getExtrato (
+			@RequestParam(value="dataInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "yyyy-MM-dd")  LocalDate dataInicio,
+			@RequestParam(value="dataFim", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "yyyy-MM-dd")  LocalDate dataFim,
+			@RequestParam(value="dias30",defaultValue="false") Boolean dias30,
+			@RequestParam(value="dias60",defaultValue="false") Boolean dias60
+			
+			) throws IOException {
+		
+		if (dias30) {
+			dataFim = LocalDate.now();
+			dataInicio = LocalDate.now().minusMonths(1);
+		} else if(dias60) {
+			dataFim = LocalDate.now();
+			dataInicio = LocalDate.now().minusMonths(2);
+		}
+		
+		service.relatorioExtrato(dataInicio, dataFim);
+		
+		 String pathToPDF = "/tmp/extrato.pdf";
+	        Path pdfPath = Paths.get(pathToPDF);
+	        byte[] pdfBytes = Files.readAllBytes(pdfPath);
+
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(MediaType.APPLICATION_PDF); // Configurando o Content-Type
+
+	        return ResponseEntity
+	                .ok()
+	                .headers(headers)
+	                .body(pdfBytes);
+		 
+	}
 	
 	
 }

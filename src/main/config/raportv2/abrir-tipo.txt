@@ -1,0 +1,3 @@
+    <div class="report-section">
+        <h1 class="section-title">${tipo} <span style="color:${cor}"> (${totalTipo}) </span></h1>  
+        <div class="flex-container">

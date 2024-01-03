@@ -1,9 +1,18 @@
 package br.org.demaosunidas.services;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
@@ -22,6 +31,9 @@ public class CriancaService {
 	
 	@Autowired
 	private CriancaRepository repo;
+	
+	@Value("${foto.padrao}")
+	private String caminhoFotoPadrao;
 	
 //	public List<Crianca> listar() {
 //		// TODO Auto-generated method stub
@@ -56,6 +68,18 @@ public class CriancaService {
 	
 	public void insert(Crianca obj) {
 		obj.setId(null);
+		
+		byte[] fileContent;
+		try {
+			fileContent = Files.readAllBytes(Paths.get(caminhoFotoPadrao));
+			String base64String = Base64.getEncoder().encodeToString(fileContent);
+			obj.setFoto(base64String);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 		repo.save(obj);
 	}
 	
@@ -102,7 +126,10 @@ public class CriancaService {
 		return repo.searchQueryPorFamilia(idFamilia,pageRequest);
 		
 	}
-
 	
+	@Transactional
+	public void salvarFotoCrianca(String base64String, Integer id) {
+		repo.atualizarFoto(id, base64String);
+	}
 	
 }

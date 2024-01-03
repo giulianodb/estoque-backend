@@ -78,6 +78,16 @@ public class InstituicaoResource {
 		return ResponseEntity.noContent().build() ;
 	}
 	
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	@CrossOrigin
+	@PreAuthorize( "hasAnyRole('ROLE_Administrador','ROLE_Estoque')")
+	public ResponseEntity<Void> Alterar(@PathVariable Integer id,@RequestBody Instituicao instituicao){
+		instituicao.setId(id);	
+		service.update(instituicao);
+		
+		return ResponseEntity.noContent().build() ;
+	}
+	
 	
 	
 }

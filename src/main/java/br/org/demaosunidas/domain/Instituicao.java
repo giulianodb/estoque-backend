@@ -25,6 +25,7 @@ public class Instituicao implements Serializable {
 	
 	private String nome;
 	
+	@Column(unique=true)
 	private String cnpj;
 	
 	@Column(name = "nomecontato")

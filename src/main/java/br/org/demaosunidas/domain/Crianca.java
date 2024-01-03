@@ -19,7 +19,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import br.org.demaosunidas.domain.enums.ProjetoEnum;
 import br.org.demaosunidas.domain.enums.Status;
 import br.org.demaosunidas.dto.CriancaDTO;
 
@@ -68,6 +67,8 @@ public class Crianca implements Serializable {
 	private String descricaoMedicamento;
 	
 	private String religiao;
+	 @Column(length = 10485760)
+	private String foto;
 	
 //	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR", timezone="America/Sao_Paulo")
 //	private Date dataInscricao;
@@ -230,8 +231,14 @@ public class Crianca implements Serializable {
 		this.listInscricao = listInscricao;
 	}
 
+	public String getFoto() {
+		return foto;
+	}
 
-	
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
 
 	
 }

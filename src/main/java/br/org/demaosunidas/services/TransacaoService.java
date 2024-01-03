@@ -1,17 +1,14 @@
 package br.org.demaosunidas.services;
 
-import java.io.BufferedReader;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +36,6 @@ import br.org.demaosunidas.dto.ContaDTO;
 import br.org.demaosunidas.dto.FamiliaDTO;
 import br.org.demaosunidas.dto.GrupoCategoriaDTO;
 import br.org.demaosunidas.dto.MesesFinanceiroGrafico;
-import br.org.demaosunidas.dto.RelatorioExtratoDTO;
 import br.org.demaosunidas.dto.RelatorioRazaoDTO;
 import br.org.demaosunidas.dto.TransacaoDTO;
 import br.org.demaosunidas.repository.GrupoCategoriaRepository;
@@ -636,23 +632,29 @@ public class TransacaoService {
             
             List<Transacao> listT = repo.obterTransacoesPorData(primeiroDiaDoMes, ultimoDiaDoMes);
             
-            double receita = 0;
-            double despesa = 0;
+            BigDecimal receita = BigDecimal.ZERO;
+            BigDecimal despesa = BigDecimal.ZERO;
             
             for (Transacao t : listT) {
 				if (t.getTipoTransacaoEnum().equals(TipoTransacaoEnum.RECEITA)) {
-					receita += t.getValor().doubleValue();
+					receita = receita.add(t.getValor());
 				} else {
-					despesa += t.getValor().doubleValue();
+					despesa = despesa.add(t.getValor());
 				}
 			}
             
-            despesa = despesa *-1;
+            despesa = despesa.multiply(new BigDecimal(-1));
             meses.add(DateUtil.obterMes(primeiroDiaDoMes.getMonthValue()).substring(0, 3) );
-            receitas.add(receita);
-            despesas.add(despesa);
+            
+            receita = receita.setScale(2);
+            despesa = despesa.setScale(2);
+            
+            receitas.add(receita.doubleValue());
+            despesas.add(despesa.doubleValue());
             
         }
+        
+        
         
         MesesFinanceiroGrafico g = new MesesFinanceiroGrafico();
         g.setDespesa(despesas);

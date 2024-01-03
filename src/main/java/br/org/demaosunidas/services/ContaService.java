@@ -252,6 +252,7 @@ public void relatorioExtrato(LocalDate dataInicio,LocalDate dataFim) {
 		dto.getListTransacao().add(tInicial);
 		
 		for (Transacao t : conta.getListTransacao()) {
+			
 			TransacaoDTO transacaoDto = TransacaoService.entityToDto(t);
 			saldoFinalConta = saldoFinalConta.add(t.getValor());
 			
@@ -266,7 +267,7 @@ public void relatorioExtrato(LocalDate dataInicio,LocalDate dataFim) {
 			dto.getListTransacao().add(transacaoDto);
 		}
 		
-		dto.setTotalLancamentos(dto.getListTransacao().size());
+		dto.setTotalLancamentos(dto.getListTransacao().size()-1);
 		dto.setTotalEntradas(totalEntrdasConta);
 		dto.setTotalSaidas(totalSaidasConta);
 		dto.setSaldoFinal(saldoFinalConta);

@@ -28,9 +28,10 @@ insert into estoque.avaliacao_contexto_perguntas (id,descricao,tipo_avaliacao) v
 	Papel
 */
 
-INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(1, 'Administrador', 'Administrador');
-INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(2, 'AssistenteSocial', 'AssistenteSocial');
-INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(3, 'Estoque', 'Estoque')
+--INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(1, 'Administrador', 'Administrador');
+--INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(2, 'AssistenteSocial', 'AssistenteSocial');
+INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(3, 'Estoque', 'Estoque');
+INSERT INTO estoque.papel (id_papel, descricao_papel, nome_papel) VALUES(4, 'Financeiro', 'Financeiro');
 
 /*
 Inserir centro de custo
@@ -75,7 +76,7 @@ insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (3,'F
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (4,'Noite do Pastel',0,1);
 
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (5,'Bazar PF',0,2);
-insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (6,'Doações PF"',0,2);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (6,'Doações PF',0,2);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (7,'Doações PJ',0,2);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (8,'Doações em Produtos - Estoque',0,2);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (9,'Nota Paraná',0,2);
@@ -83,6 +84,7 @@ insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (9,'N
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (10,'Reembolso',0,3);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (11,'Venda de Bens - Ativo Imobilizado',0,3);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (110,'Saldo',0,3);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (111,'Transferência',0,3);
 
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (12,'Dividendos/ Dist. Lucros/Sobras',0,4);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (13,'Ganhos de Capital',0,4);
@@ -184,7 +186,7 @@ insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (95,'
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (96,'Telefone Fixo/Internet',0,14);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (97,'Água e Esgoto',0,14);
 
-insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (98,'Dispensa',0,15);
+insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (98,'Despensa',0,15);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (99,'Impressões/Fotocópias',0,15);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (100,'Limpeza/Higiene',0,15);
 insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (101,'Papelaria',0,15);
@@ -199,4 +201,692 @@ insert into estoque.categoria (id, nome, status,grupo_categoria_id) values (107,
 
 
 update estoque.instituicao set estoque = true, cliente = false, fornecedor = false;
-update estoque.pessoa set estoque = true, cliente = false, fornecedor = false; 
+update estoque.pessoa set estoque = true, cliente = false, fornecedor = false;
+
+
+--Cria tabela temporaria
+
+CREATE TABLE estoque.tmp ( id_menor int4 NULL, cpf varchar NULL );
+
+update estoque.pessoa set cpf = null where cpf = '00000000000' or cpf='000000000000000' or cpf = '00000000000' or cpf = '0';
+
+--Inserir qual é o menor id de cada Cpf duplicado
+
+insert into estoque.tmp (cpf,id_menor) select distinct f.cpf , min(f.id) as menorId from estoque.pessoa f inner join estoque.pessoa f2 on f.cpf = f2.cpf where f.id <> f2.id group by f.cpf;
+
+--Criar coluna cpf na tabela lte
+
+ALTER TABLE estoque.lotemovimentacao ADD cpf_tmp varchar NULL;
+
+--Adicionar o CPF da familia no campo temporaria
+
+update estoque.lotemovimentacao set cpf_tmp = fa.cpf from (select cpf,id from estoque.pessoa ) as fa where fa.id = doador_id or fa.id = doadorcampanha_id ;
+
+--Atualiza o id da família para o menor id com o mesmo CPF
+
+update estoque.lotemovimentacao set doador_id = tmp.id_menor from (select cpf,id_menor from estoque.tmp ) as tmp where tmp.cpf = cpf_tmp and doador_id notnull ;
+
+--Atualiza o id da família para o menor id com o mesmo CPF
+
+update estoque.lotemovimentacao set doadorcampanha_id = tmp.id_menor from (select cpf,id_menor from estoque.tmp ) as tmp where tmp.cpf = cpf_tmp and doadorcampanha_id notnull ;
+
+delete from estoque.pessoa where cpf in (select cpf from estoque.tmp) and id NOT IN (select id_menor from estoque.tmp);
+
+DROP TABLE estoque.tmp;
+
+ALTER TABLE estoque.lotemovimentacao DROP COLUMN cpf_tmp;
+
+ALTER TABLE estoque.pessoa ADD CONSTRAINT cpf_un UNIQUE (cpf);
+
+--Cria tabela temporaria
+
+CREATE TABLE estoque.tmp ( id_menor int4 NULL, cnpj varchar NULL );
+
+update estoque.instituicao set cnpj = null where cnpj = '00000000000' or cnpj = '0' or cnpj = '0000000';
+
+--Inserir qual é o menor id de cada Cpf duplicado 
+
+insert into estoque.tmp (cnpj,id_menor) select distinct f.cnpj , min(f.id) as menorId from estoque.instituicao f inner join estoque.instituicao f2 on f.cnpj = f2.cnpj where f.id <> f2.id group by f.cnpj;
+
+--Criar coluna cpf na tabela lte
+
+ALTER TABLE estoque.lotemovimentacao ADD cnpj_tmp varchar NULL;
+
+--Adicionar o CPF da familia no campo temporaria 
+
+update estoque.lotemovimentacao set cnpj_tmp = fa.cnpj from (select cnpj,id from estoque.instituicao ) as fa where fa.id = instituicao_id or fa.id = instituicaocampanha_id ;
+
+--Atualiza o id da família para o menor id com o mesmo CPF 
+
+update estoque.lotemovimentacao set instituicao_id = tmp.id_menor from (select cnpj,id_menor from estoque.tmp ) as tmp where tmp.cnpj = cnpj_tmp and instituicao_id notnull ;
+
+--Atualiza o id da família para o menor id com o mesmo CPF 
+
+update estoque.lotemovimentacao set instituicaocampanha_id = tmp.id_menor from (select cnpj,id_menor from estoque.tmp ) as tmp where tmp.cnpj = cnpj_tmp and instituicaocampanha_id notnull ;
+
+delete from estoque.instituicao where cnpj in (select cnpj from estoque.tmp) and id NOT IN (select id_menor from estoque.tmp);
+
+DROP TABLE estoque.tmp;
+
+ALTER TABLE estoque.lotemovimentacao DROP COLUMN cnpj_tmp;
+
+ALTER TABLE estoque.instituicao ADD CONSTRAINT cnpj_un UNIQUE (cnpj);
+
+
+
+
+--Cria tabela temporaria
+
+CREATE TABLE estoque.tmp ( id_menor int4 NULL, cpf varchar NULL );
+
+update estoque.familia set cpfresponsavel = null where cpfresponsavel = '00000000000';
+
+--Inserir qual é o menor id de cada Cpf duplicado
+
+insert into estoque.tmp (cpf,id_menor)
+select distinct f.cpfresponsavel , min(f.id) as menorId from estoque.familia f
+inner join estoque.familia f2 on f.cpfresponsavel = f2.cpfresponsavel where f.id <> f2.id group by f.cpfresponsavel;
+
+--Criar coluna cpf na tabela lte
+
+ALTER TABLE estoque.lotemovimentacao ADD cpf_tmp varchar NULL;
+
+--Adicionar o CPF da familia no campo temporaria
+
+update estoque.lotemovimentacao set cpf_tmp = fa.cpfresponsavel from (select cpfresponsavel,id from estoque.familia ) as fa where fa.id = familia_id or fa.id = familiacampanha_id ;
+
+--Atualiza o id da família para o menor id com o mesmo CPF
+
+update estoque.lotemovimentacao set familia_id = tmp.id_menor from (select cpf,id_menor from estoque.tmp ) as tmp where tmp.cpf = cpf_tmp and familia_id notnull ;
+
+--Atualiza o id da família para o menor id com o mesmo CPF
+
+update estoque.lotemovimentacao set familiacampanha_id = tmp.id_menor from (select cpf,id_menor from estoque.tmp ) as tmp where tmp.cpf = cpf_tmp and familiacampanha_id notnull ;
+
+delete from estoque.familia where cpfresponsavel in (select cpf from estoque.tmp) and id NOT IN (select id_menor from estoque.tmp);
+
+DROP TABLE estoque.tmp;
+
+ALTER TABLE estoque.lotemovimentacao DROP COLUMN cpf_tmp;
+
+ALTER TABLE estoque.familia ADD CONSTRAINT familia_un UNIQUE (cpfresponsavel);
+
+
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'KARLO NOCERA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'SANDRA MARIA CARDOSO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'NANCY DE JESUS CHIMINELLI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'BETINA GUTH MAZETO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'RODRIGO JOSÉ DE OLIVEIRA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Eduar Mehry Neto',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'PAMELA SUELEN DAL NEGRO DA SILVA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ANTONIO DIVINO DA CRUZ',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LETICIA MASSANEIRO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ADEMIR FERREIRA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Ritamara Moreira Bueno Kosinski',0,true,true,false);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Kariane Rell Bender',0,true,true,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LOURDES GONÇALVES ARAUJO',0,true,true,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'GIZELI FERNANDA APARECIDA POSTALE',0,true,true,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Damar de Cosmo Martins',0,true,true,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Tatiana de Cosmo Martins',0,true,true,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MARCIA SUZANA DERNIS',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MARCOS FRANCISCO CASAL',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'GISELE APARECIDA BORGES',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ELEDA LANCONI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ANA PAULA BATISTA OLIVEIRA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MARISTELA REZENDE',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'FABIOLA JULIANA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'SILVIA FALKENB',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'KEILA REGINA KOHLER',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MARISTELA WIGINIESKI',0,false,true,false);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'FABRICIA CAROLINE STELLA DE OL',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'VANESSA SAYURI UMEHARA HOSHINA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ELLEN DAMARIS LIMA REAL DE AQU',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'FRANCIELLI TAPIA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'HELOISE CLAUDINO BRIDAROLI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'FLAVIA COELHO VIGIANI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'VILMAR MOREIRA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MARCIA AMALIA DE ANDRADE ALMEIDA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'FABRICIA CAROLINE STELLA DE OL',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LUCAS SOLKULSKI',0,true,true,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MARCIA REGINA GRECHI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Rosana Bernardes de Castro',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'CAREN DE SOUZA ROSA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'NANCY DE JESUS CHIMINELLI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MICHELI CRIST RACOSKI SABINO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'CRISTIANE DO PÉRPETUO SOCORRO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'SORAIA CRISTINA REZENDE',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'VILAUMA DE SOUZA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'CLEONILDA DO ROCIO ALVES DE SOUZA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MICHELLE APARECIDA SIQUEIRA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'PAMELA SUELEN DAL NEGRO DA SILVA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'IZABEL APARECIDA GONÇALVES',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'FABIOLA JULIANA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ANA CLAUDIA DAS NEVES TOLEDO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MARCIA SUZANA DERNIS',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'NEIVA NAVARRO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'JESSICA PIMENTEL',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'DAIANE CRISTINA DE SOUZA DOS S',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'JULIANA MARTINS',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'SANDRA CRISTINA ALMEIDA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ALEXANDRE GOMES',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MARIANE MULAK GOMES',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ELISIANE LIE SATAKE',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'JULIANE GABRIELLE PIMENTA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LEANDRO DA SILVA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Edna Maria Luvison Perlin',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'GRACIELA DUARTE FANEGO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'JULIANA MENDES DA ROCHA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Leoncio Santiago',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LEIA REGINA NASCIMENTO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ELIANE CRISTINA LINO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ATAISA APARECIDA FONTANA VIEIRA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'JONATHAN FELIPE DOS SANTOS DE LIMA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Helena Jacinta de Melo Moraes',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'NILSON MANOEL DOS SANTOS',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'EDUARDO BECHTLOFF WOELLNER',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'BEATRIZ ABDALA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'SIMONE ROSA SOBRINHO',0,true,true,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LEILA MARIA BATISTA CZERWINSKI',0,true,true,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'JACQUELINE GUIMARÃES PEDROSO',0,true,true,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ESTHER CHERUBINI T BOABAID',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'JONAS TERTULIANO DOS SANTOS',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'POLIANA RAZZOLINI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Egeu Emilio Feix',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'VIVIANE RIEDI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'DOROTEIA DE FATIMA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Adriana Abage',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ANA KHARINA DARIO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ELISANGELA DUARTE BELLO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'VERA CRISTINA LEMA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'FATIMA GONCALVES GOU',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'DESONEI PEDROSO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'FABIOLA DE PAULA GARCIA GOMES',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LUIZ GUSTAVO J LORENCI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'WANDERLEY DA SILVA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'KATIA SIMONE SATO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LEANDRO TAZIMA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MARIA APARECIDA MACHADO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'GISELE APARECIDA BORGES MATIOSKI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MELYSSA BISCAIA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MARCIA APARECIDA DA SILVA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LUZIA AFONSO DE MELO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Caroline Gongra',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LUCILEIDE DE FATIMA FERREIRA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'EFREN WILLIAM BELO MALUENDAS',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MARIA PERPETUA DOS SANTOS',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MURILO RIBEIRO GONÇALVES',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'JULIANA BESTER',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'PAULA MARIA CASTRO AVILA CESA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Karen Aquino Zanoni',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'FERNANDO CRISTOPOLISKI JUNIOR',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'FRANCIELE APARECIDA PEREIRA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Alessandra B Pegoraro',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'SANDRA MARA LITWINSKI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'MaDALEINE ORIEL MARTINS',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ADRIANA ZEFERINO DA SILVA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'THAIS DE FATIMA RAMOS',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Gislaine Aparecida dos santos',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'JANETE DE JESUS CAVALHEIRO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'CARMEM LUCIA KOHLER',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'EUGENIA MARCIA ANVERSA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'SILVANA FERREIRA DA ROCHA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ELAINE CRISTINA AMORIM',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'JANIA MACHADO HARDT',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ANA CAROLINA RANCONI MELLEM',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'THEREZINHA GIARETTA ROCHA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'JOÃO PEDRO STEOFELA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'BEATRIZ AMORIM DE LIMA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LUCAS MIKAMI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ANA LUCIA PETRI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'REGIANE APARECIDA MOREIRA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'DENISE DO ROCIO SPONHOLZ',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'PAULA MARIA DE CASTRO AVILA CESAR',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'VIVIAN QUIMELLI ROSA MACIEL',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'LEILA FAYEK TACLA YACOUB',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ANDRE FELIPE DA SILVA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'ANDREA BORBA CORTES VELLOSO',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'PAULA AMARAL DA SILVA BORCATH',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'POLIANA RAZZOLINI',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'BERNADETTE AMARAL DA SILVA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'PAULA MARIA DE CASTRO AVILA CESAR',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'FABIOLA JULIANA',0,true,false,true);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'SOLANGE MARIA BUSARELLO ARNIZAUT',0,true,false,true);
+
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Relotron Tecnica e comercio de informática',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'PROAGIR - BEM ESTAR SOCIAL',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Vivo Telefonica Brasil S/A',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Bradesco',0,true,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Servant Assessoria Empresarial Ltda.',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'SOMPO SEGUROS S.A.',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'WORLD LINE PORTARIA LTDA',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'AZUL COMPANHIA DE SEGUROS GERAIS',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Premium Saúde Ocupacional Ltda.',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'DENTAL UNI PLANO DE SAUDE',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'CONSORCIO SERVOPA',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'OLIZON DESPACHANTE',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Secretaria do Estado da Fazenda',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Copel',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Sanepar Cia de Saneamento do Paraná',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Impacto Comércio de gás Ltda',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'MAGAZINE LUIZA SA',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Fundo de Urbanização de Curitiba-URBS',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Caixa Economica Federal',0,true,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Fundo de Garantia do Tempo de Serviço',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Elizandro Veudolin',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Auto Posto San Michel Ltda.',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Sacolão Capão Raso',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Lacfrios',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Tim Celular',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Receita Federral do Brasil',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Evidence Car Multimarcas',0,true,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'UNEX INTERNET E TV',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'DOM BOSCO ENSINO SUPERIOR LTDA',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'A LOJA MAÇONICA SALDANHA MARINHO',0,true,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Bellos Imóveis Ltda.',0,true,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'CHRISTOPHER DE FREITAS',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'GEPR Nota Paraná',0,true,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'OBRA 7 ENGENHARIA LTDA',0,true,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'Condor Super Center Ltda',0,false,true,false);
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'CACAU SHOW',0,false,true,false);
+
+
+INSERT INTO estoque.usuario
+(id_usuario, email, loginusuario, nome, participaextra, participacao, senha, status, papel_id_papel, sobrenome, senha_cripto)
+VALUES(nextval('id_usuario_seq'), NULL, 'admin2', 'Administrador', NULL, NULL, '123', 0, 1, NULL, '$2a$10$FQ1etqbj43vjMXElr1enC.eXQSQ50uvY18W8BCByCW3/abhPJc7xa');
+
+insert into instituicao (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_instituicao_seq'),'CONSORCIO SERVOPA',0,false,true,false);
+insert into pessoa (id,nome,status,cliente,fornecedor,estoque) values ( nextval('id_pessoadoador_seq'),'Giuliano Diego Barbarra',0,true,false,true);
+
+
+INSERT INTO estoque.conta (id,agencia_conta,nome_conta,numero_conta,status,tipo_conta) VALUES
+	 (1,NULL,'BRADESCO',NULL,NULL,0),
+	 (2,NULL,'Bradesco - Poupança',NULL,NULL,2),
+	 (3,NULL,'BRADESCO APLICAÇÃO',NULL,NULL,1),
+	 (4,NULL,'CAIXA 2118-2',NULL,NULL,1),
+	 (5,NULL,'CAIXA 2118-2 FOMENTO',NULL,NULL,0),
+	 (6,NULL,'CAIXA 322-2',NULL,NULL,0);
+
+
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (1,false,'2023-11-01','RELOGIO PONTO',6,0,-52.00,51,1,1,NULL,NULL,205),
+	 (2,false,'2023-11-01','SEGURO DE BEM ESTAR SOCIAL',6,0,-189.20,91,1,1,NULL,NULL,206),
+	 (3,false,'2023-11-01','Telefone Fixo DMU',6,0,-149.99,96,1,1,NULL,NULL,207),
+	 (4,false,'2023-11-06','SALDO',5,1,14416.70,110,1,1,NULL,NULL,208),
+	 (5,false,'2023-11-07','RESGATE AUTOMATICO',5,1,27.69,110,1,1,NULL,NULL,208),
+	 (6,false,'2023-11-07','RESGATE AUTOMATICO',5,1,1000.00,110,1,1,NULL,NULL,208),
+	 (7,false,'2023-11-07','RESGATE AUTOMATICO',6,1,1998.00,110,1,1,NULL,NULL,208),
+	 (8,false,'2023-11-07','RESGATE AUTOMATICO',6,1,2000.00,110,1,1,NULL,NULL,208),
+	 (9,false,'2023-11-07','RESGATE AUTOMATICO',5,1,1999.99,110,1,1,NULL,NULL,208),
+	 (10,false,'2023-11-07','RESGATE AUTOMATICO',6,1,2000.00,110,1,1,NULL,NULL,208);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (11,false,'2023-11-07','CONTABILIDADE',6,0,-1425.00,49,1,1,NULL,NULL,209),
+	 (12,false,'2023-11-09','TARIFA PIX',5,0,-3.00,55,1,1,NULL,NULL,208),
+	 (13,false,'2023-11-09','TARIFA PIX',6,0,-3.00,55,1,1,NULL,NULL,208),
+	 (14,false,'2023-11-09','TARIFA PIX',6,0,-3.00,55,1,1,NULL,NULL,208),
+	 (15,false,'2023-11-09','TARIFA PIX',6,0,-3.00,55,1,1,NULL,NULL,208),
+	 (16,false,'2023-11-09','TARIFA PIX',6,0,-3.00,55,1,1,NULL,NULL,208),
+	 (17,false,'2023-11-09','TARIFA PIX',6,0,-3.00,55,1,1,NULL,NULL,208),
+	 (18,false,'2023-11-09','TARIFA PIX',6,0,-3.00,55,1,1,NULL,NULL,208),
+	 (19,false,'2023-11-09','TARIFA PIX',6,0,-3.00,55,1,1,NULL,NULL,208),
+	 (20,false,'2023-11-09','TARIFA PIX',6,0,-3.00,55,1,1,NULL,NULL,208);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (21,false,'2023-11-09','TARIFA PIX',6,0,-3.00,55,1,1,NULL,NULL,208),
+	 (22,false,'2023-11-10','DOAÇÃO RECEBIDA',3,1,200.00,6,1,1,184,NULL,NULL),
+	 (23,false,'2023-11-10','DOAÇÃO RECEBIDA',3,1,200.00,6,1,1,185,NULL,NULL),
+	 (24,false,'2023-11-10','VENDA DE PRODUTOS NO BAZAR',3,1,22.00,5,1,1,223,NULL,NULL),
+	 (25,false,'2023-11-10','DOAÇÃO RECEBIDA',3,1,120.00,6,1,1,323,NULL,NULL),
+	 (26,true,'2023-11-10','DOAÇÃO RECEBIDA',7,1,1250.00,6,2,1,NULL,NULL,NULL),
+	 (27,true,'2023-11-10','DOAÇÃO RECEBIDA',7,1,1000.00,6,2,1,NULL,NULL,NULL),
+	 (28,true,'2023-11-10','DOAÇÃO RECEBIDA',7,1,1100.00,6,2,1,NULL,NULL,NULL),
+	 (29,true,'2023-11-10','DOAÇÃO RECEBIDA',7,1,1300.00,6,2,1,NULL,NULL,NULL),
+	 (30,true,'2023-11-10','DOAÇÃO RECEBIDA',7,1,350.00,6,2,1,NULL,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (31,false,'2023-10-31','Saldo anterior',6,1,643.27,110,1,1,NULL,NULL,208),
+	 (32,false,'2023-11-10','DOAÇÃO RECEBIDA',3,1,150.00,6,2,1,187,NULL,NULL),
+	 (33,false,'2023-11-10','ATENDIMENTO PSP',3,1,180.00,6,1,1,188,NULL,NULL),
+	 (34,false,'2023-11-10','DOAÇÃO RECEBIDA',3,1,4671.00,5,2,1,189,NULL,NULL),
+	 (35,false,'2023-11-10','VENDA DE PRODUTOS NO BAZAR',3,1,10.00,5,1,1,230,NULL,NULL),
+	 (36,false,'2023-11-10','DOAÇÃO RECEBIDA',3,1,50.00,6,2,1,191,NULL,NULL),
+	 (37,false,'2023-11-10','VENDA DE PRODUTOS NO BAZAR',3,1,50.00,5,1,1,192,NULL,NULL),
+	 (38,false,'2023-11-10','ATENDIMENTO DE PSICOPEDAGOGIA',3,1,140.00,6,1,1,193,NULL,NULL),
+	 (39,false,'2023-11-10','SEGURO DE VIDA CLT',6,0,-72.48,90,1,1,NULL,NULL,210),
+	 (40,false,'2023-11-10','MONITORAMENTO',6,0,-80.00,75,1,1,NULL,NULL,211);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (41,false,'2023-11-10','SEGURO DA VAN',6,0,-578.68,107,1,1,NULL,NULL,212),
+	 (42,false,'2023-11-10','PCMSO',6,0,-209.97,87,1,1,NULL,NULL,213),
+	 (43,false,'2023-11-10','PLANO ODONTO',6,0,-290.36,87,1,1,NULL,NULL,214),
+	 (44,false,'2023-11-10','Pg parcela',6,0,-1768.75,16,1,1,NULL,NULL,215),
+	 (46,false,'2023-11-10','Aluguel DMU',6,0,-4392.19,15,1,1,NULL,NULL,241),
+	 (47,false,'2023-11-10','DARF',6,0,-226.87,89,1,1,NULL,NULL,230),
+	 (45,false,'2023-11-10','ALUGUEL PAGO EM JUIZO MENOS TAXA DE CAÇA VAZAMENTOS DE 680,00',4,0,-3459.23,15,2,1,194,NULL,NULL),
+	 (48,false,'2023-11-10','SALARIO',3,0,-2998.78,89,1,1,195,NULL,NULL),
+	 (49,false,'2023-11-10','13° PARCELA 1',4,0,-1755.28,89,1,1,59,NULL,NULL),
+	 (50,false,'2023-11-10','SALARIO',3,0,-1748.80,89,1,1,196,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (51,false,'2023-11-10','SALARIO 13 1',3,0,-950.00,78,1,1,196,NULL,NULL),
+	 (52,false,'2023-11-10','SALARIO',4,0,-1823.23,89,1,1,197,NULL,NULL),
+	 (53,false,'2023-11-10','SALARIO 13',4,0,-552.87,78,1,1,197,NULL,NULL),
+	 (54,false,'2023-11-10','SALARIO PASTORALISTA',4,0,-3114.54,89,1,1,198,NULL,NULL),
+	 (55,false,'2023-11-10','SALARIO PASTORALISTA',4,0,-1617.16,89,1,1,198,NULL,NULL),
+	 (56,false,'2023-11-10','SALARIO',4,0,-4367.28,89,1,1,199,NULL,NULL),
+	 (57,false,'2023-11-10','EMPLACAMENTO DA VAN',6,0,-664.74,68,1,1,NULL,NULL,216),
+	 (58,false,'2023-11-10','IPVA VAN PARCELA UNICA',6,0,-1509.08,68,1,1,NULL,NULL,217),
+	 (59,false,'2023-11-10','LUZ',6,0,-86.50,94,1,1,NULL,NULL,218),
+	 (60,false,'2023-11-10','LUZ',6,0,-597.34,94,1,1,NULL,NULL,218);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (61,false,'2023-11-10','SANEPAR',6,0,-197.33,97,1,1,NULL,NULL,219),
+	 (62,false,'2023-11-10','DOAÇÃO RECEBIDA',3,1,123.00,6,1,1,200,NULL,NULL),
+	 (63,false,'2023-11-10','Gás de cozinha',6,0,-490.00,30,1,1,NULL,NULL,220),
+	 (64,false,'2023-11-10','ATENDIMENTO PSP',3,1,90.00,6,1,1,201,NULL,NULL),
+	 (65,false,'2023-11-10','DOAÇÃO RECEBIDA',3,1,500.00,6,1,1,202,NULL,NULL),
+	 (66,false,'2023-11-13','VENDA DE PRODUTOS NO BAZAR',3,1,43.00,5,1,1,203,NULL,NULL),
+	 (67,false,'2023-11-13','DOAÇÃO RECEBIDA',3,1,23.00,6,2,1,204,NULL,NULL),
+	 (68,false,'2023-11-13','VENDA DE PRODUTOS NO BAZAR',3,1,67.00,5,1,1,205,NULL,NULL),
+	 (69,false,'2023-11-13','VENDA DE PRODUTOS NO BAZAR',3,1,20.00,5,1,1,206,NULL,NULL),
+	 (70,false,'2023-11-13','VENDA DE PRODUTOS NO BAZAR',3,1,7.00,5,1,1,207,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (71,false,'2023-11-13','TARIFA',6,0,-3.00,63,1,1,NULL,NULL,208),
+	 (72,false,'2023-11-13','VENDA DE PRODUTOS NO BAZAR',3,1,13.00,5,1,1,208,NULL,NULL),
+	 (73,false,'2023-11-14','JARDINAGEM',4,0,-200.00,69,1,1,209,NULL,NULL),
+	 (74,false,'2023-11-27','MIXER',6,0,-199.90,22,1,1,NULL,NULL,221),
+	 (75,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,24.00,5,1,1,218,NULL,NULL),
+	 (76,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,24.00,5,1,1,211,NULL,NULL),
+	 (77,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,50.00,5,1,1,212,NULL,NULL),
+	 (78,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,25.00,5,1,1,213,NULL,NULL),
+	 (79,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,15.00,5,1,1,214,NULL,NULL),
+	 (80,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,3.00,5,1,1,215,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (81,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,15.00,5,1,1,216,NULL,NULL),
+	 (82,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,5.00,6,2,1,217,NULL,NULL),
+	 (86,false,'2023-11-27','DOAÇÃO RECEBIDA',3,1,15.00,6,1,1,220,NULL,NULL),
+	 (88,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,80.00,5,1,1,222,NULL,NULL),
+	 (90,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,5.00,5,1,1,224,NULL,NULL),
+	 (91,false,'2023-11-27','ATENDIMENTO PSP',3,1,180.00,6,1,1,225,NULL,NULL),
+	 (95,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,180.00,5,1,1,227,NULL,NULL),
+	 (83,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,120.00,5,1,1,218,NULL,NULL),
+	 (84,false,'2023-11-27','PROJETO DE MIDIA',3,0,-1000.00,51,1,1,219,NULL,NULL),
+	 (85,false,'2023-11-27','RESGATE AUTOMATICO',5,1,742.90,110,1,1,NULL,NULL,208);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (87,false,'2023-11-27','DOAÇÃO RECEBIDA',3,1,150.00,6,2,1,221,NULL,NULL),
+	 (89,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,30.00,5,1,1,186,NULL,NULL),
+	 (93,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,36.00,5,1,1,213,NULL,NULL),
+	 (94,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,48.00,5,1,1,222,NULL,NULL),
+	 (97,false,'2023-11-27','TARIFA',6,0,-2.00,63,1,1,NULL,NULL,208),
+	 (96,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,25.00,5,1,1,228,NULL,NULL),
+	 (92,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,30.00,5,1,1,226,NULL,NULL),
+	 (98,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,12.00,5,1,1,229,NULL,NULL),
+	 (99,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,18.00,5,1,1,230,NULL,NULL),
+	 (100,false,'2023-11-28','DOAÇÃO RECEBIDA',3,1,30.00,6,2,1,231,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (101,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,35.00,5,1,1,206,NULL,NULL),
+	 (102,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,15.00,5,1,1,233,NULL,NULL),
+	 (103,false,'2023-11-28','DOAÇÃO RECEBIDA',3,1,9.00,6,2,1,200,NULL,NULL),
+	 (104,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,78.00,5,1,1,222,NULL,NULL),
+	 (105,false,'2023-11-28','ATENDIMENTO PSICOPEDAGOGICO',3,1,5.00,6,1,1,235,NULL,NULL),
+	 (106,false,'2023-11-28','TARIFA',6,0,-3.00,63,1,1,NULL,NULL,208),
+	 (107,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,6.00,5,1,1,236,NULL,NULL),
+	 (108,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,10.00,5,1,1,237,NULL,NULL),
+	 (109,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,10.00,5,1,1,238,NULL,NULL),
+	 (110,false,'2023-11-28','PRODUTOS NO BAZAR',3,1,10.00,5,1,1,239,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (111,false,'2023-11-28','DOAÇÃO RECEBIDA',3,1,50.00,6,1,1,240,NULL,NULL),
+	 (112,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,17.00,5,1,1,206,NULL,NULL),
+	 (113,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,15.00,5,1,1,241,NULL,NULL),
+	 (114,false,'2023-11-27','DOAÇÃO RECEBIDA',3,1,7.00,6,2,1,242,NULL,NULL),
+	 (115,false,'2023-11-28','ATENDIMENTO PSICOPEDAGOGICO',3,1,50.00,6,1,1,243,NULL,NULL),
+	 (116,false,'2023-11-28','DOAÇÃO RECEBIDA',3,1,36.00,6,2,1,244,NULL,NULL),
+	 (117,false,'2023-11-28','DOAÇÃO RECEBIDA',3,1,23.00,6,2,1,245,NULL,NULL),
+	 (118,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,78.00,5,1,1,207,NULL,NULL),
+	 (119,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,49.00,5,1,1,246,NULL,NULL),
+	 (120,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,12.00,5,1,1,224,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (121,false,'2023-11-28','DOAÇÃO RECEBIDA',3,1,10.00,6,2,1,247,NULL,NULL),
+	 (122,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,10.00,5,1,1,246,NULL,NULL),
+	 (123,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,23.00,5,1,1,227,NULL,NULL),
+	 (124,false,'2023-11-28','DOAÇÃO RECEBIDA',3,1,10.00,6,2,1,231,NULL,NULL),
+	 (125,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,155.00,5,1,1,248,NULL,NULL),
+	 (126,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,25.00,5,1,1,249,NULL,NULL),
+	 (127,false,'2023-11-28','ATENDIMENTO PSP',3,1,90.00,6,1,1,250,NULL,NULL),
+	 (128,false,'2023-11-28','DOAÇÃO RECEBIDA',3,1,20.00,6,2,1,251,NULL,NULL),
+	 (129,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,20.00,5,1,1,252,NULL,NULL),
+	 (130,false,'2023-11-28','DOAÇÃO RECEBIDA',3,1,20.00,6,2,1,204,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (131,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,33.00,5,1,1,249,NULL,NULL),
+	 (132,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,10.00,5,1,1,235,NULL,NULL),
+	 (133,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,5.00,5,1,1,229,NULL,NULL),
+	 (134,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,23.00,5,1,1,253,NULL,NULL),
+	 (135,false,'2023-11-28','VENDA DE PRODUTOS NO BAZAR',3,1,20.00,5,1,1,254,NULL,NULL),
+	 (136,false,'2023-11-28','DOAÇÃO RECEBIDA',3,1,100.00,6,2,1,185,NULL,NULL),
+	 (137,false,'2023-11-28','SALARIO',3,0,-4474.10,88,1,1,196,NULL,NULL),
+	 (138,false,'2023-11-28','VT',6,0,-103.03,93,3,1,NULL,NULL,222),
+	 (139,false,'2023-11-28','RESGATE AUTOMATICO',5,1,2842.12,110,1,1,NULL,NULL,208),
+	 (140,false,'2023-11-29','VENTILADOR DA COZINHA',6,0,-174.99,22,1,1,NULL,NULL,221);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (141,false,'2023-11-30','VENDA DE PRODUTOS NO BAZAR',3,1,24.00,5,1,1,186,NULL,NULL),
+	 (142,false,'2023-11-30','DOAÇÃO RECEBIDA',3,1,300.00,6,2,1,255,NULL,NULL),
+	 (143,false,'2023-11-30','DOAÇÃO RECEBIDA',3,1,16.00,6,1,1,240,NULL,NULL),
+	 (144,false,'2023-11-30','DOAÇÃO RECEBIDA',3,1,8.00,6,1,1,256,NULL,NULL),
+	 (145,false,'2023-11-30','DOAÇÃO RECEBIDA',3,1,200.00,6,2,1,185,NULL,NULL),
+	 (146,false,'2023-11-30','TARIFA',6,0,-3.00,63,1,1,NULL,NULL,208),
+	 (147,false,'2023-10-31','Saldo mês outubro',6,1,9000.00,110,1,2,NULL,NULL,208),
+	 (148,false,'2023-11-07','RESGATE AUTOMATICO',6,0,-27.69,54,1,2,NULL,NULL,208),
+	 (149,false,'2023-11-07','RESGATE AUTOMATICO',6,0,-1000.00,54,1,2,NULL,NULL,208),
+	 (150,false,'2023-11-07','RESGATE AUTOMATICO',6,0,-1998.00,54,1,2,NULL,NULL,208);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (151,false,'2023-11-07','RESGATE AUTOMATICO',6,0,-2000.00,54,1,2,NULL,NULL,208),
+	 (152,false,'2023-11-07','RESGATE AUTOMATICO',6,0,-1999.99,54,1,2,NULL,NULL,208),
+	 (153,false,'2023-11-07','RESGATE AUTOMATICO',6,0,-2000.00,54,1,2,NULL,NULL,208),
+	 (154,false,'2023-11-13','RENDIMENTO',6,1,33.13,12,1,2,NULL,NULL,208),
+	 (155,false,'2023-11-13','TARIFA',6,0,-7.45,63,1,2,NULL,NULL,208),
+	 (156,false,'2023-10-31','Saldo mês de outubro',6,1,683055.89,110,1,3,NULL,NULL,208),
+	 (157,false,'2023-11-06','SALDO',6,0,-14416.70,54,1,3,NULL,NULL,208),
+	 (158,false,'2023-11-13','RENDIMENTO',6,1,1825.92,12,1,3,NULL,NULL,208),
+	 (159,false,'2023-11-27','RESGATE AUTOMATICO',6,0,-742.90,54,1,3,NULL,NULL,208),
+	 (160,false,'2023-11-28','RENDIMENTO',6,1,2578.44,12,1,3,NULL,NULL,208);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (161,false,'2023-11-28','RESGATE AUTOMATICO',6,0,-2842.12,54,1,3,NULL,NULL,208),
+	 (162,false,'2023-11-30','RENDIMENTO',6,1,771.98,12,1,3,NULL,NULL,208),
+	 (163,false,'2023-10-31','Saldo em outubro',6,1,7903.13,110,1,4,NULL,NULL,223),
+	 (164,false,'2023-11-01','RENDIMENTOS',6,1,9.97,12,1,4,NULL,NULL,223),
+	 (165,false,'2023-11-07','RESGATE AUTOMÁTICO',6,0,-7910.66,54,1,4,NULL,NULL,223),
+	 (166,false,'2023-11-30','RENDIMENTOS',6,1,0.02,12,1,4,NULL,NULL,223),
+	 (167,false,'2023-11-07','CONTRAPARTIDA FGTS',6,1,1310.86,110,1,5,NULL,NULL,223),
+	 (168,false,'2023-11-07','FGTS',6,0,-1814.99,81,1,5,NULL,NULL,224),
+	 (169,false,'2023-11-07','SALARIO ZELADORA',4,0,-1723.09,89,3,5,257,NULL,NULL),
+	 (170,false,'2023-11-07','SALARIO COZINHEIRA',4,0,-1787.80,89,1,5,258,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (171,false,'2023-11-07','SALARIO EDUCADORA',4,0,-2158.30,89,1,5,259,NULL,NULL),
+	 (172,false,'2023-11-07','13° PARCELA I - EDUCADORA',4,0,-979.35,78,1,5,259,NULL,NULL),
+	 (173,false,'2023-11-07','13° PARCELA I - COZINHEIRA',4,0,-867.89,78,1,5,258,NULL,NULL),
+	 (174,false,'2023-11-07','13° SALÁRIO - PARCELA I',4,0,-940.25,78,1,5,257,NULL,NULL),
+	 (175,false,'2023-11-07','CONTRAPARTIDA FGTS',6,1,1050.15,110,1,5,NULL,NULL,223),
+	 (176,false,'2023-11-07','RESGATE AUTOMÁTICO',6,1,7910.66,110,1,5,NULL,NULL,223),
+	 (177,false,'2023-11-28','CONTRAPARTIDA FGTS ZELADORA',6,1,1095.75,110,1,5,NULL,NULL,223),
+	 (178,false,'2023-11-28','CONTRAPARTIDA RESCISÃO ZELADORA',6,1,4681.92,110,1,5,NULL,NULL,223),
+	 (182,false,'2023-11-01','DOAÇÃO RECEBIDA',3,1,2800.00,6,1,6,260,NULL,NULL),
+	 (187,false,'2023-11-03','DOAÇÃO RECEBIDA',3,1,20.00,6,2,6,265,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (188,false,'2023-11-05','DOAÇÃO RECEBIDA',3,1,700.00,6,2,6,266,NULL,NULL),
+	 (191,false,'2023-11-06','INSTALAÇÃO DA CALHA',6,0,-450.00,72,1,6,NULL,NULL,225),
+	 (193,false,'2023-11-07','CONTRAPARTIDA FGTS',6,0,-1310.86,54,1,6,NULL,NULL,223),
+	 (195,false,'2023-11-07','COMBUSTIVEL',6,0,-231.30,102,1,6,NULL,NULL,226),
+	 (200,false,'2023-11-07','Pg recarga celular COORDENAÇÃO',6,0,-40.00,95,1,6,NULL,NULL,229),
+	 (179,false,'2023-11-28','ZELADORA',6,0,-1095.75,82,1,5,NULL,NULL,224),
+	 (184,false,'2023-11-01','DOAÇÃO RECEBIDA',3,1,5.00,5,1,6,318,NULL,NULL),
+	 (190,false,'2023-11-06','DOAÇÃO RECEBIDA',3,1,100.00,6,2,6,268,NULL,NULL),
+	 (180,false,'2023-11-28','RESCISÃO ZELADORA',4,0,-4681.92,88,3,5,257,NULL,NULL),
+	 (183,false,'2023-11-01','DOAÇÃO RECEBIDA',3,1,225.00,6,2,6,261,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (185,false,'2023-11-03','DOAÇÃO RECEBIDA',3,1,600.00,6,2,6,263,NULL,NULL),
+	 (189,false,'2023-11-06','DOAÇÃO RECEBIDA',3,1,20.00,6,2,6,267,NULL,NULL),
+	 (192,false,'2023-11-06','DOAÇÃO RECEBIDA',3,1,150.00,6,2,6,269,NULL,NULL),
+	 (196,false,'2023-11-07','FRUTAS E VERDURAS',6,0,-157.28,21,3,6,NULL,NULL,227),
+	 (198,false,'2023-11-07','VENDA DE PRODUTOS NO BAZAR',3,1,2.00,5,1,6,270,NULL,NULL),
+	 (199,false,'2023-11-07','DOAÇÃO RECEBIDA',3,1,45.00,5,1,6,257,NULL,NULL),
+	 (181,false,'2023-10-31','Saldo Outubro',6,1,3853.04,110,1,6,NULL,NULL,223),
+	 (186,false,'2023-11-03','DOAÇÃO RECEBIDA',3,1,1000.00,6,2,6,264,NULL,NULL),
+	 (194,false,'2023-11-07','CONTRAPARTIDA FGTS',6,0,-1050.15,54,1,6,NULL,NULL,223),
+	 (197,false,'2023-11-07','COMPRAS COZINHA',6,0,-679.99,31,1,6,NULL,NULL,228);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (201,false,'2023-11-07','GPS',6,0,-2597.31,89,1,6,NULL,NULL,230),
+	 (202,false,'2023-11-08','13° SALARIO',4,0,-2745.29,89,1,6,199,NULL,NULL),
+	 (203,false,'2023-11-08','DOAÇÃO RECEBIDA',3,1,15.00,6,2,6,271,NULL,NULL),
+	 (204,false,'2023-11-08','DOAÇÃO RECEBIDA',3,1,150.00,6,1,6,272,NULL,NULL),
+	 (205,false,'2023-11-08','DOAÇÃO RECEBIDA',5,1,50.00,7,2,6,NULL,NULL,231),
+	 (206,false,'2023-11-09','DOAÇÃO RECEBIDA',3,1,100.00,6,2,6,273,NULL,NULL),
+	 (207,false,'2023-11-09','VENDA DE PRODUTOS NO BAZAR',3,1,150.00,5,1,6,215,NULL,NULL),
+	 (208,false,'2023-11-09','ATENDIMENTO PSP',3,1,360.00,6,1,6,274,NULL,NULL),
+	 (209,false,'2023-11-09','VENDA DE PRODUTOS NO BAZAR',3,1,50.00,5,1,6,224,NULL,NULL),
+	 (210,false,'2023-11-10','VENDA DE PRODUTOS NO BAZAR',3,1,15.00,5,1,6,272,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (211,false,'2023-11-10','VENDA DE PRODUTOS NO BAZAR',3,1,10.00,5,1,6,275,NULL,NULL),
+	 (212,false,'2023-11-10','DOAÇÃO RECEBIDA',3,1,300.00,6,2,6,276,NULL,NULL),
+	 (213,false,'2023-11-10','INTERNET COM JUROS',6,0,-96.85,96,2,6,NULL,NULL,232),
+	 (214,false,'2023-11-10','MENSALIDADE',6,0,-993.58,38,1,6,NULL,NULL,233),
+	 (215,false,'2023-11-13','ATENDIMENTO PSP',3,1,180.00,6,1,6,277,NULL,NULL),
+	 (216,false,'2023-11-13','DOAÇÃO RECEBIDA',3,1,300.00,6,2,6,278,NULL,NULL),
+	 (217,false,'2023-11-13','ATENDIMENTO PSP',3,1,180.00,5,1,6,253,NULL,NULL),
+	 (218,false,'2023-11-13','ATENDIMENTO PSP',3,1,185.00,6,1,6,280,NULL,NULL),
+	 (219,false,'2023-11-13','VENDA DE PRODUTOS NO BAZAR',3,1,20.00,5,1,6,281,NULL,NULL),
+	 (220,false,'2023-11-13','DOAÇÃO RECEBIDA',3,1,50.00,6,2,6,282,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (221,false,'2023-11-13','ATENDIMENTO PSP',3,1,180.00,6,1,6,283,NULL,NULL),
+	 (222,false,'2023-11-13','VENDA DE PRODUTOS NO BAZAR',3,1,110.00,5,1,6,206,NULL,NULL),
+	 (223,false,'2023-11-13','DOAÇÃO RECEBIDA',5,1,576.00,7,1,6,NULL,NULL,234),
+	 (224,false,'2023-11-13','DOAÇÃO RECEBIDA',3,1,350.00,6,2,6,284,NULL,NULL),
+	 (225,false,'2023-11-13','DARF ADOLFO',6,0,-235.05,15,1,6,NULL,NULL,230),
+	 (226,false,'2023-11-13','DARF RITA',6,0,-360.77,15,2,6,NULL,NULL,230),
+	 (227,false,'2023-11-13','DOAÇÃO RECEBIDA',5,1,100.00,7,1,6,NULL,NULL,235),
+	 (228,false,'2023-11-14','VENDA DE PRODUTOS NO BAZAR',3,1,2.00,5,1,6,285,NULL,NULL),
+	 (229,false,'2023-11-14','VENDA DE PRODUTOS NO BAZAR',3,1,55.00,5,1,6,222,NULL,NULL),
+	 (230,false,'2023-11-14','DOAÇÃO RECEBIDA',3,1,70.00,6,2,6,286,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (231,false,'2023-11-14','DOAÇÃO RECEBIDA',3,1,250.00,6,2,6,287,NULL,NULL),
+	 (232,false,'2023-11-16','DOAÇÃO RECEBIDA',5,1,1000.00,7,2,6,NULL,NULL,231),
+	 (233,false,'2023-11-16','DOAÇÃO RECEBIDA',3,1,300.00,6,2,6,288,NULL,NULL),
+	 (234,false,'2023-11-16','ITENS PARA COZINHA',6,0,-105.95,22,3,6,NULL,NULL,236),
+	 (235,false,'2023-11-17','SEGURO DA KOMBI',6,0,-1718.41,107,1,6,NULL,NULL,210),
+	 (236,false,'2023-11-21','RECURSO PROGRAMA NOTA PARANÁ',6,1,2337.43,9,1,6,NULL,NULL,237),
+	 (237,false,'2023-11-21','DOAÇÃO RECEBIDA',3,1,600.00,6,2,6,289,NULL,NULL),
+	 (238,false,'2023-11-21','DOAÇÃO RECEBIDA',3,1,10.00,6,2,6,198,NULL,NULL),
+	 (239,false,'2023-11-21','VENDA DE PRODUTOS NO BAZAR',3,1,120.00,5,1,6,275,NULL,NULL),
+	 (240,false,'2023-11-21','DOAÇÃO RECEBIDA',3,1,100.00,6,2,6,290,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (241,false,'2023-11-21','VENDA DE PRODUTOS NO BAZAR',3,1,15.00,5,1,6,291,NULL,NULL),
+	 (242,false,'2023-11-21','VENDA DE PRODUTOS NO BAZAR',3,1,5.00,5,1,6,203,NULL,NULL),
+	 (243,false,'2023-11-21','DOAÇÃO RECEBIDA',3,1,1500.00,6,2,6,292,NULL,NULL),
+	 (244,false,'2023-11-21','DOAÇÃO RECEBIDA',3,1,100.00,6,2,6,293,NULL,NULL),
+	 (245,false,'2023-11-21','VENDA DE PRODUTOS NO BAZAR',3,1,180.00,5,1,6,186,NULL,NULL),
+	 (246,false,'2023-11-21','COMBUSTIVEL',6,0,-195.82,102,1,6,NULL,NULL,226),
+	 (247,false,'2023-11-22','DOAÇÃO RECEBIDA',3,1,21.00,6,2,6,294,NULL,NULL),
+	 (248,false,'2023-11-22','VENDA DE PRODUTOS NO BAZAR',3,1,20.00,5,1,6,295,NULL,NULL),
+	 (249,false,'2023-11-22','VENDA DE PRODUTOS NO BAZAR',3,1,5.00,5,1,6,186,NULL,NULL),
+	 (250,false,'2023-11-22','VENDA DE PRODUTOS NO BAZAR',3,1,10.00,5,1,6,186,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (251,false,'2023-11-22','VENDA DE PRODUTOS NO BAZAR',3,1,243.00,5,1,6,295,NULL,NULL),
+	 (252,false,'2023-11-22','DOAÇÃO RECEBIDA',3,1,25.00,6,2,6,296,NULL,NULL),
+	 (253,false,'2023-11-22','VENDA DE PRODUTOS NO BAZAR',3,1,10.00,5,1,6,297,NULL,NULL),
+	 (254,false,'2023-11-22','DOAÇÃO RECEBIDA',3,1,66.00,6,2,6,298,NULL,NULL),
+	 (255,false,'2023-11-22','VENDA DE PRODUTOS NO BAZAR',3,1,21.00,5,1,6,299,NULL,NULL),
+	 (256,false,'2023-11-22','VENDA DE PRODUTOS NO BAZAR',3,1,15.00,5,1,6,203,NULL,NULL),
+	 (257,false,'2023-11-22','DOAÇÃO RECEBIDA',3,1,5.00,6,2,6,300,NULL,NULL),
+	 (258,false,'2023-11-23','DOAÇÃO RECEBIDA',3,1,12.00,5,1,6,301,NULL,NULL),
+	 (259,false,'2023-11-23','VENDA DE PRODUTOS NO BAZAR',3,1,2.00,5,1,6,302,NULL,NULL),
+	 (260,false,'2023-11-23','DOAÇÃO RECEBIDA',3,1,100.00,6,2,6,303,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (261,false,'2023-11-23','DOAÇÃO RECEBIDA',3,1,100.00,6,2,6,304,NULL,NULL),
+	 (262,false,'2023-11-23','DOAÇÃO RECEBIDA',3,1,100.00,6,2,6,305,NULL,NULL),
+	 (263,false,'2023-11-23','VENDA DE PRODUTOS NO BAZAR',3,1,17.00,5,1,6,285,NULL,NULL),
+	 (264,false,'2023-11-23','DOAÇÃO RECEBIDA',5,1,1800.00,7,2,6,NULL,NULL,238),
+	 (265,false,'2023-11-23','DOAÇÃO RECEBIDA',3,1,5.00,6,2,6,261,NULL,NULL),
+	 (266,false,'2023-11-23','VENDA DE PRODUTOS NO BAZAR',3,1,22.00,5,1,6,295,NULL,NULL),
+	 (267,false,'2023-11-23','VENDA DE PRODUTOS NO BAZAR',3,1,15.00,5,1,6,291,NULL,NULL),
+	 (268,false,'2023-11-23','VENDA DE PRODUTOS NO BAZAR',3,1,4.00,5,1,6,307,NULL,NULL),
+	 (269,false,'2023-11-23','COMPRAS PRA COZINHA',6,0,-497.78,98,1,6,NULL,NULL,239),
+	 (270,false,'2023-11-24','DOAÇÃO RECEBIDA',3,1,100.00,6,2,6,303,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (271,false,'2023-11-24','DOAÇÃO RECEBIDA',3,1,8.00,5,1,6,301,NULL,NULL),
+	 (272,false,'2023-11-24','DOAÇÃO RECEBIDA',3,1,150.00,6,2,6,308,NULL,NULL),
+	 (273,false,'2023-11-24','DOAÇÃO RECEBIDA',3,1,40.00,6,1,6,309,NULL,NULL),
+	 (274,false,'2023-11-24','VENDA DE PRODUTOS NO BAZAR',3,1,10.00,5,1,6,283,NULL,NULL),
+	 (275,false,'2023-11-24','DOAÇÃO RECEBIDA',3,1,2.00,6,2,6,296,NULL,NULL),
+	 (276,false,'2023-11-27','SANEPAR',6,0,-175.70,97,1,6,NULL,NULL,219),
+	 (277,false,'2023-11-27','DOAÇÃO RECEBIDA',3,1,10.00,6,2,6,310,NULL,NULL),
+	 (278,false,'2023-11-27','VENDA DE PRODUTOS NO BAZAR',3,1,37.00,6,2,6,217,NULL,NULL),
+	 (279,false,'2023-11-27','DOAÇÃO RECEBIDA',3,1,50.00,6,2,6,294,NULL,NULL),
+	 (280,false,'2023-11-27','DOAÇÃO RECEBIDA',3,1,350.00,6,2,6,311,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (281,false,'2023-11-27','DOAÇÃO RECEBIDA',3,1,300.00,6,2,6,288,NULL,NULL),
+	 (288,false,'2023-11-29','DOAÇÃO RECEBIDA',3,1,216.00,6,2,6,286,NULL,NULL),
+	 (289,false,'2023-11-29','COMBUSTIVEL',6,0,-227.98,102,1,6,NULL,NULL,226),
+	 (291,false,'2023-11-30','DOAÇÃO RECEBIDA',3,1,200.00,6,1,6,316,NULL,NULL),
+	 (292,false,'2023-11-30','DOAÇÃO RECEBIDA',3,1,200.00,6,1,6,317,NULL,NULL),
+	 (295,false,'2023-11-30','DOAÇÃO RECEBIDA',3,1,250.00,6,2,6,288,NULL,NULL),
+	 (282,false,'2023-11-28','PRESENTE PARA O BISPO',6,0,-54.90,22,2,6,NULL,NULL,240),
+	 (283,false,'2023-11-28','CONTRAPARTIDA FGTS ZELADORA',6,0,-1095.75,54,1,6,NULL,NULL,223),
+	 (285,false,'2023-11-28','RECEPÇÃO',6,0,-1608.01,88,1,6,NULL,NULL,224),
+	 (293,false,'2023-11-30','DOAÇÃO RECEBIDA',3,1,180.00,5,1,6,318,NULL,NULL);
+INSERT INTO estoque.transacao (id,anonimo,"data",descricao,tipo_parceiro_enum,tipo_transacao_enum,valor,categoria_id,centro_custo_id,conta_id,doador_id,familia_id,instituicao_id) VALUES
+	 (294,false,'2023-11-30','DOAÇÃO RECEBIDA',3,1,200.00,6,1,6,319,NULL,NULL),
+	 (284,false,'2023-11-28','CONTRAPARTIDA RESCISÃO ZELADORA',6,0,-4681.92,54,1,6,NULL,NULL,223),
+	 (286,false,'2023-11-28','DOAÇÃO RECEBIDA',3,1,100.00,6,1,6,313,NULL,NULL),
+	 (290,false,'2023-11-30','VENDA DE PRODUTOS NO BAZAR',3,1,21.00,5,1,6,315,NULL,NULL),
+	 (287,false,'2023-11-29','DOAÇÃO RECEBIDA',3,1,100.00,6,2,6,314,NULL,NULL),
+	 (297,false,'2023-11-30','DOAÇÃO RECEBIDA',3,1,200.00,6,2,6,322,NULL,NULL),
+	 (296,false,'2023-11-30','ATENDIMENTO PSP',3,1,180.00,6,1,6,206,NULL,NULL);
+
+
+INSERT INTO estoque.saldo (id,"data",valor,conta_id) VALUES
+	 (14,'2023-10-31',9000.00,2),
+	 (39,'2023-11-14',2379.61,6),
+	 (15,'2023-11-07',-25.68,2),
+	 (16,'2023-11-13',0.00,2),
+	 (17,'2023-10-31',683055.89,3),
+	 (18,'2023-11-06',668639.19,3),
+	 (19,'2023-11-13',670465.11,3),
+	 (20,'2023-11-27',669722.21,3),
+	 (21,'2023-11-28',669458.53,3),
+	 (22,'2023-11-30',670230.51,3);
+INSERT INTO estoque.saldo (id,"data",valor,conta_id) VALUES
+	 (23,'2023-10-31',7903.13,4),
+	 (24,'2023-11-01',7913.10,4),
+	 (25,'2023-11-07',2.44,4),
+	 (26,'2023-11-30',2.46,4),
+	 (40,'2023-11-16',3573.66,6),
+	 (41,'2023-11-17',1855.25,6),
+	 (27,'2023-11-07',0.00,5),
+	 (28,'2023-11-28',0.00,5),
+	 (29,'2023-10-31',3853.04,6),
+	 (30,'2023-11-01',6883.04,6);
+	 (31,'2023-11-03',8503.04,6),
+	 (32,'2023-11-05',9203.04,6),
+	 (42,'2023-11-21',6626.86,6),
+	 (10,'0203-11-27',0.00,1),
+	 (33,'2023-11-06',9023.04,6),
+	 (6,'2023-10-31',643.27,1),
+	 (1,'2023-11-01',252.08,1),
+	 (2,'2023-11-06',14668.78,1),
+	 (3,'2023-11-07',22269.46,1),
+	 (4,'2023-11-09',22239.46,1);
+INSERT INTO estoque.saldo (id,"data",valor,conta_id) VALUES
+	 (5,'2023-11-10',194.00,1),
+	 (7,'2023-11-13',364.00,1),
+	 (8,'2023-11-14',164.00,1),
+	 (34,'2023-11-07',3003.15,6),
+	 (9,'2023-11-27',772.00,1),
+	 (11,'2023-11-28',175.99,1),
+	 (12,'2023-11-29',1.00,1),
+	 (13,'2023-11-30',546.00,1),
+	 (35,'2023-11-08',472.86,6),
+	 (43,'2023-11-22',7067.86,6);
+INSERT INTO estoque.saldo (id,"data",valor,conta_id) VALUES
+	 (36,'2023-11-09',1132.86,6),
+	 (37,'2023-11-10',367.43,6),
+	 (44,'2023-11-23',8747.08,6),
+	 (38,'2023-11-13',2002.61,6),
+	 (45,'2023-11-24',9057.08,6),
+	 (46,'2023-11-27',9628.38,6),
+	 (47,'2023-11-28',2287.80,6),
+	 (48,'2023-11-29',2375.82,6),
+	 (49,'2023-11-30',3806.82,6);
+

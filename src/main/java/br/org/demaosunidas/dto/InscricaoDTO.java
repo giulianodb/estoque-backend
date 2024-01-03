@@ -35,6 +35,9 @@ public class InscricaoDTO implements Serializable {
 	private Boolean matriculado;
 	
 	private PeriodoEnum periodo;
+	
+	private String periodoDescricao;
+	
 	public InscricaoDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -55,7 +58,11 @@ public class InscricaoDTO implements Serializable {
 		this.dataDesligamento = obj.getDataDesligamento();
 	
 	}
-
+	
+	public String getPeriodoDescricao() {
+		return this.periodo.getDescricao();
+	}
+	
 	public Integer getId() {
 		return id;
 	}

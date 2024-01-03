@@ -48,6 +48,10 @@ public class CriancaGetDTO implements Serializable{
 	
 	private String religiao;
 	
+	private String foto;
+	
+	private Integer idade;
+	
 	public String getSexo() {
 		return sexo;
 	}
@@ -140,6 +144,7 @@ public class CriancaGetDTO implements Serializable{
 		this.medicamento = obj.getMedicamento();
 		this.descricaoMedicamento = obj.getDescricaoMedicamento();
 		this.religiao = obj.getReligiao();
+		this.foto = obj.getFoto();
 		
 		if (obj.getListInscricao() != null) {
 			obj.getListInscricao().forEach(x -> {
@@ -229,6 +234,31 @@ public class CriancaGetDTO implements Serializable{
 	}
 	public void setTotalSituacao(Integer totalSituacao) {
 		this.totalSituacao = totalSituacao;
+	}
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
+	public Integer getIdade() {
+		   // Data atual
+        Date dataAtual = new Date();
+
+        // Calcula a diferença em milissegundos
+        long diferencaEmMillis = dataAtual.getTime() - dataNascimento.getTime();
+
+        // Converte a diferença de milissegundos para anos
+        long anos = diferencaEmMillis / (1000L * 60 * 60 * 24 * 365);
+		
+		return (int) anos;
+	}
+
+	public void setIdade(Integer idade) {
+		this.idade = idade;
 	}
 	
 }

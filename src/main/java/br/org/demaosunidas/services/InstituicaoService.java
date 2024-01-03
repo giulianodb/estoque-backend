@@ -50,6 +50,28 @@ public class InstituicaoService {
 		repo.save(obj);
 	}
 	
+	public Instituicao update(Instituicao objAlterado) {
+		Instituicao objBanco = findById(objAlterado.getId());
+		updateData(objBanco,objAlterado);
+		return repo.save(objBanco);
+	}
+	
+	private void updateData(Instituicao objBanco, Instituicao objAnterado) {
+		
+		objBanco.setCliente(objAnterado.getCliente());
+		objBanco.setCnpj(objAnterado.getCnpj());
+		objBanco.setEmail(objAnterado.getEmail());
+		objBanco.setEstoque(objAnterado.getEstoque());
+		objBanco.setFornecedor(objAnterado.getFornecedor());
+		objBanco.setNome(objAnterado.getNome());
+		objBanco.setNomeContato(objAnterado.getNomeContato());
+		objBanco.setTelefone(objAnterado.getTelefone());
+		
+		objBanco.setStatus(objAnterado.getStatus());
+		
+	}
+	
+	
 	public static InstituicaoDTO entityToDto(Instituicao entity) {
 		if (entity == null) {
 			return null;

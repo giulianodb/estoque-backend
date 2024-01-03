@@ -3,6 +3,7 @@ package br.org.demaosunidas.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -32,6 +33,10 @@ public interface CriancaRepository extends JpaRepository<Crianca, Integer>{
 	
 	@Query("SELECT DISTINCT obj FROM Crianca obj LEFT JOIN obj.listInscricao i WHERE obj.id = :id" )
 	Page<Crianca> searchQueryIdCrianca(@Param("id") Integer id, Pageable pageRequest);
+	
+	  @Modifying
+	    @Query("UPDATE Crianca c SET c.foto = :base64 WHERE c.id = :id")
+	    void atualizarFoto(Integer id, String base64);
 	
 }
 
